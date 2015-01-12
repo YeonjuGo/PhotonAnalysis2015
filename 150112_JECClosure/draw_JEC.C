@@ -124,7 +124,7 @@ void draw_JEC(const char *calgo="ak3PF", bool savePlots=1){
 	TLegend *l1 = new TLegend(0.65, 0.60, 0.85, 0.80, calgo);
 	TCanvas *c[4];
 	c[0] = new TCanvas("c_hMean","c_hMean");
-	hMean->SetAxisRange(0.99,1.10,"Y");
+//	hMean->SetAxisRange(0.99,1.10,"Y");
 	hMean->Draw();
 	l1->Draw();
 	c[1] = new TCanvas("c_hSigma","c_hSigma");
