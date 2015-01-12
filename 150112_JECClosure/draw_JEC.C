@@ -5,6 +5,7 @@
 #include "TNtuple.h"
 #include "TH1D.h"
 #include "TCut.h"
+#include "TF1.h"
 #include "TProfile.h"
 #include "TGraphAsymmErrors.h"
 #include "TGraphErrors.h"
@@ -18,6 +19,7 @@
 #include <iostream>
 
 void FillMeanSigma(Int_t ip, TH1 *h1F, TH1 *hArM, TH1 *hRMS, TH1 *hMean, TH1 *hSigma);
+TF1* FillGaussMeanSigma(Int_t ip, TH1F *h1F, TH1F *hMean, TH1F *hSigma);
 
 const Int_t maxEntry = 5; //if fewer than this number of entries, ignore histogram
 const double fitmin=0.00;
@@ -90,15 +92,16 @@ void draw_JEC(const char *calgo="ak3PF", bool savePlots=1){
 	TCut analysisCut = "jteta>-3.0 && jteta<3.0";
 
 	TCanvas *d[nptbins];
+    TF1* fratio[nptbins];
 	for(int i=0; i<nptbins; i++){
 		TCut ptCut = Form("refpt > %lf && refpt < %lf",ptbins[i], ptbins[i+1]);
 		TString hName = Form("reco_over_gen_pt_%d",(Int_t)ptbins[i]);
-		TH1D* ratio;
-		if(i==nptbins-1) ratio = new TH1D(hName, Form("%d GeV< gen p_{T}<500 GeV;reco/gen p_{T}",(Int_t)ptbins[i]), 200, fitmin, fitmax);
-		else ratio = new TH1D(hName, Form("%d GeV< gen p_{T}<%d GeV;reco/gen p_{T}",(Int_t)ptbins[i],(Int_t)ptbins[i+1]), 200, fitmin, fitmax);
+		TH1F* ratio;
+		if(i==nptbins-1) ratio = new TH1F(hName, Form("%d GeV< gen p_{T}<500 GeV;reco/gen p_{T}",(Int_t)ptbins[i]), 200, fitmin, fitmax);
+		else ratio = new TH1F(hName, Form("%d GeV< gen p_{T}<%d GeV;reco/gen p_{T}",(Int_t)ptbins[i],(Int_t)ptbins[i+1]), 200, fitmin, fitmax);
 
 		for(int ipt=0;ipt<5;ipt++){
-			TH1D *htmp = (TH1D*)ratio->Clone();
+			TH1F *htmp = (TH1F*)ratio->Clone();
 			htmp->SetName(Form("my_htmp_%d",ipt));
 			htmp->Reset();
 			TCut pthatCut = Form("pthat>=%d && pthat<%d",filepthat[ipt], filepthat[ipt+1]);
@@ -108,13 +111,15 @@ void draw_JEC(const char *calgo="ak3PF", bool savePlots=1){
 			delete htmp;
 		}        
 
-		FillMeanSigma(i, ratio, hArM, hRMS, hMean, hSigma);
-
-/*		d[i] = new TCanvas(Form("reco/gen_%d",(Int_t)ptbins[i]),Form("reco/gen_%d",(Int_t)ptbins[i]));
+	//	FillMeanSigma(i, ratio, hArM, hRMS, hMean, hSigma);
+	   fratio[i]= FillGaussMeanSigma(i, ratio, hMean, hSigma);
+#if 0        
+		d[i] = new TCanvas(Form("reco/gen_%d",(Int_t)ptbins[i]),Form("reco/gen_%d",(Int_t)ptbins[i]));
 		ratio->DrawClone();
 		if(savePlots)
 			d[i]->SaveAs(Form("%s/"+hName+".gif",calgo));
-*/	}
+#endif
+    }
 
 	TLegend *l1 = new TLegend(0.65, 0.60, 0.85, 0.80, calgo);
 	TCanvas *c[4];
@@ -146,6 +151,24 @@ void FillMeanSigma(Int_t ip,TH1 *h1F,TH1 *hArM,TH1 *hRMS,TH1 *hMean,TH1 *hSigma)
 		hMean ->SetBinContent  (ip+1,h1F->GetMean());
 		hMean ->SetBinError  (ip+1,h1F->GetMeanError());
 		hSigma->SetBinContent  (ip+1,h1F->GetRMS());
-		hSigma->SetBinError  (ip+1,h1F->GetRMSError());
-	}
+        hSigma->SetBinError  (ip+1,h1F->GetRMSError());
+    }
 }
+
+TF1* FillGaussMeanSigma(Int_t ip, TH1F *h1F, TH1F *hMean, TH1F *hSigma)
+{
+    TF1* myFit = new TF1("myFit", "gaus");
+    //myFit -> SetParameters(h1F->GetMaximum(),1.0, 0.1);
+    h1F->Fit(myFit->GetName(), "QL", "");
+#if 1   
+    if(h1F->Integral()>0){
+        hMean ->SetBinContent  (ip+1,h1F->GetFunction(myFit->GetName())->GetParameter(1));
+        hMean ->SetBinError  (ip+1,h1F->GetFunction(myFit->GetName())->GetParError(1));
+        hSigma->SetBinContent  (ip+1,h1F->GetFunction(myFit->GetName())->GetParameter(2));
+        hSigma->SetBinError  (ip+1,h1F->GetFunction(myFit->GetName())->GetParError(2));
+    }   
+#endif
+
+    return myFit;
+}
+

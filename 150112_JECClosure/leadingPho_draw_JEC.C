@@ -28,13 +28,14 @@ TF1* FillGaussMeanSigma(Int_t ip, TH1F *h1F, TH1F *hMean, TH1F *hSigma);
 const Int_t maxEntry = 5; //if fewer than this number of entries, ignore histogram
 //const double fitmin=0.90;
 //const double fitmax=1.10;
-const double fitmin=0.00;
-const double fitmax=3.00;
+const double fitmin=0.50;
+const double fitmax=1.50;
 const TString fopt="RQ+";
 const Int_t iFit=0;
 const Int_t knpx=2000;
 
-const Double_t ptbins[] = {30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,340, 400, 500};
+const Double_t ptbins[] = {30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280};
+//const Double_t ptbins[] = {30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,340, 400, 500};
 //double ptbins[] ={10,15,20,27,35,45,57,72,90,120,150,200,300,400,550,750,1000};
 const int nptbins = sizeof(ptbins)/sizeof(double) - 1;
 
@@ -65,8 +66,8 @@ void leadingPho_draw_JEC(
 	TTree* tree = (TTree*) fin -> Get(calgo+"JetAnalyzer/t");
 	//TTree* tree = (TTree*) fin -> Get(calgo+"JetAnalyzer/t"Form("%sJetAnalyzer/t", calgo.str().c_str())); 
     TString calgoDir;
-    if(savePlots==1) calgoDir =calgo+"_gaus";
-    if(savePlots==0) calgoDir =calgo+"_mean";
+    if(gausfitting==1) calgoDir =calgo+"_gaus";
+    if(gausfitting==0) calgoDir =calgo+"_mean";
 
 //===========================================================================
 // to test weighting factor
@@ -97,7 +98,8 @@ void leadingPho_draw_JEC(
 		TH1F* ratio;
 		if(i==nptbins-1) ratio = new TH1F(hName, Form("%d GeV< gen p_{T}<500 GeV;reco/gen p_{T}",(Int_t)ptbins[i]), 200, fitmin, fitmax);
 		else ratio = new TH1F(hName, Form("%d GeV< gen p_{T}<%d GeV;reco/gen p_{T}",(Int_t)ptbins[i],(Int_t)ptbins[i+1]), 200, fitmin, fitmax);
-		tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0)",ptbins[i], ptbins[i+1]));
+		tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0)",ptbins[i], ptbins[i+1]));
+		//tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0)",ptbins[i], ptbins[i+1]));
 	//	tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0 && hiHF>20)",ptbins[i], ptbins[i+1]));
 		//tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0 && hiHF<=20)",ptbins[i], ptbins[i+1]));
 		ratio = (TH1F*)gDirectory->Get(hName);

@@ -16,47 +16,68 @@
 #include <stdlib.h>
 using namespace std;
 
+#if 0
 const int filepthat[]={30,50,80,120,170};
 const int nFile = 5;
+#endif
+const int filepthat[]={30,50,80,120};
+const int nFile = 4;
 
 void xSectionCal(const char *ksp="pp"){
 
-	//pp    
-	/*    const char *fileName[nFile] = {
+//old pPb in KNU 
+    const char *fileName[nFile] = {
+        "/home/goyeonju/CMS/2015/gammaJetAnalysis/histogramProducer/forestFiles/pA/pA_Pyquen_allQCDPhoton30_hiForest2_53x_2013-18-14-1922.root",
+        "/home/goyeonju/CMS/2015/gammaJetAnalysis/histogramProducer/forestFiles/pA/pA_Pyquen_allQCDPhoton50_hiForest2_53x_2013-18-14-1922.root",
+        "/home/goyeonju/CMS/2015/gammaJetAnalysis/histogramProducer/forestFiles/pA/pA_Pyquen_allQCDPhoton80_hiForest2_53x_2013-18-14-1922.root",
+        "/home/goyeonju/CMS/2015/gammaJetAnalysis/histogramProducer/forestFiles/pA/pA_Pyquen_allQCDPhoton120_hiForest2_53x_2013-18-14-1922.root"
+    };
+
+	
+#if 0
+    //pp    
+    const char *fileName[nFile] = {
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pp_JEC/merging-forest/ppAllQCD15/JEC_ppAllQCD15.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pp_JEC/merging-forest/ppAllQCD30/JEC_ppAllQCD30.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pp_JEC/merging-forest/ppAllQCD50/JEC_ppAllQCD50.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pp_JEC/merging-forest/ppAllQCD80/JEC_ppAllQCD80.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pp_JEC/merging-forest/ppAllQCD120/JEC_ppAllQCD120.root"        
 	      }; 
-	      */
-	// pPb FINAL MC produced by Alex 
-	const char *fileName[nFile] = {
+#endif
+	
+#if 0
+    // pPb MIX MC produced by Alex after applying photon JEC
+    const char *fileName[nFile] = {
 		"/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton30.root",
 		"/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton50.root",
 		"/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton80.root",
 		"/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton120.root",
 		"/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton170.root",
 	};
+#endif
 
+#if 0
 	// pPb MC produced by yeonju
-	/*    const char *fileName[nFile] = {
+	     const char *fileName[nFile] = {
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pPb_JEC/merging-forest/pPbAllQCD15/JEC_pPbAllQCD15.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pPb_JEC/merging-forest/pPbAllQCD30/JEC_pPbAllQCD30.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pPb_JEC/merging-forest/pPbAllQCD50/JEC_pPbAllQCD50.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pPb_JEC/merging-forest/pPbAllQCD80/JEC_pPbAllQCD80.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/pPb_JEC/merging-forest/pPbAllQCD120/JEC_pPbAllQCD120.root"        
 	      };
-	      */
+	      
+#endif
+
+#if 0
 	// Pbp (reverse direction)
-	/*    const char *fileName[nFile] = {
+	    const char *fileName[nFile] = {
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/Pbp_JEC/merging-forest/PbpAllQCD15/JEC_PbpAllQCD15.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/Pbp_JEC/merging-forest/PbpAllQCD30/JEC_PbpAllQCD30.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/Pbp_JEC/merging-forest/PbpAllQCD50/JEC_PbpAllQCD50.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/Pbp_JEC/merging-forest/PbpAllQCD80/JEC_PbpAllQCD80.root",        
 	      "/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/Pbp_JEC/merging-forest/PbpAllQCD120/JEC_PbpAllQCD120.root"        
 	      };
-	      */
+#endif     
 
 	TFile *fin[nFile];
 	TTree *jetTree[nFile];
