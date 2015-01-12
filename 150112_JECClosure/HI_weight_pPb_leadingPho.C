@@ -77,9 +77,10 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 	Int_t	pprimaryVertexFilter, pPAcollisionEventSelectionPA, pPAprimaryVertexFilter;
 	TTree *tr_skim = 0;
 	tr_skim = (TTree*)fin->Get("skimanalysis/HltTree");
-	tr_skim->SetBranchAddress("pprimaryVertexFilter",&pprimaryVertexFilter);
+	tr_skim->SetBranchAddress("pprimaryvertexFilter",&pprimaryVertexFilter);
+	//tr_skim->SetBranchAddress("pprimaryVertexFilter",&pprimaryVertexFilter);
 	tr_skim->SetBranchAddress("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA);
-	tr_skim->SetBranchAddress("pPAprimaryVertexFilter",&pPAprimaryVertexFilter);
+	//tr_skim->SetBranchAddress("pPAprimaryVertexFilter",&pPAprimaryVertexFilter);
 
 	for(Int_t idir=0;idir<ndir;idir++)
 	{
@@ -167,8 +168,9 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 
 		// Set output branch addresses.
 		tr_out->Branch("pprimaryVertexFilter",&pprimaryVertexFilter,"pprimaryVertexFilter/I");
+		//tr_out->Branch("pprimaryVertexFilter",&pprimaryVertexFilter,"pprimaryVertexFilter/I");
 		tr_out->Branch("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA,"pPAcollisionEventSelectionPA/I");
-		tr_out->Branch("pPAprimaryVertexFilter",&pPAprimaryVertexFilter,"pPAprimaryVertexFilter/I");
+//		tr_out->Branch("pPAprimaryVertexFilter",&pPAprimaryVertexFilter,"pPAprimaryVertexFilter/I");
 		tr_out->Branch("hiHF",&hiHF,"hiHF/F");
 		tr_out->Branch("hiBin",&hiBin,"hiBin/I");
 		tr_out->Branch("nPhotons",&nPhotons,"nPhotons/I");
@@ -206,9 +208,9 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 
 			if(pthat > maxpthat) continue; 
 
-			//if(pprimaryVertexFilter == 0) continue;// skim selection cut
+			if(pprimaryVertexFilter == 0) continue;// skim selection cut
 			if(pPAcollisionEventSelectionPA == 0) continue;// skim selection cut
-			if(pPAprimaryVertexFilter== 0) continue;// skim selection cut
+//			if(pPAprimaryVertexFilter== 0) continue;// skim selection cut
 
 			if(nPhotons == 0) continue;// no photon event
 

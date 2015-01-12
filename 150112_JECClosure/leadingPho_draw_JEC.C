@@ -19,6 +19,7 @@
 #include "TLine.h"
 #include "stdio.h"
 #include <iostream>
+#include <sstream>
 
 void FillMeanSigma(Int_t ip, TH1F *h1F, TH1F *hArM, TH1F *hRMS, TH1F *hMean, TH1F *hSigma);
 TF1* FillGaussMeanSigma(Int_t ip, TH1F *h1F, TH1F *hMean, TH1F *hSigma);
@@ -49,19 +50,23 @@ const int nFile = 5;
 //const double weight[]={1., 1., 1., 1., 1.};
 const double weight[]={102400.0/102400.0, 39656.0/104640.0, 10157.0/104640.0, 2517.0/104640.0, 649.0/104640.0};
   
-void leadingPho_draw_JEC(const char *calgo="ak3PF",const char *calgoDir="ak3PF_gaus", bool savePlots=1, bool fitting=1){
-	TH1::SetDefaultSumw2();
+void leadingPho_draw_JEC(
+        const char* infile="/home/goyeonju/CMS/2015/gammaJetAnalysis/histogramProducer/forestFiles/pA/PA2013_pyquen_allQCDPhoton30to50_forestv85.root", 
+        TString calgo="ak3PF", bool savePlots=1, bool gausfitting=1)
+{
+
+    TH1::SetDefaultSumw2();
 	gStyle->SetOptStat(0);
 	gStyle->SetMarkerStyle(20);
-	//gStyle->SetTitleXSize(28);
 
-//	TFile* fin = new TFile("merged_pPb_leadingpho_eventselection.root");
-	TFile* fin = new TFile("merged_pPb_leadingpho_eventselection_photonThreshold30.root");
-	//TFile* fin = new TFile("merged_pPb_leadingpho_eventselection_photonThreshold40.root");
-	//TFile* fin = new TFile("merged_pPb_leadingpho.root");
-//	TFile* fin = new TFile("/u/user/goyeonju/2014/141015_JEC/CMSSW_5_3_20/src/JetMETAnalysis/JetAnalyzers/bin/merged_pPb_leadingpho_v7.root");
-
-	TTree* tree = (TTree*) fin -> Get(Form("%sJetAnalyzer/t", calgo)); 
+	TFile* fin = TFile::Open(infile,"readonly");
+    cout << infile << endl;
+    
+	TTree* tree = (TTree*) fin -> Get(calgo+"JetAnalyzer/t");
+	//TTree* tree = (TTree*) fin -> Get(calgo+"JetAnalyzer/t"Form("%sJetAnalyzer/t", calgo.str().c_str())); 
+    TString calgoDir;
+    if(savePlots==1) calgoDir =calgo+"_gaus";
+    if(savePlots==0) calgoDir =calgo+"_mean";
 
 //===========================================================================
 // to test weighting factor
@@ -96,16 +101,17 @@ void leadingPho_draw_JEC(const char *calgo="ak3PF",const char *calgoDir="ak3PF_g
 	//	tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0 && hiHF>20)",ptbins[i], ptbins[i+1]));
 		//tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0 && hiHF<=20)",ptbins[i], ptbins[i+1]));
 		ratio = (TH1F*)gDirectory->Get(hName);
-		if(fitting==0)	FillMeanSigma(i, ratio, hArM, hRMS, hMean, hSigma);
-		else if(fitting==1) fratio[i]= FillGaussMeanSigma(i, ratio, hMean, hSigma);
+		if(gausfitting==0)	FillMeanSigma(i, ratio, hArM, hRMS, hMean, hSigma);
+		else if(gausfitting==1) fratio[i]= FillGaussMeanSigma(i, ratio, hMean, hSigma);
 
 		d[i] = new TCanvas(Form("reco/gen_%d",(Int_t)ptbins[i]),Form("reco/gen_%d",(Int_t)ptbins[i]));
 		ratio->DrawClone();
 		if(savePlots)
-			d[i]->SaveAs(Form("%s/"+hName+".gif",calgoDir));
+			d[i]->SaveAs(calgoDir+"/"+hName+".gif");
+			//d[i]->SaveAs(Form("%s/"+hName+".gif",calgoDir));
 	}
 
-	TLegend *l1 = new TLegend(0.65, 0.60, 0.85, 0.80, calgoDir);
+    TLegend*l1 = new TLegend(0.65, 0.60, 0.85, 0.80, calgoDir);
 	TCanvas *c[4];
 	c[0] = new TCanvas("c_hMean","c_hMean");
 	c[0] -> cd();
@@ -118,8 +124,10 @@ void leadingPho_draw_JEC(const char *calgo="ak3PF",const char *calgoDir="ak3PF_g
 	l1->Draw();
 	if(savePlots)
 	{
-		c[0]->SaveAs(Form("%s/hMean.gif",calgoDir));
-		c[1]->SaveAs(Form("%s/hSigma.gif",calgoDir));
+		c[0]->SaveAs(calgoDir+"/hMean.gif");
+		c[1]->SaveAs(calgoDir+"/hSigma.gif");
+	    //c[0]->SaveAs(Form("%s/hMean.gif",calgoDir));
+		//c[1]->SaveAs(Form("%s/hSigma.gif",calgoDir));
 	}    
 
 }
