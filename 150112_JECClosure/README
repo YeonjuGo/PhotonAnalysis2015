@@ -1,0 +1,4 @@
+first : HI_run_pPb_2014.sh - run 'HI_weight_pPb_leadingPho.C' macro to apply leading photon away-side jet conditions and weight factor
+second : run_draw_JEC.sh - run 'leadingPho_draw_JEC.C' macro to draw (reco/gen) mean & sigma plots
+
+
