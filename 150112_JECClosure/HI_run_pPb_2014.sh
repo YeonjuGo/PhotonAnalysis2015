@@ -1,6 +1,17 @@
+#in MIT
+#The samples used to derive the forward pPb JEC have been re-forested using the derived JEC
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/mnt/hadoop/cms/store/user/luck/2014-photon-forests/pPblocalDBJECSampleClosureTest/HiForest_pPbJECClosure15.root","test/pPblocalDBJECSampleClosureTest15.root",30,84110.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/mnt/hadoop/cms/store/user/luck/2014-photon-forests/pPblocalDBJECSampleClosureTest/HiForest_pPbJECClosure30.root","test/pPblocalDBJECSampleClosureTest30.root",50,46533.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/mnt/hadoop/cms/store/user/luck/2014-photon-forests/pPblocalDBJECSampleClosureTest/HiForest_pPbJECClosure50.root","test/pPblocalDBJECSampleClosureTest50.root",80,13144.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/mnt/hadoop/cms/store/user/luck/2014-photon-forests/pPblocalDBJECSampleClosureTest/HiForest_pPbJECClosure80.root","test/pPblocalDBJECSampleClosureTest80.root",120,3096.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/mnt/hadoop/cms/store/user/luck/2014-photon-forests/pPblocalDBJECSampleClosureTest/HiForest_pPbJECClosure120.root","test/pPblocalDBJECSampleClosureTest120.root",9999,733.0)'
+
+list=`echo ./test/pPblocalDB*.root`
+hadd merged_pPblocalDBJECSampleClosureTest.root $list
+
 #in KNU
 #pPb MIX produced by Alex
-#: << 'END'
+: << 'aaa'
 root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton30.root","test/mixed_pPb30.root",50,102400.0)'
 root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton50.root","test/mixed_pPb50.root",80,39656.0)'
 root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton80.root","test/mixed_pPb80.root",120,10157.0)'
@@ -9,7 +20,7 @@ root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/for
 
 list=`echo ./test/mixed_pPb*.root`
 hadd merged_mixed_pPb.root $list
-#END
+aaa
 
 #in Korea University
 #pPb 2013 old sample to test macro
@@ -22,6 +33,5 @@ root -l -b -q 'HI_weight_pPb_leadingPho.C+("/home/goyeonju/CMS/2015/gammaJetAnal
 
 list=`echo ./test/old_pPb*.root`
 hadd merged_old_pPb.root $list
-
 END
 
