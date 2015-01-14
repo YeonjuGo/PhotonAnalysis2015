@@ -98,19 +98,19 @@ void leadingPho_draw_JEC(
 		TH1F* ratio;
 		if(i==nptbins-1) ratio = new TH1F(hName, Form("%d GeV< gen p_{T}<500 GeV;reco/gen p_{T}",(Int_t)ptbins[i]), 200, fitmin, fitmax);
 		else ratio = new TH1F(hName, Form("%d GeV< gen p_{T}<%d GeV;reco/gen p_{T}",(Int_t)ptbins[i],(Int_t)ptbins[i+1]), 200, fitmin, fitmax);
-		tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0)",ptbins[i], ptbins[i+1]));
-		//tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0)",ptbins[i], ptbins[i+1]));
+		//tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0)",ptbins[i], ptbins[i+1]));
+		tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0)",ptbins[i], ptbins[i+1]));
 	//	tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0 && hiHF>20)",ptbins[i], ptbins[i+1]));
 		//tree -> Draw(Form("jtpt/refpt >> reco_over_gen_pt_%d",(Int_t)ptbins[i]), Form("weight*(jtpt > %lf && jtpt < %lf && refpt>0 && refpt<1000 && jteta>-3.0 && jteta<3.0 && hiHF<=20)",ptbins[i], ptbins[i+1]));
 		ratio = (TH1F*)gDirectory->Get(hName);
 		if(gausfitting==0)	FillMeanSigma(i, ratio, hArM, hRMS, hMean, hSigma);
 		else if(gausfitting==1) fratio[i]= FillGaussMeanSigma(i, ratio, hMean, hSigma);
-
+/*
 		d[i] = new TCanvas(Form("reco/gen_%d",(Int_t)ptbins[i]),Form("reco/gen_%d",(Int_t)ptbins[i]));
 		ratio->DrawClone();
 		if(savePlots)
 			d[i]->SaveAs(calgoDir+"/"+hName+".gif");
-			//d[i]->SaveAs(Form("%s/"+hName+".gif",calgoDir));
+*/			//d[i]->SaveAs(Form("%s/"+hName+".gif",calgoDir));
 	}
 
     TLegend*l1 = new TLegend(0.65, 0.60, 0.85, 0.80, calgoDir);

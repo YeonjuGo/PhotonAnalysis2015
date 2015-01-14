@@ -79,15 +79,14 @@ void HI_weight_pPb_changeThreshold(const char *infile="/mnt/hadoop/cms/store/use
 	TTree *tr_skim = 0;
 	tr_skim = (TTree*)fin->Get("skimanalysis/HltTree");
 	tr_skim->SetBranchAddress("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA);
-	tr_skim->SetBranchAddress("pPAprimaryVertexFilter",&pPAprimaryVertexFilter);
+	//tr_skim->SetBranchAddress("pPAprimaryVertexFilter",&pPAprimaryVertexFilter);
 	tr_skim->SetBranchStatus("*",0,0);
 	tr_skim->SetBranchStatus("pPAcollisionEventSelectionPA",1,0);
-	tr_skim->SetBranchStatus("pPAprimaryVertexFilter",1,0);
+	//tr_skim->SetBranchStatus("pPAprimaryVertexFilter",1,0);
 
 
         float ptgen[1000]; 
 	float etagen[1000];
-	float phigen[1000];
         int mult;
 	int pdg[1000];
 	TTree *tr_gen = 0;
@@ -106,12 +105,14 @@ void HI_weight_pPb_changeThreshold(const char *infile="/mnt/hadoop/cms/store/use
 	int nPhotons;
 	float pt[1000];
 	float hadronicOverEm[1000];
+	float eta[1000];
 	float phi[1000];
 	int isGenMatched[1000];
 	int genMomId[1000];
 	tr_pho->SetBranchAddress("nPhotons",&nPhotons);
 	tr_pho->SetBranchAddress("pt",pt);
 	tr_pho->SetBranchAddress("hadronicOverEm",hadronicOverEm);
+	tr_pho->SetBranchAddress("eta",eta);
 	tr_pho->SetBranchAddress("phi",phi);
 	tr_pho->SetBranchAddress("isGenMatched",isGenMatched);
 	tr_pho->SetBranchAddress("genMomId",genMomId);
@@ -119,6 +120,7 @@ void HI_weight_pPb_changeThreshold(const char *infile="/mnt/hadoop/cms/store/use
 	tr_pho->SetBranchStatus("nPhotons",1,0);
 	tr_pho->SetBranchStatus("pt",1,0);
 	tr_pho->SetBranchStatus("hadronicOverEm",1,0);
+	tr_pho->SetBranchStatus("eta",1,0);
 	tr_pho->SetBranchStatus("phi",1,0);
 	tr_pho->SetBranchStatus("isGenMatched",1,0);
 	tr_pho->SetBranchStatus("genMomId",1,0);
@@ -193,7 +195,7 @@ void HI_weight_pPb_changeThreshold(const char *infile="/mnt/hadoop/cms/store/use
 		// Set output branch addresses.
 	//	tr_out->Branch("pprimaryVertexFilter",&pprimaryVertexFilter,"pprimaryVertexFilter/I");
 		tr_out->Branch("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA,"pPAcollisionEventSelectionPA/I");
-		tr_out->Branch("pPAprimaryVertexFilter",&pPAprimaryVertexFilter,"pPAprimaryVertexFilter/I");
+//		tr_out->Branch("pPAprimaryVertexFilter",&pPAprimaryVertexFilter,"pPAprimaryVertexFilter/I");
 		tr_out->Branch("mult",&mult,"mult/I");
 		tr_out->Branch("pdg",pdg,"pdg[mult]/I");
 		tr_out->Branch("ptgen",ptgen,"ptgen[mult]/F");
@@ -205,7 +207,12 @@ void HI_weight_pPb_changeThreshold(const char *infile="/mnt/hadoop/cms/store/use
 		tr_out->Branch("hiBin",&hiBin,"hiBin/I");
 		tr_out->Branch("nPhotons",&nPhotons,"nPhotons/I");
 		tr_out->Branch("pt",pt,"pt[nPhotons]/F");
-		tr_out->Branch("hiBin",&hiBin,"hiBin/I");
+		tr_out->Branch("hadronicOverEm",hadronicOverEm, "hadronicOverEm[nPhotons]/F");
+		tr_out->Branch("eta",eta,"eta[nPhotons]/F");
+		tr_out->Branch("phi",phi,"phi[nPhotons]/F");
+		tr_out->Branch("isGenMatched",isGenMatched,"isGenMatched[nPhotons]/I");
+		tr_out->Branch("genMomId",genMomId,"genMomId[nPhotons]/I");
+
 		tr_out->Branch("nref",&nref,"nref/I");
 		tr_out->Branch("pthat",&pthat,"pthat/F");
 		tr_out->Branch("weight",&weight,"weight/F");

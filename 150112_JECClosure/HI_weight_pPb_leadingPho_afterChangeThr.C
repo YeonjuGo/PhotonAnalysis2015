@@ -28,7 +28,7 @@ const double xsec[12][3] ={{2.034e-01,15,30}, //! 15
 
 float GetXsec(float/*maxpthat*/);
 
-void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/belt/Validations53X/Track8_Jet29_cut1/QCDpT15_2011RECO_STARTHI53_LV1_5_3_16_Track8_Jet29_1GeVcut_badJEC_forest.root",
+void HI_weight_pPb_leadingPho_afterChangeThr(const char *infile="/mnt/hadoop/cms/store/user/belt/Validations53X/Track8_Jet29_cut1/QCDpT15_2011RECO_STARTHI53_LV1_5_3_16_Track8_Jet29_1GeVcut_badJEC_forest.root",
 		const char *outfile="test_corr_MC.root",
 		float maxpthat=30.,
 		float xSection=1.075e-02
@@ -62,44 +62,7 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 
 	TFile *fout=new TFile(outfile,"RECREATE");
 
-	TTree *tr_in=0, *tr_out=0, *tr_pho=0;
-	Int_t           hiBin;
-	Float_t           hiHF;
-
-	TTree *tr_ev = 0;
-	tr_ev = (TTree*)fin->Get("hiEvtAnalyzer/HiTree");
-	tr_ev->SetBranchAddress("hiHF",&hiHF);
-	tr_ev->SetBranchAddress("hiBin",&hiBin);
-	tr_ev->SetBranchStatus("*",0,0);
-	tr_ev->SetBranchStatus("hiBin",1,0);
-	tr_ev->SetBranchStatus("hiHF",1,0);
-
-	Int_t	pprimaryVertexFilter, pPAcollisionEventSelectionPA, pPAprimaryVertexFilter;
-	TTree *tr_skim = 0;
-	tr_skim = (TTree*)fin->Get("skimanalysis/HltTree");
-	//tr_skim->SetBranchAddress("pprimaryVertexFilter",&pprimaryVertexFilter);
-	//tr_skim->SetBranchAddress("pprimaryVertexFilter",&pprimaryVertexFilter);
-	tr_skim->SetBranchAddress("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA);
-	//tr_skim->SetBranchAddress("pPAprimaryVertexFilter",&pPAprimaryVertexFilter);
-
-	tr_pho = (TTree*)fin->Get("multiPhotonAnalyzer/photon");
-	//Declaration of leaves types of photon tree for leading photon.
-	//
-	int nPhotons;
-	float pt[1000];
-	float hadronicOverEm[1000];
-	float phi[1000];
-	int isGenMatched[1000];
-	int genMomId[1000];
-
-
-	tr_pho->SetBranchAddress("nPhotons",&nPhotons);
-	tr_pho->SetBranchAddress("pt",pt);
-	tr_pho->SetBranchAddress("hadronicOverEm",hadronicOverEm);
-	tr_pho->SetBranchAddress("phi",phi);
-	tr_pho->SetBranchAddress("isGenMatched",isGenMatched);
-	tr_pho->SetBranchAddress("genMomId",genMomId);
-
+	TTree *tr_in=0, *tr_out=0;
 
 	for(Int_t idir=0;idir<ndir;idir++)
 	{
@@ -134,6 +97,43 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 		float refparton_pt[1000];
 		int refparton_flavor[1000];
 		int subid[1000];
+		int nPhotons;
+		float pt[1000];
+		float hadronicOverEm[1000];
+		float eta[1000];
+		float phi[1000];
+		int isGenMatched[1000];
+		int genMomId[1000];
+		int hiBin;
+		float hiHF;
+		int pPAcollisionEventSelectionPA;
+		int mult;
+		int pdg[1000];
+		float ptgen[1000];
+		float etagen[1000];
+		int nPhogen;
+		int leadingPhoIndex[1000];
+		float leadingPhoPt;
+
+
+
+		tr_in->SetBranchAddress("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA);
+		tr_in->SetBranchAddress("hiHF",&hiHF);
+		tr_in->SetBranchAddress("hiBin",&hiBin);
+		tr_in->SetBranchAddress("nPhotons",&nPhotons);
+		tr_in->SetBranchAddress("pt",pt);
+		tr_in->SetBranchAddress("hadronicOverEm",hadronicOverEm);
+		tr_in->SetBranchAddress("eta",eta);
+		tr_in->SetBranchAddress("phi",phi);
+		tr_in->SetBranchAddress("isGenMatched",isGenMatched);
+		tr_in->SetBranchAddress("genMomId",genMomId);
+		tr_in->SetBranchAddress("mult",&mult);
+		tr_in->SetBranchAddress("pdg",pdg);
+		tr_in->SetBranchAddress("ptgen",ptgen);
+		tr_in->SetBranchAddress("etagen",etagen);
+		tr_in->SetBranchAddress("nPhogen",&nPhogen);
+		tr_in->SetBranchAddress("leadingPhoIndex",leadingPhoIndex);
+		tr_in->SetBranchAddress("leadingPhoPt",&leadingPhoPt);
 
 		tr_in->SetBranchAddress("nref",&nref);
 		tr_in->SetBranchAddress("pthat",&pthat);
@@ -156,26 +156,32 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 		tr_in->SetBranchAddress("subid",subid);
 		cout<<"get jet trees!!! "<<endl;
 
-		//! Add Friends to the TTree
-		tr_in->AddFriend(tr_ev);
-		tr_in->AddFriend(tr_pho);
-		tr_in->AddFriend(tr_skim);
-
 		fout->mkdir(DirName[idir].c_str());
 		fout->cd(DirName[idir].c_str());
 
 		tr_out = new TTree("t","Jet  Response Analyzer");
 		tr_out->SetMaxTreeSize(4200000000);
 
-		// Set output branch addresses.
-	//	tr_out->Branch("pprimaryVertexFilter",&pprimaryVertexFilter,"pprimaryVertexFilter/I");
-		//tr_out->Branch("pprimaryVertexFilter",&pprimaryVertexFilter,"pprimaryVertexFilter/I");
 		tr_out->Branch("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA,"pPAcollisionEventSelectionPA/I");
-//		tr_out->Branch("pPAprimaryVertexFilter",&pPAprimaryVertexFilter,"pPAprimaryVertexFilter/I");
 		tr_out->Branch("nPhotons",&nPhotons,"nPhotons/I");
 		tr_out->Branch("pt",pt,"pt[nPhotons]/F");
 		tr_out->Branch("hiBin",&hiBin,"hiBin/I");
 		tr_out->Branch("hiHF",&hiHF,"hiHF/F");
+		tr_out->Branch("nPhotons",&nPhotons,"nPhotons/I");
+		tr_out->Branch("pt",pt,"pt[nPhotons]/F");
+		tr_out->Branch("hadronicOverEm",hadronicOverEm, "hadronicOverEm[nPhotons]/F");
+		tr_out->Branch("eta",eta,"eta[nPhotons]/F");
+		tr_out->Branch("phi",phi,"phi[nPhotons]/F");
+		tr_out->Branch("isGenMatched",isGenMatched,"isGenMatched[nPhotons]/I");
+		tr_out->Branch("genMomId",genMomId,"genMomId[nPhotons]/I");
+		tr_out->Branch("mult",&mult,"mult/I");
+		tr_out->Branch("pdg",pdg,"pdg[mult]/I");
+		tr_out->Branch("ptgen",ptgen,"ptgen[mult]/F");
+		tr_out->Branch("etagen",etagen,"etagen[mult]/F");
+		tr_out->Branch("nPhogen",&nPhogen,"nPhogen/I");
+		tr_out->Branch("leadingPhoIndex",leadingPhoIndex,"leadingPhoIndex[mult]/I");
+		tr_out->Branch("leadingPhoPt",&leadingPhoPt,"leadingPhoPt/F");
+		
 		tr_out->Branch("nref",&nref,"nref/I");
 		tr_out->Branch("pthat",&pthat,"pthat/F");
 		tr_out->Branch("weight",&weight,"weight/F");
@@ -203,15 +209,10 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 		for (Long64_t i=0; i<fentries;i++) 
 		{
 			nbytes += tr_in->GetEntry(i);
-			tr_pho->GetEntry(i);
-			tr_ev->GetEntry(i);
-			tr_skim->GetEntry(i);
 
 			if(pthat > maxpthat) continue; 
 
-	//		if(pprimaryVertexFilter == 0) continue;// skim selection cut
 			if(pPAcollisionEventSelectionPA == 0) continue;// skim selection cut
-//			if(pPAprimaryVertexFilter== 0) continue;// skim selection cut
 
 			if(nPhotons == 0) continue;// no photon event
 
