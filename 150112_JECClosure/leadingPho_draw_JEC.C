@@ -105,12 +105,13 @@ void leadingPho_draw_JEC(
 		ratio = (TH1F*)gDirectory->Get(hName);
 		if(gausfitting==0)	FillMeanSigma(i, ratio, hArM, hRMS, hMean, hSigma);
 		else if(gausfitting==1) fratio[i]= FillGaussMeanSigma(i, ratio, hMean, hSigma);
-/*
+    #if 0
 		d[i] = new TCanvas(Form("reco/gen_%d",(Int_t)ptbins[i]),Form("reco/gen_%d",(Int_t)ptbins[i]));
 		ratio->DrawClone();
 		if(savePlots)
 			d[i]->SaveAs(calgoDir+"/"+hName+".gif");
-*/			//d[i]->SaveAs(Form("%s/"+hName+".gif",calgoDir));
+			//d[i]->SaveAs(Form("%s/"+hName+".gif",calgoDir));
+    #endif
 	}
 
     TLegend*l1 = new TLegend(0.65, 0.60, 0.85, 0.80, calgoDir);
