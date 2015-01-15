@@ -13,19 +13,20 @@ bbb
 
 #in KNU
 #pPb MIX produced by Alex
-: << 'aaa'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton30.root","test/mixed_pPb30.root",50,102400.0)'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton50.root","test/mixed_pPb50.root",80,39656.0)'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton80.root","test/mixed_pPb80.root",120,10157.0)'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton120.root","test/mixed_pPb120.root",170,2517.0)'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton170.root","test/mixed_pPb170.root",9999,649.0)'
+#: << 'aaa'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton30.root","test/MIX_pPb30.root",50,102400.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton50.root","test/MIX_pPb50.root",80,39656.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton80.root","test/MIX_pPb80.root",120,10157.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton120.root","test/MIX_pPb120.root",170,2517.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton170.root","test/MIX_pPb170.root",9999,649.0)'
 
-list=`echo ./test/mixed_pPb*.root`
-hadd merged_mixed_pPb.root $list
-aaa
+list=`echo ./test/MIX_pPb*.root`
+hadd merged_MIX_pPb.root $list
+#aaa
 
 #in Korea University
 #pPb 2013 old sample to test macro
+:<<'ccc'
 root -l -b -q 'HI_weight_pPb_leadingPho.C+("/home/goyeonju/CMS/2015/gammaJetAnalysis/histogramProducer/forestFiles/pA/PA2013_pyquen_allQCDPhoton30to50_forestv85.root","test/old_pPb30.root",50,56669.0)'
 root -l -b -q 'HI_weight_pPb_leadingPho.C+("/home/goyeonju/CMS/2015/gammaJetAnalysis/histogramProducer/forestFiles/pA/PA2013_pyquen_allQCDPhoton50to80_forestv85.root","test/old_pPb50.root",80,41906.0)'
 root -l -b -q 'HI_weight_pPb_leadingPho.C+("/home/goyeonju/CMS/2015/gammaJetAnalysis/histogramProducer/forestFiles/pA/PA2013_pyquen_allQCDPhoton80to120_forestv85.root","test/old_pPb80.root",120,12044.0)'
@@ -33,6 +34,7 @@ root -l -b -q 'HI_weight_pPb_leadingPho.C+("/home/goyeonju/CMS/2015/gammaJetAnal
 
 #list=`echo ./test/old_pPb*.root`
 #hadd merged_old_pPb.root $list
+ccc
 
 : << 'bbb'
 root -l -b -q 'HI_weight_pPb_leadingPho.C+("/home/goyeonju/CMS/2015/gammaJetAnalysis/histogramProducer/forestFiles/pA/pA_Pyquen_allQCDPhoton30_hiForest2_53x_2013-18-14-1922.root","test/old_pPb30_53x_2013-18-14-1922.root",50,56669.0)'
