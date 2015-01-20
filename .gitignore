@@ -12,6 +12,7 @@ AutoDict*
 *.swp
 *~
 *\#
+*C_ACLiC*
 
 gammaJetAnalysis
 gammaJetSystematics
@@ -21,4 +22,3 @@ photonJetAnalysis2013
 plotsHIN_11_010_thesis
 HiForestAnalysis
 photonHadron2014
-centrality
