@@ -1,4 +1,6 @@
 // Author Yeonju Go
+// last modification : 2015/01/27 
+// 
 #include "TFile.h"
 #include "TTree.h"
 #include "TLine.h"
@@ -32,7 +34,7 @@ void tower_data_mc_number()
 // Get Trees from data & mc files.
 // ===================================================================================
 
-    TFile *dataf = new TFile("/home/goyeonju/recent2013/jetAnalysis/140916_centrality/files/HiForest_20141011.root");
+    TFile *dataf = new TFile("/home/goyeonju/CMS/Files/centrality/HiForest_PbPb_minbias_DATA_20141011_53X_byKisoo.root");
     TTree *datat_evt = (TTree*) dataf -> Get("hiEvtAnalyzer/HiTree");
     TTree *datat_skim = (TTree*) dataf -> Get("skimanalysis/HltTree");
     TTree *datat_hlt = (TTree*) dataf -> Get("hltanalysis/HltTree");
@@ -51,7 +53,7 @@ void tower_data_mc_number()
     int Npf_dataEntries = datat_pfTower -> GetEntries();
     cout << "# of rec DATA entries = "  << Nrec_dataEntries << ", pf DATA entries = " << Npf_dataEntries<< endl;
 
-    TFile *mcf = new TFile("/home/goyeonju/recent2013/jetAnalysis/140916_centrality/files/centrality_PbPb_minbias_MC.root");
+    TFile *mcf = new TFile("/home/goyeonju/CMS/Files/centrality/HiForest_HydjetMB_730_53XBS_merged.root");
     TTree *mct_evt = (TTree*) mcf -> Get("hiEvtAnalyzer/HiTree");
     TTree *mct_skim = (TTree*) mcf -> Get("skimanalysis/HltTree");
     TTree *mct_hlt = (TTree*) mcf -> Get("hltanalysis/HltTree");
@@ -81,51 +83,52 @@ void tower_data_mc_number()
     TH1D* data_rec_n[5];
     TH1D* mc_pf_n[5];
     TH1D* mc_rec_n[5];
-    TH1D* effi_pf_n[5];// effi = data/mc
-    TH1D* effi_rec_n[5];// effi = data/mc
-    for(int i=0; i<Ncut; i++)
-    {
-        data_pf_n[i] = new TH1D(Form("data_pf_n%d",i), ";pfTowers/n;Normalized Events",200,0,4500);
+    TH1D* ratio_pf_n[5];// ratio = data/mc
+    TH1D* ratio_rec_n[5];// ratio = data/mc
+ //   for(int i=0; i<Ncut; i++)
+ //   {
+    int i = 4;
+        data_pf_n[i] = new TH1D(Form("data_pf_n%d",i), ";(pfTowers) Number of HF towers above threshold;Normalized Events",200,0,1000);
         data_pf_n[i] -> SetMarkerStyle(20);
         data_pf_n[i] -> SetMarkerSize(0.7);
         data_pf_n[i] -> SetMarkerColor(21+i);
         data_pf_n[i] -> SetLabelSize(0.03);
 
-        mc_pf_n[i] = new TH1D(Form("mc_pf_n%d",i), ";pfTowers/n;Normalized Events",200,0,4500);
+        mc_pf_n[i] = new TH1D(Form("mc_pf_n%d",i), ";(pfTowers) Number of HF towers above threshold;Normalized Events",200,0,1000);
        // mc_pf_n[i] -> SetMarkerStyle(24+i);
        // mc_pf_n[i] -> SetMarkerSize(0.7);
         mc_pf_n[i] -> SetMarkerColor(21+i); //marker color
         mc_pf_n[i] -> SetLineColor(21+i); //line color
         mc_pf_n[i] -> SetLabelSize(0.03);
    
-        data_rec_n[i] = new TH1D(Form("data_rec_n%d",i), ";rechitTowers/n;Normalized Events",200,0,4500);
+        data_rec_n[i] = new TH1D(Form("data_rec_n%d",i), ";(rechitTowers) Number of HF towers above threshold;Normalized Events",200,0,1000);
         data_rec_n[i] -> SetMarkerStyle(20);
         data_rec_n[i] -> SetMarkerSize(0.7);
         data_rec_n[i] -> SetMarkerColor(31+i);
         data_rec_n[i] -> SetLabelSize(0.03);
 
-        mc_rec_n[i] = new TH1D(Form("mc_rec_n%d",i), ";rechitTowers/n;Normalized Events",200,0,4500);
+        mc_rec_n[i] = new TH1D(Form("mc_rec_n%d",i), ";(rechitTowers) Number of HF towers above threshold;Normalized Events",200,0,1000);
        // mc_rec_n[i] -> SetMarkerStyle(24+i);
        // mc_rec_n[i] -> SetMarkerSize(0.7);
         mc_rec_n[i] -> SetMarkerColor(31+i); //marker color
         mc_rec_n[i] -> SetLineColor(31+i); //line color
         mc_rec_n[i] -> SetLabelSize(0.03);
         
-        effi_pf_n[i] = new TH1D(Form("effi_pf_n%d",i), ";pfTowers/n;DATA/MC",200,0,4500);
-        effi_pf_n[i] -> SetMarkerStyle(20);
-        effi_pf_n[i] -> SetMarkerSize(0.7);
-        effi_pf_n[i] -> SetMarkerColor(21+i);
-        effi_pf_n[i] -> SetLabelSize(0.03);
-        effi_pf_n[i] -> SetAxisRange(0.5,1.5,"Y");
+        ratio_pf_n[i] = new TH1D(Form("ratio_pf_n%d",i), ";(pfTowers) Number of HF towers above threshold;DATA/MC",200,0,1000);
+        ratio_pf_n[i] -> SetMarkerStyle(20);
+        ratio_pf_n[i] -> SetMarkerSize(0.7);
+        ratio_pf_n[i] -> SetMarkerColor(21+i);
+        ratio_pf_n[i] -> SetLabelSize(0.03);
+        ratio_pf_n[i] -> SetAxisRange(0.5,1.5,"Y");
 
-        effi_rec_n[i] = new TH1D(Form("effi_rec_n%d",i), ";rechitTowers/n;DATA/MC",200,0,4500);
-        effi_rec_n[i] -> SetMarkerStyle(20);
-        effi_rec_n[i] -> SetMarkerSize(0.7);
-        effi_rec_n[i] -> SetMarkerColor(31+i);
-        effi_rec_n[i] -> SetLabelSize(0.03);
-        effi_rec_n[i] -> SetAxisRange(0.5,1.5,"Y");
+        ratio_rec_n[i] = new TH1D(Form("ratio_rec_n%d",i), ";(rechitTowers) Number of HF towers above threshold;DATA/MC",200,0,1000);
+        ratio_rec_n[i] -> SetMarkerStyle(20);
+        ratio_rec_n[i] -> SetMarkerSize(0.7);
+        ratio_rec_n[i] -> SetMarkerColor(31+i);
+        ratio_rec_n[i] -> SetLabelSize(0.03);
+        ratio_rec_n[i] -> SetAxisRange(0.5,1.5,"Y");
 
-    }
+   // }
 
    
 // ===============================================================================================
@@ -141,7 +144,7 @@ void tower_data_mc_number()
     data_pf_n[2] = (TH1D*)gDirectory->Get("data_pf_n2");
     datat_pfTower -> Draw("et >>+ data_pf_n3",eventCut &&  "HLT_HIMinBiasHfOrBSC_v1==1 && phfCoincFilter3==1");
     data_pf_n[3] = (TH1D*)gDirectory->Get("data_pf_n3");
-  */  datat_pfTower -> Draw("n >>+ data_pf_n4",eventCut && threCut && "HLT_HIMinBiasHfOrBSC_v1==1 && pcollisionEventSelection==1");
+  */  datat_pfTower -> Draw("Sum$(abs(tower.eta) > 2.87 && tower.et > 0.5) >>+ data_pf_n4",eventCut && "HLT_HIMinBiasHfOrBSC_v1==1 && pcollisionEventSelection==1");
     data_pf_n[4] = (TH1D*)gDirectory->Get("data_pf_n4");
     cout << "data_pf_n finished"<< endl;
 
@@ -153,7 +156,7 @@ void tower_data_mc_number()
     mc_pf_n[2] = (TH1D*)gDirectory->Get("mc_pf_n2");
     mct_pfTower -> Draw("et >>+ mc_pf_n3","phfCoincFilter3==1");
     mc_pf_n[3] = (TH1D*)gDirectory->Get("mc_pf_n3");
- */   mct_pfTower -> Draw("n >>+ mc_pf_n4",threCut && "pcollisionEventSelection==1");
+ */   mct_pfTower -> Draw("Sum$(abs(tower.eta) > 2.87 && tower.et > 0.5) >> mc_pf_n4","pcollisionEventSelection==1");
     mc_pf_n[4] = (TH1D*)gDirectory->Get("mc_pf_n4");
     cout << "mc_pf_n"<< endl;
 
@@ -165,7 +168,7 @@ void tower_data_mc_number()
     data_rec_n[2] = (TH1D*)gDirectory->Get("data_rec_n2");
     datat_recTower -> Draw("et >>+ data_rec_n3",eventCut &&  "HLT_HIMinBiasHfOrBSC_v1==1 && phfCoincFilter3==1");
     data_rec_n[3] = (TH1D*)gDirectory->Get("data_rec_n3");
-  */  datat_recTower -> Draw("n >>+ data_rec_n4",eventCut &&threCut &&   "HLT_HIMinBiasHfOrBSC_v1==1 && pcollisionEventSelection==1");
+  */  datat_recTower -> Draw("Sum$(abs(tower.eta) > 2.87 && tower.et > 0.5) >> data_rec_n4",eventCut && "HLT_HIMinBiasHfOrBSC_v1==1 && pcollisionEventSelection==1");
     data_rec_n[4] = (TH1D*)gDirectory->Get("data_rec_n4");
 
 //    mct_recTower -> Draw("et >>+ mc_rec_n0");
@@ -176,12 +179,12 @@ void tower_data_mc_number()
     mc_rec_n[2] = (TH1D*)gDirectory->Get("mc_rec_n2");
     mct_recTower -> Draw("et >>+ mc_rec_n3","phfCoincFilter3==1");
     mc_rec_n[3] = (TH1D*)gDirectory->Get("mc_rec_n3");
-  */  mct_recTower -> Draw("n >>+ mc_rec_n4",threCut && "pcollisionEventSelection==1");
+  */  mct_recTower -> Draw("Sum$(abs(tower.eta) > 2.87 && tower.et > 0.5) >> mc_rec_n4", "pcollisionEventSelection==1");
     mc_rec_n[4] = (TH1D*)gDirectory->Get("mc_rec_n4");
 
     //for(int i=0; i<Ncut; i++){
-    int i=4;    
-    data_pf_n[i] -> Scale(1./data_pf_n[i]->Integral("width"));
+    //int i=4;    
+        data_pf_n[i] -> Scale(1./data_pf_n[i]->Integral("width"));
         data_rec_n[i] -> Scale(1./data_rec_n[i]->Integral("width"));
         mc_pf_n[i] -> Scale(1./mc_pf_n[i]->Integral("width"));
         mc_rec_n[i] -> Scale(1./mc_rec_n[i]->Integral("width"));
@@ -190,8 +193,8 @@ void tower_data_mc_number()
         mc_pf_n[i] -> Scale(1./Npf_mcEntries);
         mc_rec_n[i] -> Scale(1./Nrec_mcEntries);
 */  //  }
-    effi_pf_n[i] -> Divide(data_pf_n[i],mc_pf_n[i]);
-    effi_rec_n[i] -> Divide(data_rec_n[i],mc_rec_n[i]);
+    ratio_pf_n[i] -> Divide(data_pf_n[i],mc_pf_n[i]);
+    ratio_rec_n[i] -> Divide(data_rec_n[i],mc_rec_n[i]);
  
 
  
@@ -250,10 +253,10 @@ void tower_data_mc_number()
     leg->AddEntry(mc_rec_n[4],"rechitTower MC","l");
     leg->Draw();
  
-    TCanvas *c_compare_n_effi = new TCanvas("c_compare_n_effi", "c_compare_n_effi", 400,200);
-    effi_pf_n[4] -> Draw("ep");
-    effi_rec_n[4] -> Draw("same ep");
-    c_compare_n_effi->SaveAs("pdf/tower_n_effi.pdf");
+    TCanvas *c_compare_n_ratio = new TCanvas("c_compare_n_ratio", "c_compare_n_ratio", 400,200);
+    ratio_pf_n[4] -> Draw("ep");
+    ratio_rec_n[4] -> Draw("same ep");
+    c_compare_n_ratio->SaveAs("pdf/tower_n_ratio.pdf");
    // leg->Draw();
 
     c_compare_n -> SaveAs("pdf/tower_n.pdf");
