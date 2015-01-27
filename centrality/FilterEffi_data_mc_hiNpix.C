@@ -31,8 +31,8 @@ void FilterEffi_data_mc_hiNpix()
     TH1::SetDefaultSumw2();
     gStyle -> SetOptStat(0);
     
-    TFile *dataf = new TFile("/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/centralityDATA/merging-forest/HiForest_100_1_pKq.root");//in KNU server
-    //TFile *dataf = new TFile("files/HiForest_20141011.root");
+    //TFile *dataf = new TFile("/u/user/goyeonju/PRODUCTION/CMSSW_5_3_20/src/centralityDATA/merging-forest/HiForest_100_1_pKq.root");//in KNU server
+    TFile *dataf = new TFile("/home/goyeonju/CMS/Files/centrality/HiForest_PbPb_minbias_DATA_20141011_53X_byKisoo.root"); // in Korea University server
     TTree *datat_evt = (TTree*) dataf -> Get("hiEvtAnalyzer/HiTree");
     TTree *datat_skim = (TTree*) dataf -> Get("skimanalysis/HltTree");
     TTree *datat_hlt = (TTree*) dataf -> Get("hltanalysis/HltTree");
@@ -41,7 +41,8 @@ void FilterEffi_data_mc_hiNpix()
     double Nevt_datat = datat_evt -> GetEntries();
     cout << "# of DATA events = " << Nevt_datat << endl;
 
-    TFile *mcf = new TFile("/u/user/goyeonju/files/centrality/HiForest_HydjetMB_730_53XBS_merged.root");//in KNU server
+    //TFile *mcf = new TFile("/u/user/goyeonju/files/centrality/HiForest_HydjetMB_730_53XBS_merged.root");//in KNU server
+    TFile *mcf = new TFile("/home/goyeonju/CMS/Files/centrality/HiForest_HydjetMB_730_53XBS_merged.root"); // in Korea University server
     TTree *mct_evt = (TTree*) mcf -> Get("hiEvtAnalyzer/HiTree");
     TTree *mct_skim = (TTree*) mcf -> Get("skimanalysis/HltTree");
     TTree *mct_hlt = (TTree*) mcf -> Get("hltanalysis/HltTree");
@@ -52,10 +53,10 @@ void FilterEffi_data_mc_hiNpix()
 
 
 //======================================
-//HF sum!!
+// hiNpix!!
 //======================================
 
-    const double hiNpix_bins[] = {0,2,5,10,15,20,30,40,50,60,70,80,90,100,200,300,400,500,1000,2000,3000,4000,5000};
+    const double hiNpix_bins[] = {0,2,5,10,15,20,30,40,50,60,70,80,90,100,200,300,400,500,1000,2000,3000,4000,5000,10000};
     const int n_hiNpix_bins = sizeof(hiNpix_bins)/sizeof(double) - 1;
     
     TLine* t1 = new TLine(0,1,1000,1);
@@ -67,17 +68,15 @@ void FilterEffi_data_mc_hiNpix()
     TH1D *hiNpix_mc[5];
     for(int i=0; i<Ncut; i++)
     {
-       // hiNpix_data[i] = new TH1D(Form("hiNpix_data%d",i), ";hiNpix;Normalized Events",n_hiNpix_bins, hiNpix_bins);
-        hiNpix_data[i] = new TH1D(Form("hiNpix_data%d",i), ";hiNpix;Normalized Events",100,0,5000);
+        hiNpix_data[i] = new TH1D(Form("hiNpix_data%d",i), ";hiNpix;Normalized Events",n_hiNpix_bins, hiNpix_bins); // when you look at efficiency
+       // hiNpix_data[i] = new TH1D(Form("hiNpix_data%d",i), ";hiNpix;Normalized Events",100,0,10000); // when you look at the whole distribution
         hiNpix_data[i] -> SetMarkerStyle(20+i);
         hiNpix_data[i] -> SetMarkerSize(0.7);
         hiNpix_data[i] -> SetMarkerColor(kRed+i);
         hiNpix_data[i] -> SetLabelSize(0.03);
    	
-	hiNpix_mc[i] = new TH1D(Form("hiNpix_mc%d",i), ";hiNpix;Normalized Events",n_hiNpix_bins, hiNpix_bins);
-	hiNpix_mc[i] = new TH1D(Form("hiNpix_mc%d",i), ";hiNpix;Normalized Events",100,0,5000);
-        //hiNpix_mc[i] -> SetMarkerStyle(20);
-        //hiNpix_mc[i] -> SetMarkerSize(1.0);
+	    hiNpix_mc[i] = (TH1D*) hiNpix_data[i] -> Clone(Form("hiNpix_mc%d",i));
+        hiNpix_mc[i] -> SetMarkerStyle(1); //marker point
         hiNpix_mc[i] -> SetLineColor(2+i); //line color
         hiNpix_mc[i] -> SetLabelSize(0.03);
     }
@@ -106,7 +105,19 @@ void FilterEffi_data_mc_hiNpix()
     mct_evt -> Draw("hiNpix >>+ hiNpix_mc4","pcollisionEventSelection==1");
     hiNpix_mc[4] = (TH1D*)gDirectory->Get("hiNpix_mc4");
 
-    TLegend* l1 = new TLegend(0.3, 0.65, 0.6, 0.80, "PbPb Minbias rereco DATA");
+    cout << "hiNpix_mc[0] () Entries : " << hiNpix_mc[0]->GetEntries() << endl;
+    cout << "hiNpix_mc[1] (pprimaryVertexFilter==1) Entries : " << hiNpix_mc[1]->GetEntries() << endl;
+    cout << "hiNpix_mc[2] (phltPixelClusterShapeFilter==1) Entries : " << hiNpix_mc[2]->GetEntries() << endl;
+    cout << "hiNpix_mc[3] (phfCoincFilter3==1) Entries : " << hiNpix_mc[3]->GetEntries() << endl;
+    cout << "hiNpix_mc[4] (pcollisionEventSelection==1) Entries : " << hiNpix_mc[4]->GetEntries() << endl;
+
+    cout << "hiNpix_data[0] () Entries : " << hiNpix_data[0]->GetEntries() << endl;
+    cout << "hiNpix_data[1] (pprimaryVertexFilter==1) Entries : " << hiNpix_data[1]->GetEntries() << endl;
+    cout << "hiNpix_data[2] (phltPixelClusterShapeFilter==1) Entries : " << hiNpix_data[2]->GetEntries() << endl;
+    cout << "hiNpix_data[3] (phfCoincFilter3==1) Entries : " << hiNpix_data[3]->GetEntries() << endl;
+    cout << "hiNpix_data[4] (pcollisionEventSelection==1) Entries : " << hiNpix_data[4]->GetEntries() << endl;
+   
+    TLegend* l1 = new TLegend(0.3, 0.65, 0.6, 0.80, "PbPb Minbias DATA");
    // l1 -> AddEntry((TObject*)0, "PbPb Minbias rereco DATA"); 
     l1 -> AddEntry(hiNpix_data[0], "No filters");
     l1 -> AddEntry(hiNpix_data[1], "primay vertex filter");
@@ -122,7 +133,7 @@ void FilterEffi_data_mc_hiNpix()
     l1_mc -> AddEntry(hiNpix_mc[3], "HF coinc. 3 filter");
     l1_mc -> AddEntry(hiNpix_mc[4], "collision event filter");
    
-    TLegend* l2 = new TLegend(0.4, 0.65, 0.85, 0.80,"PbPb Minbias rereco DATA");
+    TLegend* l2 = new TLegend(0.4, 0.65, 0.85, 0.80,"PbPb Minbias DATA");
     //l2 -> AddEntry((TObject*)0, "PbPb Minbias rereco DATA"); 
     l2 -> AddEntry(hiNpix_data[1], "primay vertex filter");
     l2 -> AddEntry(hiNpix_data[2], "pixel cluster shape filter");
@@ -163,10 +174,8 @@ void FilterEffi_data_mc_hiNpix()
 
     TH1D *hiNpix_data_effi[5];
     for(int i=0; i<Ncut; i++){
-     //   hiNpix_data_effi[i] = new TH1D(Form("hiNpix_data_effi%d",i), "", 500,0, 5000);
-     //  hiNpix_data_effi[i] = new TH1D(Form("hiNpix_data_effi%d",i), ";hiNpix;Normalized Events",n_hiNpix_bins,hiNpix_bins);
         hiNpix_data_effi[i] = (TH1D*)hiNpix_data[i]->Clone(Form("hiNpix_data_effi%d",i));
-	   hiNpix_data_effi[i] -> SetTitle(";hiNpix;Filter Efficiency");
+        hiNpix_data_effi[i] -> SetTitle(";hiNpix;Filter Efficiency");
         if(i!=0)
             hiNpix_data_effi[i] -> Divide(hiNpix_data[i],hiNpix_data[0]);
 
@@ -189,7 +198,6 @@ void FilterEffi_data_mc_hiNpix()
 
    TH1D *hiNpix_mc_effi[5];
     for(int i=0; i<Ncut; i++){
-     //   hiNpix_mc_effi[i] = new TH1D(Form("hiNpix_mc_effi%d",i), "", 500,0, 5000);
         hiNpix_mc_effi[i] = (TH1D*)hiNpix_mc[i]->Clone(Form("hiNpix_mc_effi%d",i));
         hiNpix_mc_effi[i] -> SetTitle(";hiNpix;Filter Efficiency");
         if(i!=0)
