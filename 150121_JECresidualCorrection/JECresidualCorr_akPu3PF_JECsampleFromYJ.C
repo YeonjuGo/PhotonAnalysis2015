@@ -29,7 +29,7 @@ double myFunc3(double *x, double *par){
 }
 
 
-void JECresidualCorr_JECsampleFromYJ(int collision = 3, int flvOpt = 0, int genOpt = 1){
+void JECresidualCorr_akPu3PF_JECsampleFromYJ(int collision = 3, int flvOpt = 0, int genOpt = 0){
 	/*  const int kHIcentral = 0; // 0-30%
 	    const int kHIperipheral = 1;//30-100%
 	    const int kPP = 2;
@@ -96,12 +96,11 @@ void JECresidualCorr_JECsampleFromYJ(int collision = 3, int flvOpt = 0, int genO
 	//###################################
 
 	//const char* infile = "/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton30.root";
-	//const char* infile = "/u/user/goyeonju/2015/150112_JECClosure/merged_MIX_pPb.root";
-	const char* infile = "/u/user/goyeonju/2015/150112_JECClosure/merged_MIX_dphi_pPb.root";
+	const char* infile = "/u/user/goyeonju/2015/150112_JECClosure/merged_MIX_pPb_final.root";
 	TFile* fin = TFile::Open(infile,"readonly");
 	fin->ls();
 	
-	TTree* yJet = (TTree*)fin->Get("ak3PFJetAnalyzer/t");
+	TTree* yJet = (TTree*)fin->Get("akPu3PFJetAnalyzer/t");
 
 
 
@@ -174,9 +173,8 @@ void JECresidualCorr_JECsampleFromYJ(int collision = 3, int flvOpt = 0, int genO
 		Escale[i] = new TH1D(Form("Escale%d_%d",collision, i) , " ;p_{T}^{RECO}/p_{T}^{GEN};Entries", 50, 0, 2);
 
 		if ( genOpt == 1 )  {
-			yJet -> Draw(Form("jtpt/refpt >>+ Escale%d_%d",collision, i), Form("( weight * (abs(jteta) < 1.6) && (dphi > 7*3.141592/8.0) && (refpt >= %d && refpt < %d) )", (int)ptbins[i], (int)ptbins[i+1]));
 			//yJet -> Draw(Form("jtpt/refpt >>+ Escale%d_%d",collision, i), Form("( (abs(jteta) < 3) && (jtpt<1000) && (refpt >= %d && refpt < %d) )", (int)ptbins[i], (int)ptbins[i+1]));
-			//yJet -> Draw(Form("jtpt/refpt >>+ Escale%d_%d",collision, i), Form("weight *( (abs(jteta) < 3) && (jtpt<1000) && (refpt >= %d && refpt < %d) )", (int)ptbins[i], (int)ptbins[i+1]));
+			yJet -> Draw(Form("jtpt/refpt >>+ Escale%d_%d",collision, i), Form("weight *( (abs(jteta) < 1.6) && (jtpt<1000) && (refpt >= %d && refpt < %d) )", (int)ptbins[i], (int)ptbins[i+1]));
 		} else if (genOpt == 0)  {
 			yJet -> Draw(Form("jtpt/refpt >>+ Escale%d_%d",collision, i), Form("weight *( (abs(jteta) < 1.6) && (jtpt >= %d && jtpt < %d) )", (int)ptbins[i], (int)ptbins[i+1])); 
 		}

@@ -29,7 +29,7 @@ double myFunc3(double *x, double *par){
 }
 
 
-void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
+void JECresidualCorr_yskim(int genOpt = 1, bool useFullJetTree = 0, int collision = 3, int flvOpt = 0){
 	/*  const int kHIcentral = 0; // 0-30%
 	    const int kHIperipheral = 1;//30-100%
 	    const int kPP = 2;
@@ -83,6 +83,7 @@ void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
 	else if (flvOpt == 2 ) partonCut = "abs(refPartonFlv) < 21";
 	else partonCut = "refPartonFlv < -200";
 
+	//const double ptbins[] = {30,40,50,60,80,100,140,180,280};
 	const double ptbins[] = {30,40,50,60,70,80,90,100,120,140,160,180,200,240,280};
 	const int nptbins = sizeof(ptbins)/sizeof(double) - 1;
 	double AvePtBin[nptbins];
@@ -95,22 +96,16 @@ void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
 	// to merge different pthat samples
 	//###################################
 
-	int nJetmax = 1000;
+	int nJetmax = 100;
 	float refPt[nJetmax], pt[nJetmax], eta[nJetmax], dphi[nJetmax];
 	int nJet, cBin, refPartonFlv[nJetmax];
 	EvtSel evtImb;
 	TBranch *b_evt;
+	TString treeName = "yJet";
+	if(useFullJetTree==1) treeName = "fullJet";
 
 	multiTreeUtil* yJet = new multiTreeUtil();
-	// PbPb
-	if(collision ==1 || collision == 0  || collision == 4 || collision == 5 || collision == 6|| collision == 7){
-		yJet -> addFile("/home/goyeonju/recent2013/jetAnalysis/files/yskimfiles/yskim_PbPb_pythiaHYDJET_forest_AllQCDPhotons30.root", "yJet", "");
-		yJet -> addFile("/home/goyeonju/recent2013/jetAnalysis/files/yskimfiles/yskim_PbPb_pythiaHYDJET_forest_AllQCDPhotons50.root", "yJet", "");  
-		yJet -> addFile("/home/goyeonju/recent2013/jetAnalysis/files/yskimfiles/yskim_PbPb_pythiaHYDJET_forest_AllQCDPhotons80.root", "yJet", "");
-		yJet -> addFile("/home/goyeonju/recent2013/jetAnalysis/files/yskimfiles/yskim_PbPb_pythiaHYDJET_forest_AllQCDPhotons120.root", "yJet", "");
-		yJet -> addFile("/home/goyeonju/recent2013/jetAnalysis/files/yskimfiles/yskim_PbPb_pythiaHYDJET_forest_AllQCDPhotons170.root", "yJet", "");
-
-	} else if (collision ==3){	
+	if (collision ==3){	
 #if 0
 		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_ak3PF.root", "yJet","",1.0 );
 		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_ak3PF.root", "yJet","", 1.0);
@@ -119,26 +114,137 @@ void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
 		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_ak3PF.root", "yJet","",1.0 );
 #endif
 #if 0
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_ak3PF_doJetResCorr_NoSmearing.root", "yJet","",1.0);
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_ak3PF_doJetResCorr_NoSmearing.root", "yJet","",1.0);
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_ak3PF_doJetResCorr_NoSmearing.root", "yJet","",1.0);
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_ak3PF_doJetResCorr_NoSmearing.root", "yJet","",1.0);
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_ak3PF_doJetResCorr_NoSmearing.root", "yJet","",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_ak3PF_doJetResCorr_NoSmearing.root",treeName ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_ak3PF_doJetResCorr_NoSmearing.root",treeName ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_ak3PF_doJetResCorr_NoSmearing.root",treeName ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_ak3PF_doJetResCorr_NoSmearing.root",treeName ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_ak3PF_doJetResCorr_NoSmearing.root",treeName ,"",1.0);
 #endif
-#if 1
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_ak3PF_doJetResCorr_DoSmearing.root", "yJet","",1.0);
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_ak3PF_doJetResCorr_DoSmearing.root", "yJet","",1.0);
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_ak3PF_doJetResCorr_DoSmearing.root", "yJet","",1.0);
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_ak3PF_doJetResCorr_DoSmearing.root", "yJet","",1.0);
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_ak3PF_doJetResCorr_DoSmearing.root", "yJet","",1.0);
+#if 0
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_doJetResCorr_DoSmearing.root", treeName,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_doJetResCorr_DoSmearing.root", treeName ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_doJetResCorr_DoSmearing.root",treeName ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_doJetResCorr_DoSmearing.root",treeName ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_doJetResCorr_DoSmearing.root",treeName ,"",1.0);
 #endif
-	} else if (collision ==2){
-		//pp 
-		yJet->addFile("/home/jazzitup/forestFiles/yskimmedFiles/yskim_merged_allQCDPhoton30to50_genPhotonPtCut30_CMSSW538HIp2.root", "yJet", "",29329. / 29329.);
-		yJet->addFile("/home/jazzitup/forestFiles/yskimmedFiles/yskim_merged_allQCDPhoton50to80_genPhotonPtCut30_CMSSW538HIp2.root", "yJet", "",8098. / 87988.);
-		yJet->addFile("/home/jazzitup/forestFiles/yskimmedFiles/yskim_merged_allQCDPhoton80to120_genPhotonPtCut30_CMSSW538HIp2.root", "yJet", "",1680. / 96756.);
-		yJet->addFile("/home/jazzitup/forestFiles/yskimmedFiles/yskim_merged_allQCDPhoton120to9999_genPhotonPtCut30_CMSSW538HIp2.root", "yJet", "", 438.   / 90972.);
-	}
+#if 0
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_NoJetResCorr.root","fullJet" ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_NoJetResCorr.root","fullJet" ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_NoJetResCorr.root", "fullJet" ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_NoJetResCorr.root", "fullJet" ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_NoJetResCorr.root", "fullJet" ,"",1.0);
+#endif
+
+#if 0
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_NoJetResCorr.root","yJet","",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_NoJetResCorr.root", "yJet","",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_NoJetResCorr.root","yJet" ,"",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_NoJetResCorr.root", "yJet","",1.0);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_NoJetResCorr.root", "yJet","",1.0);
+#endif
+
+#if 0 
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_NoJetResCorr.root", treeName,"",62744/62744. );
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_NoJetResCorr.root",treeName ,"",29499/107309.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_NoJetResCorr.root",treeName ,"",7640/106817.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_NoJetResCorr.root",treeName ,"",1868/104443.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_NoJetResCorr.root",treeName ,"",649/139647.);
+#endif
+
+#if 0 
+		// 2015/02/05 Thur.
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_NoJetResCorr_NoAllCuts.root", treeName,"",62744/62744. );
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_NoJetResCorr_NoAllCuts.root",treeName ,"",29499/107309.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_NoJetResCorr_NoAllCuts.root",treeName ,"",7640/106817.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_NoJetResCorr_NoAllCuts.root",treeName ,"",1868/104443.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_NoJetResCorr_NoAllCuts.root",treeName ,"",649/139647.);
+#endif
+#if 0 
+		// 2015/02/05 Thur.
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_NoJetResCorr_NoAllCuts_evt3000.root", treeName,"",62744/62744. );
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_NoJetResCorr_NoAllCuts_evt3000.root",treeName ,"",29499/107309.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_NoJetResCorr_NoAllCuts_evt3000.root",treeName ,"",7640/106817.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_NoJetResCorr_NoAllCuts_evt3000.root",treeName ,"",1868/104443.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_NoJetResCorr_NoAllCuts_evt3000.root",treeName ,"",649/139647.);
+#endif
+
+#if 0 
+		// 2015/02/05 Thur.
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_NoJetResCorr_onlyPtCut_evt3000.root", treeName,"",62744/62744. );
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_NoJetResCorr_onlyPtCut_evt3000.root",treeName ,"",29499/107309.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_NoJetResCorr_onlyPtCut_evt3000.root",treeName ,"",7640/106817.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_NoJetResCorr_onlyPtCut_evt3000.root",treeName ,"",1868/104443.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_NoJetResCorr_onlyPtCut_evt3000.root",treeName ,"",649/139647.);
+#endif
+
+
+#if 0
+		// 2015/02/05 Thur.
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_NoJetResCorr_PtCutEtaCut_evt10000.root", treeName,"",62744/62744. );
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_NoJetResCorr_PtCutEtaCut_evt10000.root",treeName ,"",29499/107309.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_NoJetResCorr_PtCutEtaCut_evt10000.root",treeName ,"",7640/106817.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_NoJetResCorr_PtCutEtaCut_evt10000.root",treeName ,"",1868/104443.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_NoJetResCorr_PtCutEtaCut_evt10000.root",treeName ,"",649/139647.);
+#endif
+
+
+#if 0 
+		// 2015/02/05 Thur.
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_NoJetResCorr_evt100000.root", treeName,"",62744/62744. );
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_NoJetResCorr_evt100000.root",treeName ,"",29499/107309.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_NoJetResCorr_evt100000.root",treeName ,"",7640/106817.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_NoJetResCorr_evt100000.root",treeName ,"",1868/104443.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_NoJetResCorr_evt100000.root",treeName ,"",649/139647.);
+#endif
+
+
+#if 0
+		// 2015/02/05 Thur. after yskim bug fixed
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_doJetResCorr.root", treeName,"",62744/62744. );
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_doJetResCorr.root",treeName ,"",29499/107309.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_doJetResCorr.root",treeName ,"",7640/106817.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_doJetResCorr.root",treeName ,"",1868/104443.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_doJetResCorr.root",treeName ,"",649/139647.);
+#endif
+
+#if 0
+		// 2015/02/05 Thur. before residual correction
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_B4ResCorr.root",treeName,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_B4ResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_B4ResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_B4ResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_B4ResCorr.root",treeName ,"");
+#endif
+
+#if 0
+		// 2015/02/05 Thur. after residual correction
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_AfterResCorr.root",treeName,"",62744/62744. );
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_AfterResCorr.root",treeName ,"",29499/107309.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_AfterResCorr.root",treeName ,"",7640/106817.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_AfterResCorr.root",treeName ,"",1868/104443.);
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_AfterResCorr.root",treeName ,"",649/139647.);
+#endif
+
+
+#if 0
+		// 2015/02/05 Thur. after residual correction
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_AfterResCorr.root",treeName,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_AfterResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_AfterResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_AfterResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_AfterResCorr.root",treeName ,"");
+#endif
+
+#if 0
+		// 2015/02/05 Thur. after residual correction
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_AfterResCorr.root",treeName,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_AfterResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_AfterResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_AfterResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_AfterResCorr.root",treeName ,"");
+#endif
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/merged_yskim_HiForest_pPb_MIX_AllQCDPhoton_akPu3PF_AfterResCorr.root",treeName,"");
+	} 
 
 	yJet->AddFriend("tgj");
 	// yJet->AddFriend("yPhotonTree");
@@ -188,13 +294,15 @@ void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
 	//###################################
 	// to check ptHat spectrum
 	//###################################
-#if 0
-	TCanvas* c_ptHat = new TCanvas("c_ptHat","c_ptHat",400,800);
-	TH1D* hptHat = new TH1D("hptHat",";ptHat (GeV);Entries",100,0,500);
-
-	yJet -> Draw2(hptHat, "ptHat","ptHat>0","ptHatWeight*vtxCentWeight");
-	handsomeTH1(hptHat,1);
-	hptHat->DrawCopy();
+#if 1
+	if(useFullJetTree==0){
+		TCanvas* c_ptHat = new TCanvas("c_ptHat","c_ptHat",400,400);
+		TH1D* hptHat = new TH1D("hptHat",";ptHat (GeV);Entries",100,0,500);
+		//yJet -> Draw2(hptHat, "ptHat","ptHat>0");
+		yJet -> Draw2(hptHat, "ptHat","ptHat>0","ptHatWeight*vtxCentWeight");
+		handsomeTH1(hptHat,1);
+		hptHat->DrawCopy();
+	}
 #endif
 
 	//######################################################
@@ -211,8 +319,15 @@ void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
 		Escale[i] = new TH1D(Form("Escale%d_%d",collision, i) , " ;p_{T}^{RECO}/p_{T}^{GEN};Entries", 50, 0, 2);
 
 		if ( genOpt == 1 )  {
-			yJet -> Draw2(Escale[i], "pt/refPt", centCut && partonCut && Form(" (abs(eta) < 1.6) && (dphi > 7*3.141592/8.0) && (refPt >= %d && refPt < %d)", (int)ptbins[i], (int)ptbins[i+1]), "ptHatWeight*vtxCentWeight"); 
-			//yJet -> Draw2(Escale[i], "pt/refPt", centCut && partonCut && Form(" (abs(eta) < 3) && (dphi > 3.141592/2) && (refPt >= %d && refPt < %d)", (int)ptbins[i], (int)ptbins[i+1]), "ptHatWeight*vtxCentWeight"); 
+			if(useFullJetTree==0){	
+//				yJet -> Draw2(Escale[i], "pt/refPt", centCut && partonCut && Form("(abs(eta) < 1.6) && (dphi > 7*3.141592/8.0) && (refPt >= %d && refPt < %d)", (int)ptbins[i], (int)ptbins[i+1])); 
+				//yJet -> Draw2(Escale[i], "pt/refPt", Form("(refPt >= %d && refPt < %d)", (int)ptbins[i], (int)ptbins[i+1]), "ptHatWeight*vtxCentWeight"); 
+				yJet -> Draw2(Escale[i], "pt/refPt", centCut && partonCut && Form("(abs(eta) < 1.6) && (dphi > 7*3.141592/8.0) && (refPt >= %d && refPt < %d)", (int)ptbins[i], (int)ptbins[i+1]), "ptHatWeight*vtxCentWeight"); 
+				//yJet -> Draw2(Escale[i], "pt/refPt", centCut && partonCut && Form(" (abs(eta) < 3) && (dphi > 3.141592/2) && (refPt >= %d && refPt < %d)", (int)ptbins[i], (int)ptbins[i+1]), "ptHatWeight*vtxCentWeight"); 
+			} else{
+				yJet -> Draw2(Escale[i], "jtpt/refpt", centCut && partonCut && Form("(jtpt>15) && (abs(jteta) < 3.0) && (refpt >= %d && refpt < %d)", (int)ptbins[i], (int)ptbins[i+1]), "ptHatWeight*vtxCentWeight"); 
+				//yJet -> Draw2(Escale[i], "jtpt/refpt", centCut && partonCut && Form("(3.1416-abs(3.1416-abs(photonPhi-jtphi))) > 7*3.141592/8.0 && (abs(jteta) < 1.6) && (refpt >= %d && refpt < %d)", (int)ptbins[i], (int)ptbins[i+1]), "ptHatWeight*vtxCentWeight"); 
+			}
 		} else if (genOpt == 0)  {
 			yJet -> Draw2(Escale[i], "pt/refPt", centCut && partonCut && Form(" (abs(eta) < 1.6) && (dphi > 7*3.141592/8.0) && (pt >= %d && pt < %d) ", (int)ptbins[i], (int)ptbins[i+1]), "ptHatWeight*vtxCentWeight");
 		}
@@ -259,13 +374,14 @@ void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
 	TFile* outFile = new TFile(Form("resolutionHist_collision%d.root", collision),"RECREATE");
 	outFile -> cd();
 
-	TCanvas *c_JESJER = new TCanvas("c_JESJER", ";",147,37,930,465);
-	c_JESJER->Divide(2,1);
+	TCanvas *c_JESJER = new TCanvas("c_JESJER", ";",37,147,465,930);
+	c_JESJER->Divide(1,2);
 	c_JESJER->cd(1);
 
 	TH1D* hscale = new TH1D("hscale", ";p_{T}^{GEN} (GeV);p_{T}^{RECO}/p_{T}^{GEN}", nptbins, ptbins);
+	if(genOpt==0) hscale->SetXTitle("p_{T}^{RECO} (GeV)");
 	handsomeTH1(hscale,1);
-	hscale -> SetAxisRange(0.9, 1.15, "Y");
+	hscale -> SetAxisRange(0.8, 1.2, "Y");
 	hscale -> Draw();
 	jumSun(30,1,200,1);
 
@@ -300,7 +416,7 @@ void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
 
 	hscale -> Fit("f1", "RLL");
 	f1->GetParameters(par_scale);
-	cout << " Jet Energy Scale fitting = C : " << par_scale[0] << ", S : " << par_scale[1] << ", N : : " << par_scale[2] << endl;
+	cout << " Jet Energy Scale fitting = C : " << par_scale[0] << ", S : " << par_scale[1] << ", N : " << par_scale[2] << endl;
 
 	f1->Draw("same");
 
@@ -309,6 +425,7 @@ void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
 	//###########################################################
 	c_JESJER -> cd(2);
 	TH1D* hresol = new TH1D("hresol", ";p_{T}^{GEN} (GeV);#sigma(p_{T}^{RECO}/p_{T}^{GEN})", nptbins, ptbins);
+	if(genOpt==0) hresol->SetXTitle("p_{T}^{RECO} (GeV)");
 	handsomeTH1(hresol,1);
 	hresol->SetAxisRange(0.0, 0.3, "Y");
 	hresol->GetYaxis()->CenterTitle();
@@ -325,7 +442,7 @@ void JECresidualCorr_yskim(int collision = 3, int flvOpt = 0, int genOpt = 1){
 
 	hresol -> Fit("f3", "RLL");
 	f3->GetParameters(par_resol);
-	cout << "Jet Energy Resolution fitting = C : " << par_resol[0] << ", S : " << par_resol[1] << ", N : : " << par_resol[2] << endl;
+	cout << "Jet Energy Resolution fitting = C : " << par_resol[0] << ", S : " << par_resol[1] << ", N : " << par_resol[2] << endl;
 
 	f3->Draw("same");
 	outFile -> Write();
