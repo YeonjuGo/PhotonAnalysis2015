@@ -113,7 +113,7 @@ void leadingPho_draw_JEC(
 		ratio = (TH1F*)gDirectory->Get(hName);
 		if(gausfitting==0)	FillMeanSigma(i, ratio, hArM, hRMS, hMean, hSigma);
 		else if(gausfitting==1) fratio[i]= FillGaussMeanSigma(i, ratio, hMean, hSigma);
-    #if 0
+    #if 1
 		d[i] = new TCanvas(Form("reco/gen_%d",(Int_t)ptbins[i]),Form("reco/gen_%d",(Int_t)ptbins[i]));
 		ratio->DrawClone();
 		if(savePlots)

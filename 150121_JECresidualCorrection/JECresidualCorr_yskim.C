@@ -208,7 +208,17 @@ void JECresidualCorr_yskim(int genOpt = 1, bool useFullJetTree = 0, int collisio
 #endif
 
 #if 0
-		// 2015/02/05 Thur. before residual correction
+		// 2015/02/06 Fri. before residual correction, NOT including l2l3 correction // this is real final try!!!!!!!!!!!!!
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_NoJetResCorr.root",treeName,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_NoJetResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_NoJetResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_NoJetResCorr.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_NoJetResCorr.root",treeName ,"");
+#endif
+
+
+#if 0
+		// 2015/02/05 Thur. before residual correction, but including l2l3 correction 
 		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_B4ResCorr.root",treeName,"");
 		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_B4ResCorr.root",treeName ,"");
 		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_B4ResCorr.root",treeName ,"");
@@ -243,7 +253,16 @@ void JECresidualCorr_yskim(int genOpt = 1, bool useFullJetTree = 0, int collisio
 		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_AfterResCorr.root",treeName ,"");
 		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_AfterResCorr.root",treeName ,"");
 #endif
-		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/merged_yskim_HiForest_pPb_MIX_AllQCDPhoton_akPu3PF_AfterResCorr.root",treeName,"");
+//		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/merged_yskim_HiForest_pPb_MIX_AllQCDPhoton_akPu3PF_AfterResCorr.root",treeName,"");
+#if 1
+		// 2015/02/06 Fri. after residual correction 
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton30to50_akPu3PF_AfterResCorr_final.root",treeName,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton50to80_akPu3PF_AfterResCorr_final.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton80to120_akPu3PF_AfterResCorr_final.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton120to170_akPu3PF_AfterResCorr_final.root",treeName ,"");
+		yJet->addFile("/u/user/goyeonju/files/yskimfiles/pA/yskim_HiForest_pPb_MIX_AllQCDPhoton170to9999_akPu3PF_AfterResCorr_final.root",treeName ,"");
+#endif
+
 	} 
 
 	yJet->AddFriend("tgj");

@@ -14,14 +14,14 @@ bbb
 #in KNU
 #pPb MIX produced by Alex
 #: << 'aaa'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton30.root","test/MIX_pPb30.root",50,102400.0)'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton50.root","test/MIX_pPb50.root",80,39656.0)'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton80.root","test/MIX_pPb80.root",120,10157.0)'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton120.root","test/MIX_pPb120.root",170,2517.0)'
-root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton170.root","test/MIX_pPb170.root",9999,649.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton30.root","test/MIX_dphi_pPb30.root",50,102400.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton50.root","test/MIX_dphi_pPb50.root",80,39656.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton80.root","test/MIX_dphi_pPb80.root",120,10157.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton120.root","test/MIX_dphi_pPb120.root",170,2517.0)'
+root -l -b -q 'HI_weight_pPb_leadingPho.C+("/u/user/goyeonju/files/forest/pA/forJEC/HiForest_pPb_MIX_AllQCDPhoton170.root","test/MIX_dphi_pPb170.root",9999,649.0)'
 
-list=`echo ./test/MIX_pPb*.root`
-hadd merged_MIX_pPb.root $list
+list=`echo ./test/MIX_dphi_pPb*.root`
+hadd merged_MIX_dphi_pPb.root $list
 #aaa
 
 #in Korea University

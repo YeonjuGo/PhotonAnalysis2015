@@ -116,6 +116,7 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 		//Declaration of leaves types
 		int   nref;
 		float pthat;
+		float dphi[1000];
 		float corrpt[1000];
 		float jtpt[1000];
 		float rawpt[1000];
@@ -179,6 +180,7 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 		tr_out->Branch("nref",&nref,"nref/I");
 		tr_out->Branch("pthat",&pthat,"pthat/F");
 		tr_out->Branch("weight",&weight,"weight/F");
+		tr_out->Branch("dphi",dphi,"dphi[nref]/F");//added at 20150128 
 		tr_out->Branch("jtpt",jtpt,"jtpt[nref]/F");
 		tr_out->Branch("rawpt",rawpt,"rawpt[nref]/F");
 		//tr_out->Branch("corrpt",corrpt,"corrpt[nref]/F");
@@ -236,8 +238,8 @@ void HI_weight_pPb_leadingPho(const char *infile="/mnt/hadoop/cms/store/user/bel
 
 			//! jet loop
 			for(int iref=0;iref<nref;iref++){
-				Double_t dphi = TMath::ACos(TMath::Cos(phi[leadingIndex]-jtphi[iref]));
-				if(dphi < TMath::Pi()/2){
+				dphi[iref] = TMath::ACos(TMath::Cos(phi[leadingIndex]-jtphi[iref]));
+				if(dphi[iref] < TMath::Pi()/2){
 					//        corrpt[iref]=2000.0;
 					jtpt[iref]=2000.0;
 					rawpt[iref]=2000.0;
