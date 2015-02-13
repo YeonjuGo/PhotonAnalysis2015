@@ -171,6 +171,15 @@ void yj_rootAna_acceptance(char *strBinnig = "8rap9pt", bool isPrompt=true){
     ////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
     // Toy Acceptance Calculation
+    TChain* toyFile = new TChain("toyFile");
+    if(isPrompt){
+        toyFile->Add("toyResults_pt_number100_isPrompt1_isPbp0.root");
+        toyFile->Add("toyResults_pt_number100_isPrompt1_isPbp1.root");
+    } else{
+        toyFile->Add("toyResults_pt_number100_isPrompt0_isPbp0.root");
+        toyFile->Add("toyResults_pt_number100_isPrompt0_isPbp1.root");
+    }
+
     TFile* toyFile_pPb;
     TFile* toyFile_Pbp;
     TTree* toyTree_pPb;
@@ -284,7 +293,7 @@ void yj_rootAna_acceptance(char *strBinnig = "8rap9pt", bool isPrompt=true){
 
     //// Loop Start!
     //int Ntoy = toyTree_pPb->GetEntries();
-    int Ntoy = 100; 
+    int Ntoy = 1; 
     for(int itoy=0; itoy<Ntoy; itoy++){
         if(itoy%10==0) cout << ">>>>> itoy " << itoy << " / " << Ntoy <<  endl;
         toyTree_pPb->GetEntry(itoy);
@@ -432,7 +441,7 @@ void yj_rootAna_acceptance(char *strBinnig = "8rap9pt", bool isPrompt=true){
     outFileAcc->Close();
 
 	TFile *outFile = new TFile(Form("AccAna_%s.root",strName),"RECREATE");
-	std::cout << "strName: " << strName << std::endl;
+	if(outFile) std::cout << "strName: " << strName << std::endl;
 	outFile->cd();
 
 	//h2D_NoCut_pt_y_Pbp->Write();

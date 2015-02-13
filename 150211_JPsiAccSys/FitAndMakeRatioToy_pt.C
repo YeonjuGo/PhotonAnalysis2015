@@ -26,7 +26,8 @@ const Int_t nRap = sizeof(rapArrNumFB)/sizeof(Double_t)-1;
 
 void FitAndMakeRatioToy_pt(int nToy=1, bool isPrompt=true, bool isPbp=true){
 	gRandom->SetSeed(time(0));
-	TFile* fin = new TFile(Form("/u/user/goyeonju/2015/pPbJPsiAnalysis/2015/004_closure/DataMcRecoIntegRap_8rap9pt/data_mc_reco_isPrompt%d.root",(int)isPrompt)); 
+//	TFile* fin = new TFile(Form("/u/user/goyeonju/2015/pPbJPsiAnalysis/2015/004_closure/DataMcRecoIntegRap_8rap9pt/data_mc_reco_isPrompt%d.root",(int)isPrompt));//in KNU 
+	TFile* fin = new TFile(Form("/home/goyeonju/CMS/2015/pPbJPsiAnalysis/2015/004_closure/DataMcRecoIntegRap_8rap9pt/data_mc_reco_isPrompt%d.root",(int)isPrompt));//in KNU 
 
 	TH1D* hDataReco_Pbp=(TH1D*)fin->Get("hDataReco_Pbp");
 	TH1D* hMCReco_Pbp=(TH1D*)fin->Get("hMCReco_Pbp");
