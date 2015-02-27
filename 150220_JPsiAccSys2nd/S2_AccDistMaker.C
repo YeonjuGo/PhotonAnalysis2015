@@ -100,7 +100,8 @@ void S2_AccDistMaker(bool isPrompt=true, bool isPbp=true){
     //Double_t AccCentArr[] = {0.087, 0.089, 0.131, 0.196, 0.288, 0.370, 0.447, 0.539, 0.681}; // Acceptance central value
 
   // --- y Bin //set to 1st run (For 2nd run, will be automatically changed later)
-  Double_t yBinsArr[] = {-2.4, -1.97, -1.37, -0.47, 0.43, 1.03, 1.46, 1.93, 2.4}; // 8rap9pt
+    Double_t yBinsArr[] = {-2.4, -1.97, -1.37, -0.47, 0.43, 1.03, 1.46, 1.93, 2.4}; // 8rap9pt
+    Double_t yBinsArr_pPb[] = {-2.4, -1.93, -1.46, -1.03, -0.43, 0.47, 1.37, 1.97, 2.4}; // 8rap9pt
   //Double_t yBinsArr[] = {-2.4, -1.97, -1.37, -0.47, 0.43, 1.03, 1.46}; // 6rap3pt
 	const Int_t nYBins = sizeof(yBinsArr)/sizeof(double)-1;
 	cout << "nYBins=" << nYBins << endl;
@@ -208,10 +209,18 @@ void S2_AccDistMaker(bool isPrompt=true, bool isPbp=true){
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	// define 1D hist
     // for Acc. Sys. study
-
-    TH2D *h2D_Den_pt_y= new TH2D("h2D_Den_pt_y","",nYBins,yBinsArr,nPtBins,ptBinsArr);
-    TH2D *h2D_Num_pt_y= new TH2D("h2D_Num_pt_y","",nYBins,yBinsArr,nPtBins,ptBinsArr);
-    TH2D *h2D_Acc_pt_y= new TH2D("h2D_Acc_pt_y","",nYBins,yBinsArr,nPtBins,ptBinsArr);
+    TH2D *h2D_Den_pt_y;
+    TH2D *h2D_Num_pt_y;
+    TH2D *h2D_Acc_pt_y;
+    if(isPbp){
+        h2D_Den_pt_y= new TH2D("h2D_Den_pt_y","",nYBins,yBinsArr,nPtBins,ptBinsArr);
+        h2D_Num_pt_y= new TH2D("h2D_Num_pt_y","",nYBins,yBinsArr,nPtBins,ptBinsArr);
+        h2D_Acc_pt_y= new TH2D("h2D_Acc_pt_y","",nYBins,yBinsArr,nPtBins,ptBinsArr);
+    } else if(isPbp==0){
+        h2D_Den_pt_y= new TH2D("h2D_Den_pt_y","",nYBins,yBinsArr_pPb,nPtBins,ptBinsArr);
+        h2D_Num_pt_y= new TH2D("h2D_Num_pt_y","",nYBins,yBinsArr_pPb,nPtBins,ptBinsArr);
+        h2D_Acc_pt_y= new TH2D("h2D_Acc_pt_y","",nYBins,yBinsArr_pPb,nPtBins,ptBinsArr);
+    }
     TH1D *hAccCompBin[nYBins][nPtBins];
 
     TFile *accCentFile_PR = new TFile("../pPbJPsiAnalysis/2015/001_Acceptance/AccAna_8rap9pt_PRMC_boosted.root");
@@ -234,7 +243,8 @@ void S2_AccDistMaker(bool isPrompt=true, bool isPbp=true){
 //        h1D_Acc_pt[iy]= new TH1D(Form("h1D_Acc_pt_y%d",iy),"h1D_Acc",nPtBins,ptBinsArr);
         for(int ipt=0;ipt<nPtBins;ipt++){
             AccCent[iy][ipt] = hAccCent->GetBinContent(iy+1,ipt+1);
-            hAccCompBin[iy][ipt] = new TH1D(Form("hAccCompBin_y%d_pt%d",iy,ipt),Form("Acc. Dist. of %d ptbin for rapidity %dth bin;Acceptance;Entries",iy,ipt),1000, AccCent[iy][ipt]-0.05, AccCent[iy][ipt]+0.05);
+            //hAccCompBin[iy][ipt] = new TH1D(Form("hAccCompBin_y%d_pt%d",iy,ipt),Form("Acc. Dist. of %d ptbin for rapidity %dth bin;Acceptance;Entries",iy,ipt),100, AccCent[iy][ipt]-0.05, AccCent[iy][ipt]+0.05);
+            hAccCompBin[iy][ipt] = new TH1D(Form("hAccCompBin_y%d_pt%d",iy,ipt),Form("Acc. Dist. of %d ptbin for rapidity %dth bin;Acceptance;Entries",ipt,iy),100, 0.0, 1.0);
         }
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,8 +252,16 @@ void S2_AccDistMaker(bool isPrompt=true, bool isPbp=true){
 
     //// Loop Start!
     //int Ntoy = toyTree->GetEntries();
-    int Ntoy = 500; 
+    int Ntoy = 5;
+
+    TCanvas * ctemp= new TCanvas("ctemp","ctemp",500,500);
+    TCanvas * can[Ntoy];
+    for(int itoy=0;itoy<Ntoy;itoy++){
+        can[itoy] = new TCanvas(Form("can_%d",itoy),Form("can_%d",itoy),500,500);
+    }
+
     for(int itoy=0; itoy<Ntoy; itoy++){
+        ctemp->cd();
         if(itoy%10==0) cout << ">>>>> itoy " << itoy << " / " << Ntoy <<  endl;
             h2D_Num_pt_y-> Reset();
             h2D_Den_pt_y-> Reset();
@@ -255,6 +273,7 @@ void S2_AccDistMaker(bool isPrompt=true, bool isPbp=true){
             double w_toy = 1.0;
             int yflag = 99;
             double ptThr = 0.0;
+            string st_AccRange = "";
             if(isPbp){
                 if(-2.40<= dimu_y && dimu_y<-1.97) {  yflag = 0; ptThr=0.0; }
                 else if(-1.97<= dimu_y && dimu_y<-1.37) {  yflag = 1;  ptThr=3.0; } 
@@ -265,17 +284,17 @@ void S2_AccDistMaker(bool isPrompt=true, bool isPbp=true){
                 else if(1.46<= dimu_y && dimu_y<1.93) {  yflag = 6;  ptThr=3.0; }
                 else if(1.93<= dimu_y && dimu_y<2.40) {  yflag = 7;  ptThr=0.0; }
             } else if(isPbp==0){//pPb
-                if(-2.40<= dimu_y && dimu_y<-1.97) {  yflag = 7; ptThr=0.0; }
-                else if(-1.97<= dimu_y && dimu_y<-1.37) {  yflag = 6;  ptThr=3.0; } 
-                else if(-1.37<= dimu_y && dimu_y<-0.47) {  yflag = 5;  ptThr=5.0; } 
-                else if(-0.47<= dimu_y && dimu_y<0.43) {  yflag = 4;  ptThr=6.5; }
-                else if(0.43<= dimu_y && dimu_y<1.03) {  yflag = 3;  ptThr=6.5; }
-                else if(1.03<= dimu_y && dimu_y<1.46) {  yflag = 2;  ptThr=6.5; }
-                else if(1.46<= dimu_y && dimu_y<1.93) {  yflag = 1;  ptThr=3.0; }
-                else if(1.93<= dimu_y && dimu_y<2.40) {  yflag = 0;  ptThr=0.0; }
+                if(-2.40<= dimu_y && dimu_y<-1.93) {  yflag = 7; ptThr=0.0; }
+                else if(-1.93<= dimu_y && dimu_y<-1.46) {  yflag = 6;  ptThr=3.0; } 
+                else if(-1.46<= dimu_y && dimu_y<-1.03) {  yflag = 5;  ptThr=5.0; } 
+                else if(-1.03<= dimu_y && dimu_y<-0.43) {  yflag = 4;  ptThr=6.5; }
+                else if(-0.43<= dimu_y && dimu_y<0.47) {  yflag = 3;  ptThr=6.5; }
+                else if(0.47<= dimu_y && dimu_y<1.37) {  yflag = 2;  ptThr=6.5; }
+                else if(1.37<= dimu_y && dimu_y<1.97) {  yflag = 1;  ptThr=3.0; }
+                else if(1.97<= dimu_y && dimu_y<2.40) {  yflag = 0;  ptThr=0.0; }
             }
             if(yflag==99) continue;
-            //if(dimu_pt<=ptThr) continue;
+            if(dimu_pt<ptThr) st_AccRange="out of the range";
        
            // cout << "yflag : " << yflag << ", pt : " << dimu_pt<< endl; 
             Int_t hBin = hWeight[yflag]->FindBin(dimu_pt);
@@ -283,10 +302,12 @@ void S2_AccDistMaker(bool isPrompt=true, bool isPbp=true){
             double mean = hWeight[yflag]->GetBinContent(hBin);
             double sigma = hWeight[yflag]->GetBinError(hBin); 
             //cout << hBin << "   "  << mean <<"  " << sigma << endl;
-            if(sigma==0) continue;
-
+            
+            if(i<100) cout <<"Before!!!!!! pt : " << dimu_pt << ", y : " << dimu_y << ", mean : " << mean << ", sigma : " << sigma << ", weighting : " << w_toy << ", " << st_AccRange << endl;
+            if(sigma==0.000) continue;
             w_toy = gRandom->Gaus(mean,sigma);
-            //cout <<"pt : " << dimu_pt << ", y : " << dimu_y << ", mean : " << mean << ", sigma : " << sigma << ", weighting : " << w_toy << endl;
+            if(i<100) cout <<"After!!!!!!! pt : " << dimu_pt << ", y : " << dimu_y << ", mean : " << mean << ", sigma : " << sigma << ", weighting : " << w_toy << ", " << st_AccRange << endl;
+
             ////// --- cut01 : no cut
             if (!dimuCut(dmom0_Id,dgmom0_Id,dkid0_ch,dkid1_ch)) continue;
 
@@ -303,9 +324,11 @@ void S2_AccDistMaker(bool isPrompt=true, bool isPbp=true){
                 } // end of yn2
             } // end of yn
         } //end of loop
-
+        
+        can[itoy]->cd();
         // (Num/Den) to get acceptance (B : binomial error)
         h2D_Acc_pt_y->Divide(h2D_Num_pt_y,h2D_Den_pt_y,1,1,"B");
+        h2D_Acc_pt_y->DrawCopy("text colz");
         for(int iy=0;iy<nYBins;iy++){
             for(int ipt=0;ipt<nPtBins;ipt++){
                 hAccCompBin[iy][ipt]->Fill(h2D_Acc_pt_y->GetBinContent(iy+1,ipt+1));
@@ -336,6 +359,9 @@ void S2_AccDistMaker(bool isPrompt=true, bool isPbp=true){
         }
     }
     hAccCent->Write();
+    for(int itoy=0;itoy<Ntoy;itoy++){
+        can[itoy]->Write();
+    }
     outFileAcc->Close();
 
     timer.Stop();
