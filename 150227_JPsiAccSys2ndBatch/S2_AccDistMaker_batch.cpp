@@ -348,9 +348,9 @@ int main (int argc, char* argv[]){
             if(dimu_pt<ptThr) st_AccRange="out of the range";
        
 	//cout << "d " << endl;
-            cout << "yflag : " << yflag << ", pt : " << dimu_pt<< endl; 
-		cout << "d"<<hWeight[yflag]<<endl;
-		cout << "d"<<hWeight[yflag]->GetName()<<endl;
+         //   cout << "yflag : " << yflag << ", pt : " << dimu_pt<< endl; 
+	//	cout << "d"<<hWeight[yflag]<<endl;
+	//	cout << "d"<<hWeight[yflag]->GetName()<<endl;
 //            Int_t hBin = hWeight[yflag]->FindBin(dimu_pt);
             Int_t hBin = 0;
 	//	cout << "hBin = " <<hBin << endl;
