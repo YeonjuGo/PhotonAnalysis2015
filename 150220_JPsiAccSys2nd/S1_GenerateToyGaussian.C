@@ -18,8 +18,8 @@
 #include <ctime>
 #include <string>
 #include <sstream>
-#include "../HiForestAnalysis/hiForest.h"
-#include "../gammaJetAnalysis/CutAndBinCollection2012.h"
+//#include "../HiForestAnalysis/hiForest.h"
+//#include "../gammaJetAnalysis/CutAndBinCollection2012.h"
 
 Double_t ptArrNum[] = {0.0, 3.0, 4.0, 5.0, 6.5, 7.5, 8.5, 10., 14., 30.};
 const Int_t nPt = sizeof(ptArrNum)/sizeof(Double_t)-1;
@@ -98,12 +98,15 @@ void S1_GenerateToyGaussian(bool isPrompt=true, bool isPbp=true){
                 //func[iy]->FixParameter(4,1.11672e+01 );
 #endif
             }
+        } else if(isPrompt==1 && isPbp==0 && iy==4){
+                func[4] = new TF1(Form("func_%d",iy), fitHevi,0.0,30.0,5); 
+                func[4]->SetParameters(-3.40747e+02,3.32373e+00,6.51294e-01,2.98861e+00,1.14947e+02);
         } else{
             func[iy] = new TF1(Form("func_%d",iy), fitExp,0.0,30.0,3);
             if(isPrompt==0 && isPbp==1 && (iy==2 || iy==3 || iy==4 || iy==5) ) func[iy]->SetParameters(-1.01556e+01,1.51712e-01,2.80282e+01);
-            if(isPrompt==0 && isPbp==0 && (iy==2 || iy==3 || iy==4 || iy==5) ) func[iy]->SetParameters(-1.01556e+01,1.51712e-01,2.80282e+01);
-            if(isPrompt==1 && isPbp==0 && (iy==2 || iy==3 || iy==4 || iy==5) ) func[iy]->SetParameters(-1.01556e+01,1.51712e-01,2.80282e+01);
-            if(isPrompt==1 && isPbp==1 && (iy==3 || iy==4 || iy==5) ) func[iy]->SetParameters(-1.01556e+01,1.51712e-01,2.80282e+01);
+            if(isPrompt==0 && isPbp==0 && (iy==2 || iy==3 || iy==4) ) func[iy]->SetParameters(-1.01556e+01,1.51712e-01,2.80282e+01);
+            if(isPrompt==1 && isPbp==0 && (iy==3) ) func[iy]->SetParameters(-1.01556e+01,1.51712e-01,2.80282e+01);
+            if(isPrompt==1 && isPbp==1 && (iy==3) ) func[iy]->SetParameters(-1.01556e+01,1.51712e-01,2.80282e+01);
         }
         hRatio[iy]->Fit(Form("func_%d",iy));
         func[iy]->Draw("same");
@@ -122,6 +125,7 @@ void S1_GenerateToyGaussian(bool isPrompt=true, bool isPbp=true){
     fout->cd();	
     for(int iy=0;iy<nRap;iy++){
         hWeight[iy]->Write();
+        func[iy]->Write();
     }
     c1->Write();
     fout->Close();
