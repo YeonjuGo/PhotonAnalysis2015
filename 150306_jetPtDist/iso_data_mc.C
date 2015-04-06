@@ -74,19 +74,19 @@ void iso_data_mc(TString isoName="trkSumPtHollowConeDR04"){
 	
 	
 	TCut totCut_data[nTotCut];
-	totCut_data[0] = photonEtaCut;
+	totCut_data[0] = photonEtaCut && hoeCut;
 	totCut_data[1] = photonEtaCut && spikeCut && hoeCut && resCut;
 	totCut_data[2] = photonEtaCut && spikeCut && hoeCut && resCut && candidateCut;
 
 	TCut totCut_mc[nTotCut];
-	totCut_mc[0] = photonEtaCut;
+	totCut_mc[0] = photonEtaCut && hoeCut;
 	totCut_mc[1] = photonEtaCut && spikeCut && hoeCut && resCut;
 	totCut_mc[2] = photonEtaCut && spikeCut && hoeCut && resCut && candidateCut;
 
 	TH1D* hiso_data[nTotCut][nPhoCut];
 	TH1D* hiso_mc[nTotCut][nPhoCut];
 	int nbin, xmin, xmax;
-	if(isoName=="trkSumPtHollowConeDR04") { nbin=100;xmin=0;xmax=13000; }
+	if(isoName=="trkSumPtHollowConeDR04") { nbin=100;xmin=0;xmax=10; }
 	else { nbin=100;xmin=0;xmax=300; }
 
 	TCanvas* c_temp = new TCanvas("c_temp", "jet p_{T} distribution", 300, 300); 
@@ -113,8 +113,8 @@ void iso_data_mc(TString isoName="trkSumPtHollowConeDR04"){
 	for(int i=0;i<nTotCut;i++){
 		for(int j=0;j<nPhoCut;j++){
 			c_cut->cd(3*i+j+1);
-			hiso_data[i][j]->Scale(1./hiso_data[i][j]->Integral());
-			hiso_mc[i][j]->Scale(1./hiso_mc[i][j]->Integral());
+			//hiso_data[i][j]->Scale(1./hiso_data[i][j]->Integral());
+			//hiso_mc[i][j]->Scale(1./hiso_mc[i][j]->Integral());
 			//hist cosmetics
 			double range = cleverRange(hiso_data[i][j],hiso_mc[i][j]);
                         hiso_data[i][j]->GetYaxis()->SetRangeUser(0.00001,range);
