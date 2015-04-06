@@ -57,14 +57,14 @@ void compareTwo(){
 	}
 
 	//old
-	TFile * f1 = new TFile("/u/user/goyeonju/files/forest/pA/pA_photonSkimForest_v85_HLT_PAPhoton30_NoCaloIdVL_v1_highPtPhoton40.root");
+	TFile * f1 = new TFile("/home/jazzitup/forestFiles/yskimmedFiles/everythingBeforeOct19th/yskim_pA_photonSkimForest_v85.root");
 	TTree* t1 = (TTree*) f1->Get("multiPhotonAnalyzer/photon");
 	//new
 	TFile * f2 = new TFile("/u/user/goyeonju/files/forest/pA/pPb_DATA_photon30trig_localJEC_v1.root");
 	TTree* t2 = (TTree*) f2->Get("multiPhotonAnalyzer/photon");
 
-	TH1D* h1 = new TH1D("h1", "", 100, 0, 1000);
-	TH1D* h2 = new TH1D("h2", "", 100, 0, 1000);
+	TH1D* h1 = new TH1D("h1", "", 16, 40, 200);
+	TH1D* h2 = new TH1D("h2", "", 16, 40, 200);
 
 	//configuration
 	TString var = "pt";
