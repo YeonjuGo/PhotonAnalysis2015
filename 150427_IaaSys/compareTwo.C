@@ -43,7 +43,7 @@
 #include <TStopwatch.h>
 #include <ctime>
 
-void compareTwo(int icoll=1){
+void compareTwo(int icoll=0){
 	TH1::SetDefaultSumw2();
 	gStyle -> SetOptStat(0);
 	gStyle -> SetTitleYSize(0.05);
@@ -62,7 +62,8 @@ void compareTwo(int icoll=1){
     TFile * f1;//old
     TFile * f2;//new
     if(icoll==0){//PbPb
-        f1 = new TFile("/home/goyeonju/CMS/2015/gammaJetSystematics/resultHistograms/resultHistograms_nominal_vtxCentWeighted.root");
+        f1 = new TFile("/home/goyeonju/CMS/2015/gammaJetAnalysis/drawFigures/resultHistograms/resultHistograms_nominal_vtxCentWeighted.root");
+        //f1 = new TFile("/home/goyeonju/CMS/2015/gammaJetSystematics/resultHistograms/resultHistograms_nominal_vtxCentWeighted.root");
         f2 = new TFile("/home/goyeonju/CMS/2015/gammaJetSystematics/resultHistograms_yj/resultHistograms_nominal_vtxCentWeighted.root");
     } else if(icoll==1){//pp 30-100 % 
         f1 = new TFile("/home/goyeonju/CMS/2015/gammaJetSystematics/resultHistograms/resultHistograms_ppSmeared13099.root");
