@@ -1,6 +1,6 @@
 // Author : Yeonju Go
 // This is modified macro from 131016_fitResolandScale/fitResolandScale.C.
-// To derive residual correction fitting function.
+// To draw l2l3 correction factor distribution.
 
 #include "../HiForestAnalysis/hiForest.h"
 #include "../gammaJetAnalysis/CutAndBinCollection2012.h"

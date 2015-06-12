@@ -36,17 +36,18 @@ EXE = $(DPMJET)
 #  Linux g77
 #  ---------
 # OPT = -C -Wall -malign-double -mpentium -O
-OPT = -c -O3 -g -mcpu=pentiumpro -fexpensive-optimizations -funroll-loops -fstrength-reduce -Wall -fno-automatic -fno-silent -m32 -ffortran-bounds-check -v
-FC = g77
-LD = g77
-TRAP = fpe.o
+#OPT = -c -O3 -g -mcpu=pentiumpro -fexpensive-optimizations -funroll-loops -fstrength-reduce -Wall -fno-automatic -fno-silent -m32 -ffortran-bounds-check -v
+#FC = g77
+#LD = g77
+#TRAP = fpe.o
 
 #  Linux gfortran
 #  --------------
-# OPT = -c -C -std=legacy -O  -O3 -g -fexpensive-optimizations -funroll-loops -fno-automatic -m32 -fbounds-check -v
-# FC = gfortran
-# LD = gfortran
-# TRAP = fpe.o
+#  OPT = -c -C -std=legacy -O  -O3 -g -fexpensive-optimizations -funroll-loops -fno-automatic -m32 -fbounds-check -v
+ OPT = -c -C -std=legacy -O  -O3 -g -fexpensive-optimizations -funroll-loops -fno-automatic -fbounds-check -v -fPIC
+ FC = gfortran
+ LD = gfortran
+ TRAP = fpe.o
 
 #  IBM (RISC)
 #  ----------
@@ -70,7 +71,7 @@ clean:
 
 $(EXE): $(USER).o $(DPMJET).o $(PHOJET).o $(PYTHIA).o Makefile
 
-	$(LD) -o $(EXE) -m32 $(USER).o $(DPMJET).o $(PHOJET).o $(PYTHIA).o \
+	$(LD) -o $(EXE) $(USER).o $(DPMJET).o $(PHOJET).o $(PYTHIA).o \
                         $(LIB) $(TRAP)
 
 .f.o:
