@@ -4,11 +4,16 @@
 #include "TString.h"
 #include "TCanvas.h"
 #include <iostream>
+#include <fstream>
+
 
 void makeNoiseStripList(int run=251562){
 	TString fname =Form("DQM_V0001_R000%d__SingleMuon__Run2015B-PromptReco-v1__DQMIO.root",run);
 	TFile* f = new TFile( fname.Data() );
 	cout << "Input File : " << fname.Data() << endl;
+	ofstream myfile;
+	myfile.open (Form("NoiseStripList_%d.txt",run));
+	//myfile << "Writing this to a file.\n";
 	TH1D* Occ_Barrel=new TH1D("Occ_Barrel","Occupancy of Barrel; Occupancy; Entries", 800,0,8000);
 	TH2D* Barrel[5][12]; //[wheel][sector] 
 	for(int iwheel=0; iwheel<5; iwheel++){
@@ -22,6 +27,7 @@ void makeNoiseStripList(int run=251562){
 					TString label = Barrel[iwheel][isec]->GetYaxis()->GetBinLabel(istage);	
 					if(occVal>1000){
 						cout << "W"<<iwheel-2<<"_S"<<isec+1<<" "<<label<<" stripNo."<<istrip<<" (occupancy Value = "<<occVal<<") "<< endl; 	
+						myfile << "W"<<iwheel-2<<"_S"<<isec+1<<" "<<label<<" stripNo."<<istrip<<endl; 	
 					}
 				}//istage
 			}//istrip
@@ -52,15 +58,20 @@ void makeNoiseStripList(int run=251562){
 					else if(istrip>33 && istrip<=32*2) { roll="RollB"; realStripNo=istrip-32;}
 					else if(istrip>32*2+1 && istrip<=32*3) { roll="RollC"; realStripNo=istrip-32*2;}
 
-					if(occValPlus>1000)
+					if(occValPlus>1000){
 						cout << "RE+"<<idisk+1<<" "<<labelPlus<<" "<<roll<<" stripNo."<<realStripNo<<" (occupancy Value = "<<occValPlus<<") "<< endl;	
-					if(occValMinus>1000)
+						myfile << "RE+"<<idisk+1<<" "<<labelPlus<<" "<<roll<<" stripNo."<<realStripNo<< endl;	
+					}
+					if(occValMinus>1000){
 						cout << "RE"<<-1*(idisk+1)<<" "<<labelMinus<<" "<<roll<<" stripNo."<<realStripNo<<" (occupancy Value = "<<occValMinus<<") "<< endl;
+						myfile << "RE"<<-1*(idisk+1)<<" "<<labelMinus<<" "<<roll<<" stripNo."<<realStripNo<< endl;
+					}
 				}//istage
 			}//istrip
 		}//iring
 	}//idisk
 	
+	myfile.close();
 	TCanvas* c1=new TCanvas();
 	Occ_Barrel->Draw();
 	c1->SaveAs("Occupancy_of_Barrel.pdf");
