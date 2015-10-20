@@ -17,8 +17,8 @@
 //#include "../HiForestAnalysis/hiForest.h"
 
 const int Ncut = 5;
-void Get2DEffPlots(TTree* t_evt=0, TString v1="hiHF", TString v2="hiNpix", int xbin=200, double xmin=0, double xmax=4500, int ybin=200, double ymin=0, double ymax=10000, TCut cut="", TCanvas* c_tot=0, TString cap="", bool isReject=0);
-void FilterEffi_data_2D(const char* fname="/afs/cern.ch/work/y/ygo/public/centrality/merged_centrality_MB_DATA750_RECO_150914.root", TString type = "RECO_750")
+void Get2DEvtPlots(TTree* t_evt=0, TString v1="hiHF", TString v2="hiNpix", int xbin=200, double xmin=0, double xmax=4500, int ybin=200, double ymin=0, double ymax=10000, TCut cut="", TCanvas* c_tot=0, TString cap="", bool isPassed=0, bool isAOD=0);
+void FilterEffi_data_2D(const char* fname="/afs/cern.ch/work/y/ygo/public/centrality/merged_centrality_MB_DATA750_RECO_150914.root", TString type = "RECO_750",bool isAOD=0)
 {
     //pcollisionEventSelection
     //phfCoincFilter
@@ -47,34 +47,35 @@ void FilterEffi_data_2D(const char* fname="/afs/cern.ch/work/y/ygo/public/centra
 	t1->SetLineWidth(1);
 	t1->SetLineStyle(7); // 7 is jumSun , 1 is onSun
 	t1->SetLineColor(1); // 2 is red
-	Get2DEffPlots(t_evt, "hiBin", "hiHF", 100,0,200, 100,0,5000,"",c_tot,type,0);
-	Get2DEffPlots(t_evt, "hiBin", "hiHFhit", 100,0,200, 100,0,50000,"",c_tot,type,0);
-	Get2DEffPlots(t_evt, "hiBin", "hiNpix", 100,0,200, 100,0,40000,"",c_tot,type,0);
-	Get2DEffPlots(t_evt, "hiBin", "hiZDC", 100,0,200, 100,0,80000,"",c_tot,type,0);
-	Get2DEffPlots(t_evt, "hiBin", "hiEE", 100,0,200, 100,0,3000,"",c_tot,type,0);
-	Get2DEffPlots(t_evt, "hiBin", "hiEB", 100,0,200, 100,0,4000,"",c_tot,type,0);
-	Get2DEffPlots(t_evt, "hiBin", "hiET", 100,0,200, 100,0,2000,"",c_tot,type,0);
-	Get2DEffPlots(t_evt, "hiHF", "hiNpix", 100,0,3000, 100,0,40000,"",c_tot,type,0);
-	Get2DEffPlots(t_evt, "hiEE", "hiEB", 100,0,4000, 100,0,4000,"",c_tot,type,0);
+	Get2DEvtPlots(t_evt, "hiBin", "hiHF", 100,0,200, 100,0,5000,"",c_tot,type,0,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiHFhit", 100,0,200, 100,0,50000,"",c_tot,type,0,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiNpix", 100,0,200, 100,0,40000,"",c_tot,type,0,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiZDC", 100,0,200, 100,0,80000,"",c_tot,type,0,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiEE", 100,0,200, 100,0,3000,"",c_tot,type,0,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiEB", 100,0,200, 100,0,4000,"",c_tot,type,0,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiET", 100,0,200, 100,0,2000,"",c_tot,type,0,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiHF", "hiNpix", 100,0,3000, 100,0,40000,"",c_tot,type,0,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiEE", "hiEB", 100,0,4000, 100,0,4000,"",c_tot,type,0,(int)isAOD);
 
-    Get2DEffPlots(t_evt, "hiBin", "hiHF", 100,0,200, 100,0,5000,"",c_tot,type,1);
-	Get2DEffPlots(t_evt, "hiBin", "hiHFhit", 100,0,200, 100,0,50000,"",c_tot,type,1);
-	Get2DEffPlots(t_evt, "hiBin", "hiNpix", 100,0,200, 100,0,40000,"",c_tot,type,1);
-	Get2DEffPlots(t_evt, "hiBin", "hiZDC", 100,0,200, 100,0,80000,"",c_tot,type,1);
-	Get2DEffPlots(t_evt, "hiBin", "hiEE", 100,0,200, 100,0,3000,"",c_tot,type,1);
-	Get2DEffPlots(t_evt, "hiBin", "hiEB", 100,0,200, 100,0,4000,"",c_tot,type,1);
-	Get2DEffPlots(t_evt, "hiBin", "hiET", 100,0,200, 100,0,2000,"",c_tot,type,1);
-	Get2DEffPlots(t_evt, "hiHF", "hiNpix", 100,0,3000, 100,0,40000,"",c_tot,type,1);
-	Get2DEffPlots(t_evt, "hiEE", "hiEB", 100,0,4000, 100,0,4000,"",c_tot,type,1);
+    Get2DEvtPlots(t_evt, "hiBin", "hiHF", 100,0,200, 100,0,5000,"",c_tot,type,1,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiHFhit", 100,0,200, 100,0,50000,"",c_tot,type,1,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiNpix", 100,0,200, 100,0,40000,"",c_tot,type,1,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiZDC", 100,0,200, 100,0,80000,"",c_tot,type,1,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiEE", 100,0,200, 100,0,3000,"",c_tot,type,1,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiEB", 100,0,200, 100,0,4000,"",c_tot,type,1,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiBin", "hiET", 100,0,200, 100,0,2000,"",c_tot,type,1,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiHF", "hiNpix", 100,0,3000, 100,0,40000,"",c_tot,type,1,(int)isAOD);
+	Get2DEvtPlots(t_evt, "hiEE", "hiEB", 100,0,4000, 100,0,4000,"",c_tot,type,1,(int)isAOD);
 }
-void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, double xmax, int ybin, double ymin, double ymax, TCut cut, TCanvas* c_tot, TString cap, bool isReject )
+void Get2DEvtPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, double xmax, int ybin, double ymin, double ymax, TCut cut, TCanvas* c_tot, TString cap, bool isPassed, bool isAOD )
 {
     TCut totcut[Ncut];
     totcut[0] = cut;
-    totcut[1] = cut&& Form("pprimaryVertexFilter==%d",(int)isReject);
-    totcut[2] = cut&& Form("phltPixelClusterShapeFilter==%d",(int)isReject);
-    totcut[3] = cut&& Form("phfCoincFilter3==%d",(int)isReject);
-    totcut[4] = cut&& Form("pcollisionEventSelection==%d",(int)isReject);
+    totcut[1] = cut&& Form("pprimaryVertexFilter==%d",(int)isPassed);
+    if(isAOD) totcut[2] = cut&& Form("pclusterCompatibilityFilter==%d",(int)isPassed);
+    else totcut[2] = cut&& Form("phltPixelClusterShapeFilter==%d",(int)isPassed);
+    totcut[3] = cut&& Form("phfCoincFilter3==%d",(int)isPassed);
+    totcut[4] = cut&& Form("pcollisionEventSelection==%d",(int)isPassed);
 
     TCanvas *c_temp = new TCanvas("c_temp", "c_temp", 300,300);
     c_temp->cd();
@@ -93,7 +94,7 @@ void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, 
         c_tot -> cd(i+1);
         h2D[i] -> Draw("colz");
     }
-    c_tot->SaveAs(Form("png/h2D_%s_%s_isReject%d_%s.png",v1.Data(), v2.Data(),(int)isReject,cap.Data()));
+    c_tot->SaveAs(Form("png/h2D_%s_%s_isPassed%d_%s.png",v1.Data(), v2.Data(),(int)isPassed,cap.Data()));
     for(int i=0; i<Ncut; i++){
         delete h2D[i];
     }
