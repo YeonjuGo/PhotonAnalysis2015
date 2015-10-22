@@ -23,8 +23,7 @@ process.HiForest.HiForestVersion = cms.untracked.string(version)
 
 process.source = cms.Source("PoolSource",
                             duplicateCheckMode = cms.untracked.string("noDuplicateCheck"),
-			    fileNames = cms.untracked.vstring("file:step2_RAW2DIGI_L1Reco_MB_AOD_1.root")
-#                            fileNames = cms.untracked.vstring("file:AOD_sample_file.root")
+                            fileNames = cms.untracked.vstring("file:AOD_sample_file.root")
                         )
 
 
@@ -180,27 +179,24 @@ process.ana_step = cms.Path(#process.heavyIon*
                             process.hiEvtAnalyzer*
                             process.jetSequences +
                             #process.photonStep +
-#                            process.ggHiNtuplizer +
+                            process.ggHiNtuplizer +
                             process.pfcandAnalyzer +
                             #process.rechitAna +
 #temp                            process.hltMuTree +
-                            process.HiForest
-#                            process.HiForest+
-#                            process.anaTrack +
-#                            process.pixelTrack
+                            process.HiForest+
+                            process.anaTrack +
+                            process.pixelTrack
                             )
 
 process.load('HeavyIonsAnalysis.JetAnalysis.EventSelection_cff')
 process.phltJetHI = cms.Path( process.hltJetHI )
-process.pcollisionEventSelectionAOD = cms.Path(process.collisionEventSelectionAOD)
+#process.pcollisionEventSelection = cms.Path(process.collisionEventSelection)
 # process.pHBHENoiseFilter = cms.Path( process.HBHENoiseFilter ) #should be put back in later
-process.pHBHENoiseFilterResultProducer = cms.Path( process.HBHENoiseFilterResultProducer )
-process.phfCoincFilter = cms.Path(process.hfCoincFilter )
-process.phfCoincFilter3 = cms.Path(process.hfCoincFilter3 )
-process.pprimaryVertexFilter = cms.Path(process.primaryVertexFilter )
-process.pclusterCompatibilityFilter= cms.Path(process.clusterCompatibilityFilter )
+# process.phfCoincFilter = cms.Path(process.hfCoincFilter )
+# process.phfCoincFilter3 = cms.Path(process.hfCoincFilter3 )
+# process.pprimaryVertexFilter = cms.Path(process.primaryVertexFilter )
 # process.phltPixelClusterShapeFilter = cms.Path(process.siPixelRecHits*process.hltPixelClusterShapeFilter )
-process.phiEcalRecHitSpikeFilter = cms.Path(process.hiEcalRecHitSpikeFilter )
+# process.phiEcalRecHitSpikeFilter = cms.Path(process.hiEcalRecHitSpikeFilter )
 
 process.pAna = cms.EndPath(process.skimanalysis)
 

@@ -255,4 +255,35 @@ Double_t getDR( Double_t eta1, Double_t phi1, Double_t eta2, Double_t phi2){
         Double_t theDeta = eta1 - eta2;
         return TMath::Sqrt ( theDphi*theDphi + theDeta*theDeta);
 }
+
+Double_t cleverRange(TH1* h,Float_t fac=1.2, Float_t minY=1.e-3)
+{
+   Float_t maxY =  fac * h->GetBinContent(h->GetMaximumBin());
+   //   cout <<" range will be set as " << minY << " ~ " << maxY << endl;
+   h->SetAxisRange(minY,maxY,"Y");
+   return maxY;
+}
+
+
+Double_t getCleverRange(TH1* h)
+{
+  Double_t maxY = -1000000;
+  for ( Int_t ibin = 1 ; ibin <= h->GetNbinsX() ; ibin++) {
+    if (maxY < h->GetBinContent(ibin) )
+      maxY = h->GetBinContent(ibin);
+  }
+  return maxY;
+}
+
+Double_t cleverRange(TH1* h,TH1* h2, Float_t fac=1.2, Float_t minY=1.e-3)
+{
+  Float_t maxY1 =  fac * h->GetBinContent(h->GetMaximumBin());
+  Float_t maxY2 =  fac * h2->GetBinContent(h2->GetMaximumBin());
+
+  //   cout <<" range will be set as " << minY << " ~ " << maxY << endl;
+  h->SetAxisRange(minY,max(maxY1,maxY2),"Y");
+  h2->SetAxisRange(minY,max(maxY1,maxY2),"Y");
+  return max(maxY1,maxY2);
+}
+
 #endif
