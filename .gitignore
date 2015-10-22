@@ -5,6 +5,8 @@
 *.d
 *.txt
 *.tgz
+*.png
+*.pdf
 files
 *Files
 AutoDict*
