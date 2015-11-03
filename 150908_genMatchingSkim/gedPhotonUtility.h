@@ -233,14 +233,13 @@ void makeMultiPanelCanvas(TCanvas*& canv, const Int_t columns,
 
 Double_t getDPHI( Double_t phi1, Double_t phi2) {
         Double_t dphi = phi1 - phi2;
-
-        if ( dphi > 3.141592653589 )
+        if ( dphi >= 3.141592653589 )
                 dphi = dphi - 2. * 3.141592653589;
         if ( dphi <= -3.141592653589 )
                 dphi = dphi + 2. * 3.141592653589;
 
         if ( TMath::Abs(dphi) > 3.141592653589 ) {
-                std::cout << " commonUtility::getDPHI error!!! dphi is bigger than 3.141592653589 " << std::endl;
+            //    std::cout << " commonUtility::getDPHI error!!! dphi is bigger than 3.141592653589 " << std::endl;
         }
 
         return dphi;

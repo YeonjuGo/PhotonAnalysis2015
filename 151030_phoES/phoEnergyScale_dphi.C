@@ -27,7 +27,7 @@ void phoEnergyScale_dphi(TString sample = "AllQCDPhoton30", TString treePath="gg
     gStyle->SetTitleSize(0.05,"Y");
     gStyle->SetTitleSize(0.05,"X");
     gStyle->SetLabelSize(0.05,"Y");
-    TString inputFileName = Form("/afs/cern.ch/work/y/ygo/private/PhotonAnalysis2015/PFphoton/CMSSW_7_5_0/src/150908_voronoiStudy/skimFiles/jskim_%s_%s_genMatched_inclusivePho.root",sample.Data(),treePath.Data());
+    TString inputFileName = Form("/afs/cern.ch/work/y/ygo/private/PhotonAnalysis2015/150908_voronoiStudy/skimFiles/jskim_%s_%s_genMatched_inclusivePho.root",sample.Data(),treePath.Data());
     TFile* fin = new TFile(inputFileName);
     TTree* tr = (TTree*)fin->Get("t_pho");
 
@@ -86,8 +86,8 @@ void phoEnergyScale_dphi(TString sample = "AllQCDPhoton30", TString treePath="gg
         drawText(Form("%.2f<|#eta|<%.2f",etaBin[ieta],etaBin[ieta+1]),xpos,ypos-2*dy); 
         jumSun(0.0,1.0,epmax,1.0);
     }
-    c1->SaveAs(Form("png/ES_dphi%d_ptThr%d_%s.png",evpOrder,ptThr,treePath.Data()));
+    c1->SaveAs(Form("png/ES_dphi%d_%s_%s_ptThr%d.png",evpOrder,sample.Data(),treePath.Data(),ptThr));
     for(int ieta=0; ieta<nEta; ieta++){
-        c2[ieta]->SaveAs(Form("png/ES_dphi%dDist_ptThr%d_ieta%d_%s.png",evpOrder,ptThr,ieta,treePath.Data()));
+        c2[ieta]->SaveAs(Form("png/ES_dphi%dDist_%s_%s_ptThr%d_ieta%d.png",evpOrder,sample.Data(),treePath.Data(),ptThr,ieta));
     }
 }
