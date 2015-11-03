@@ -28,60 +28,6 @@
 #include <vector>
 using namespace std;
 
-const int MAXGENPARTICLES = 50000;  // number of gen particles can be large
-const int MAXPHOTONS = 500;
-const int PDG_PHOTON = 22;
-const int cutmcStatus = 1;
-const double cutdeltaR = 0.2; // 0.3    // cut for matching gen and reco. particles
-//const float cutetaBarrel = 1.4791;                      // cut to separate photons into Barrel and Endcap photons
-const float cutetaBarrel = 1.4442;                      // cut to separate photons into Barrel and Endcap photons
-const float cutetaBarrelGap = 1.566;                      // cut to separate photons into Barrel and Endcap photons
-const float cutetaEndCap = 2;                           // cut to separate photons in Endcap into 2.
-const int cutmcMomPID_pi0 = 111;
-
-const int nEtaCut = 4;
-const int nCentCut = 5;
-const int nMomIdCut = 5;
-const int nRadius = 6;
-
-float eta_gt[nEtaCut] = {  0.0,            0.0, cutetaBarrelGap, cutetaEndCap};
-float eta_lt[nEtaCut] = {5.0, cutetaBarrel, cutetaEndCap,       5.0};
-int hiBin_gt[nCentCut] = {-999,  0, 20,  60, 100};
-int hiBin_lt[nCentCut] = { 999, 20, 60, 100, 200};
-int mcMomPID_gt[nMomIdCut] = {-999, 21, -999,  22, 110};
-int mcMomPID_lt[nMomIdCut] = { 999, 23,   22, 999, 112};
-
-enum condition { noC, hoeC, sigmaC, hoeAndSigmaC };
-TString getCondSuffix ( condition cond_) {
-  if (cond_ == noC) return "";
-  if (cond_ == hoeC) return "_hoe0.1";
-  if (cond_ == sigmaC) return "_sigma0.01";
-  if (cond_ == hoeAndSigmaC) return "_hoe0.1_sigma0.01";
-  return "NULL";
-}
-TString getCondDirName ( condition cond_) {
-  if (cond_ == noC) return "_noCut";
-  if (cond_ == hoeC ) return "_hoeC";
-  if (cond_ == sigmaC ) return "_sigmaC";
-  if (cond_ == hoeAndSigmaC) return "_hoeAndSigmaC";
-  return "NULL";
-}
-
-TString getCondSuffix ( int cond_) {
-  if (cond_ == noC) return "";
-  if (cond_ == hoeC) return "_hoe0.1";
-  if (cond_ == sigmaC) return "_sigma0.01";
-  if (cond_ == hoeAndSigmaC) return "_hoe0.1_sigma0.01";
-  return "NULL";
-}
-TString getCondDirName ( int cond_) {
-  if (cond_ == noC) return "_noCut";
-  if (cond_ == hoeC ) return "_hoeC";
-  if (cond_ == sigmaC ) return "_sigmaC";
-  if (cond_ == hoeAndSigmaC) return "_hoeAndSigmaC";
-  return "NULL";
-}
-
 void legStyle( TLegend *a=0 , TString head="")
 {
   a->SetBorderSize(0);
@@ -137,6 +83,15 @@ void jumSun(Double_t x1=0,Double_t y1=0,Double_t x2=1,Double_t y2=1,Int_t color=
 	t1->SetLineStyle(7);
 	t1->SetLineColor(color);
 	t1->Draw();
+}
+
+void onSun(Double_t x1=0,Double_t y1=0,Double_t x2=1,Double_t y2=1,Int_t color=1, Double_t width=1)
+{
+    TLine* t1 = new TLine(x1,y1,x2,y2);
+    t1->SetLineWidth(width);
+    t1->SetLineStyle(1);
+    t1->SetLineColor(color);
+    t1->Draw();
 }
 double findCross(TH1* h1, TH1* h2, double& frac, double& effi, double& fracErr, double& effiErr){
 	Int_t nBins = h1->GetNbinsX();
@@ -286,4 +241,22 @@ Double_t cleverRange(TH1* h,TH1* h2, Float_t fac=1.2, Float_t minY=1.e-3)
   return max(maxY1,maxY2);
 }
 
+TF1* cleverGaus(TH1* h, char* title="h", Float_t c = 2.5, bool quietMode=true)
+{
+    if ( h->GetEntries() == 0 )
+    {
+        TF1 *fit0 = new TF1(title,"gaus",-1,1);
+        fit0->SetParameters(0,0,0);
+        return fit0;
+    }
+
+    Int_t peakBin  = h->GetMaximumBin();
+    Double_t peak =  h->GetBinCenter(peakBin);
+    Double_t sigma = h->GetRMS();
+
+    TF1 *fit1 = new TF1(title,"gaus",peak-c*sigma,peak+c*sigma);
+    if (quietMode) h->Fit(fit1,"LL M O Q R");
+    else    h->Fit(fit1,"LL M O Q R");
+    return fit1;
+}
 #endif
