@@ -15,7 +15,7 @@
 #include <TCut.h>
 #include "../yjUtility.h"
 
-void phoEnergyScale_pt(TString sample = "AllQCDPhoton30", TString treePath="ggHiNtuplizer"){
+void phoEnergyScale_pt(TString sample = "SingleGammaFlatPt10To200", TString treePath="ggHiNtuplizerGED"){
     TH1::SetDefaultSumw2();
     // gStyle->SetOptFit(0);
     gStyle -> SetOptStat(0);
@@ -27,16 +27,17 @@ void phoEnergyScale_pt(TString sample = "AllQCDPhoton30", TString treePath="ggHi
     gStyle->SetTitleSize(0.05,"Y");
     gStyle->SetTitleSize(0.05,"X");
     gStyle->SetLabelSize(0.05,"Y");
-    TString inputFileName = Form("/afs/cern.ch/work/y/ygo/private/PhotonAnalysis2015/150908_voronoiStudy/skimFiles/jskim_%s_%s_genMatched_inclusivePho.root",sample.Data(),treePath.Data());
+    TString inputFileName = Form("/afs/cern.ch/work/y/ygo/private/PhotonAnalysis2015/150908_genMatchingSkim/skimFiles/jskim_%s_%s_genMatched_inclusivePho.root",sample.Data(),treePath.Data());
     TFile* fin = new TFile(inputFileName);
     TTree* tr = (TTree*)fin->Get("t_pho");
 
-    float etaBin[] = {0.00,1.44,2.00,2.40,3.00};
+    float etaBin[] = {0.00,1.44,2.00,3.00};
+    //float etaBin[] = {0.00,1.44,2.00,2.40,3.00};
     const int nEta = sizeof(etaBin)/sizeof(float)-1;
 
     float ptBin[] = {20.0,30.0,40.0,50.0,70.0,90.0,110.0};
     const int nPt = sizeof(ptBin)/sizeof(float)-1;
-    TH1D* h1D_ES[nEta][nPt];//[etaBin][eventPlane]
+    TH1D* h1D_ES[nEta][nPt];//[etaBin][pt]
     TH1D* h1D_ES_pt[nEta];
     double mean[nEta][nPt], var[nEta][nPt], resol[nEta][nPt], resolVar[nEta][nPt];
     
@@ -51,7 +52,7 @@ void phoEnergyScale_pt(TString sample = "AllQCDPhoton30", TString treePath="ggHi
             tr->Draw(Form("phoEt/mcPt>>+%s",h1D_ES[ieta][ipt]->GetName()), Form("abs(phoEta)>=%.2f && abs(phoEta)<%.2f && phoEt>=%.1f && phoEt<%.1f",etaBin[ieta],etaBin[ieta+1],ptBin[ipt],ptBin[ipt+1]));
             h1D_ES[ieta][ipt] = (TH1D*)gDirectory->Get(h1D_ES[ieta][ipt]->GetName());
 
-            TF1* ff = cleverGaus(h1D_ES[ieta][ipt],"h",1.5);
+            TF1* ff = cleverGaus(h1D_ES[ieta][ipt],"h",2.5);
             //gPad->SetLogy();
             mean[ieta][ipt] = ff->GetParameter(1);
             var[ieta][ipt] = ff->GetParError(1);
@@ -69,10 +70,10 @@ void phoEnergyScale_pt(TString sample = "AllQCDPhoton30", TString treePath="ggHi
     c1->Divide(2,2);
     for(int ieta=0; ieta<nEta; ieta++){
         c1->cd(ieta+1);
-        if(ieta!=nEta-1) h1D_ES_pt[ieta] -> SetAxisRange(0.9, 1.3, "Y");
+        if(ieta!=4) h1D_ES_pt[ieta] -> SetAxisRange(0.9, 1.3, "Y");
         else h1D_ES_pt[ieta] -> SetAxisRange(0.9, 3.0, "Y");
         h1D_ES_pt[ieta] -> Draw();
-        float xpos(0.6),ypos(0.6),dy(0.06);
+        float xpos(0.65),ypos(0.75),dy(0.04);
         if(ieta==0){
             //drawText(Form("p_{T}>%d GeV", ptThr),xpos,ypos);
             drawText(Form("%s",treePath.Data()),xpos,ypos+2*dy);

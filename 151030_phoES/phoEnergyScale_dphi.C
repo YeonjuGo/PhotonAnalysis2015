@@ -27,11 +27,12 @@ void phoEnergyScale_dphi(TString sample = "AllQCDPhoton30", TString treePath="gg
     gStyle->SetTitleSize(0.05,"Y");
     gStyle->SetTitleSize(0.05,"X");
     gStyle->SetLabelSize(0.05,"Y");
-    TString inputFileName = Form("/afs/cern.ch/work/y/ygo/private/PhotonAnalysis2015/150908_voronoiStudy/skimFiles/jskim_%s_%s_genMatched_inclusivePho.root",sample.Data(),treePath.Data());
+    TString inputFileName = Form("/afs/cern.ch/work/y/ygo/private/PhotonAnalysis2015/150908_genMatchingSkim/skimFiles/jskim_%s_%s_genMatched_inclusivePho.root",sample.Data(),treePath.Data());
     TFile* fin = new TFile(inputFileName);
     TTree* tr = (TTree*)fin->Get("t_pho");
 
-    double etaBin[] = {0.00,1.44,2.00,2.40,3.00};
+    double etaBin[] = {0.00,1.44,2.00,3.00};
+    //double etaBin[] = {0.00,1.44,2.00,2.40,3.00};
     const int nEta = sizeof(etaBin)/sizeof(double)-1;
 
     const int nEP = 8;
@@ -75,7 +76,7 @@ void phoEnergyScale_dphi(TString sample = "AllQCDPhoton30", TString treePath="gg
     c1->Divide(2,2);
     for(int ieta=0; ieta<nEta; ieta++){
         c1->cd(ieta+1);
-        if(ieta!=nEta-1) h1D_ES_dphi[ieta] -> SetAxisRange(0.9, 1.3, "Y");
+        if(ieta!=4) h1D_ES_dphi[ieta] -> SetAxisRange(0.9, 1.3, "Y");
         else h1D_ES_dphi[ieta] -> SetAxisRange(0.9, 3.0, "Y");
         h1D_ES_dphi[ieta] -> Draw();
         float xpos(0.6),ypos(0.6),dy(0.06);
