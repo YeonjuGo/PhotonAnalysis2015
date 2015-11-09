@@ -1,3 +1,8 @@
+// compare photon variables on between 53X and 75X CMSSW version.
+// v2 : spike rejected (only for barrel)
+//    : hcalIso added
+//    : argument ptThr added
+
 #include "TFile.h"
 #include "TTree.h"
 #include "TNtuple.h"
@@ -21,15 +26,14 @@
 
 //int returnHFBin(double hf);
 
-void compareTwo(TH1* h1=0, TH1* h2=0,double xmin=0.0, double xmax=200.0, const char* name="_pt15_etaBarrel",double ymax=3.0);
-void comparePho_eventMatcherOutput()
+void compareTwo(TH1* h1=0, TH1* h2=0,double xmin=0.0, double xmax=200.0, const char* name="_pt15_etaBarrel",double ymax=-1);
+void comparePho_eventMatcherOutput_v2(int ptThr = 15)
 {
     TH1::SetDefaultSumw2();
     gStyle->SetLabelSize(0.03,"Y");
     gStyle -> SetTitleYSize(0.05);
-    gStyle -> SetTitleXSize(0.06);
+    gStyle -> SetTitleXSize(0.05);
     TFile *inf1 = new TFile("/afs/cern.ch/work/y/ygo/private/PhotonAnalysis2015/151103_rechitEtaPhiMap/skimFiles/eventMatched_53X_75X_biransSample.root");
-    //TFile *inf1 = new TFile("/afs/cern.ch/work/y/ygo/private/PhotonAnalysis2015/151103_rechitEtaPhiMap/skimFiles/eventMatched_53X_75X.root");
     TTree* tevt = (TTree*)inf1->Get("HiTree");
     TTree* tpho[2];
     const char* ver = "53";
@@ -37,13 +41,11 @@ void comparePho_eventMatcherOutput()
         if(i==1) ver = "75";
         tpho[i] = (TTree*)inf1->Get(Form("pho%sx",ver));
     }
-
     const double xMin(0.0), xMax(2000.0);
     const int xBin=50;
-
     double energyBin[] = {0,20,40,60,80,100,120,140,160,180,200,220,240,300,500,700,900,1200,1600,2000};
     int Nenergy = sizeof(energyBin)/sizeof(double)-1;
-    double ptBin[] = {0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,110,120,140,160,180,200};
+    double ptBin[] = {0,5,10,15,20,25,30,35,40,45,50,60,70,85,110,120,140,160,200};
     int Npt = sizeof(ptBin)/sizeof(double)-1;
 
     const int Neta = 4;
@@ -51,29 +53,30 @@ void comparePho_eventMatcherOutput()
     TCut etaCut[2][Neta];
     TCut spikeCut[2];
     TCut totCut[2][Neta];//[sample][eta]
-    ptCut[0] = "pt>15";
-    ptCut[1] = "phoEt>15";
+    ptCut[0] = Form("pt>%d",ptThr);
+    ptCut[1] = Form("phoEt>%d",ptThr);
     spikeCut[0] = "swissCrx<0.9 && abs(seedTime)<3";
     spikeCut[1] = "pho_swissCrx<0.9 && abs(pho_seedTime)<3";
-    etaCut[0][0] = "pt>15 && abs(eta)<1.44";
-    etaCut[1][0] = "phoEt>15 && abs(phoEta)<1.44";
-    etaCut[0][1] = "pt>15 && abs(eta)>1.44 && abs(eta)<2.0";
-    etaCut[1][1] = "phoEt>15 && abs(phoEta)>1.44 && abs(phoEta<2.0)";
-    etaCut[0][2] = "pt>15 && abs(eta)>2.0 && abs(eta)<2.5";
-    etaCut[1][2] = "phoEt>15 && abs(phoEta)>2.0 && abs(phoEta)<2.5";
-    etaCut[0][3] = "pt>15 && abs(eta)>=0";
-    etaCut[1][3] = "phoEt>15 && abs(phoEta)>=0";
+    etaCut[0][0] = "abs(eta)<1.44";
+    etaCut[1][0] = "abs(phoEta)<1.44";
+    etaCut[0][1] = "abs(eta)>1.44 && abs(eta)<2.0";
+    etaCut[1][1] = "abs(phoEta)>1.44 && abs(phoEta<2.0)";
+    etaCut[0][2] = "abs(eta)>2.0 && abs(eta)<2.5";
+    etaCut[1][2] = "abs(phoEta)>2.0 && abs(phoEta)<2.5";
+    etaCut[0][3] = "abs(eta)>=0";
+    etaCut[1][3] = "abs(phoEta)>=0";
 
     for(int i=0; i<2;i++){
         for(int ieta=0; ieta<Neta;ieta++){
-            totCut[i][ieta] = etaCut[i][ieta] && spikeCut[i];
+            // adjust the spike cut on only the barrel. 
+            if(ieta==0) totCut[i][ieta] = ptCut[i] && etaCut[i][ieta] && spikeCut[i];
+            else totCut[i][ieta] = ptCut[i] && etaCut[i][ieta];
         }
     }
 
     TH1D* phopt[2][Neta];
     TH1D* phoE[2][Neta];
     TH1D* phoRawE[2][Neta];
-    TH1D* phoCoshRawE[2][Neta];
     TH1D* phoEoverRawE[2][Neta];
     TH1D* phoSigmaIetaIeta[2][Neta];
     TH1D* phoEtaWidth[2][Neta];
@@ -81,6 +84,7 @@ void comparePho_eventMatcherOutput()
     TH1D* phoBrem[2][Neta];
     TH1D* phoR9[2][Neta];
     TH1D* phoHoverE[2][Neta];
+    TH1D* phoHcalIso[2][Neta];
     cout << "ss"<< endl;
 
     for(int i=0; i<2;i++){
@@ -88,7 +92,6 @@ void comparePho_eventMatcherOutput()
             phopt[i][ieta] = new TH1D(Form("phopt_%d_ieta%d",i,ieta),";Photon p_{T} (GeV);",Npt,ptBin);
             phoE[i][ieta]= new TH1D(Form("phoE_%d_ieta%d",i,ieta),";Photon Energy (GeV);",Nenergy,energyBin);
             phoRawE[i][ieta] = new TH1D(Form("phoRawE_%d_ieta%d",i,ieta),";Photon Raw Energy (GeV);",Nenergy,energyBin);
-            //phoCoshRawE[i][ieta] = new TH1D(Form("phoCoshRawE_%d_ieta%d",i,ieta),";Photon Raw Energy (GeV);",xBin,xMin,xMax);
             phoEoverRawE[i][ieta] = new TH1D(Form("phoEOverRawE_%d_ieta%d",i,ieta),";Photon Energy/RawEnergy;",xBin,0.95,1.2);
             phoSigmaIetaIeta[i][ieta] = new TH1D(Form("phoSigmaIetaIeta_%d_ieta%d",i,ieta),";Photon #sigma_{I#etaI#eta};",xBin,0.0,0.1);
             phoEtaWidth[i][ieta] = new TH1D(Form("phoEtaWidth_%d_ieta%d",i,ieta),";Photon SC Eta Width;",xBin,0.0,0.27);
@@ -96,6 +99,7 @@ void comparePho_eventMatcherOutput()
             phoBrem[i][ieta] = new TH1D(Form("phoBrem_%d_ieta%d",i,ieta),";Photon SC PhiWidth/EtaWidth;",xBin,0.0,0.1);
             phoR9[i][ieta] = new TH1D(Form("phoR9_%d_ieta%d",i,ieta),";Photon R9;",xBin,0.0,1.0);
             phoHoverE[i][ieta] = new TH1D(Form("phoHoverE_%d_ieta%d",i,ieta),";Photon H/E;",xBin,0.0,1.0);
+            phoHcalIso[i][ieta] = new TH1D(Form("phoHcalIso_%d_ieta%d",i,ieta),";Photon hcalIso;",xBin,-30,100);
         }
     }
     
@@ -124,29 +128,29 @@ void comparePho_eventMatcherOutput()
         tpho[1]->Draw(Form("phoR9>>%s",phoR9[1][ieta]->GetName()), totCut[1][ieta].GetTitle());
         tpho[0]->Draw(Form("hadronicOverEm>>%s",phoHoverE[0][ieta]->GetName()), totCut[0][ieta].GetTitle());
         tpho[1]->Draw(Form("phoHoverE>>%s",phoHoverE[1][ieta]->GetName()), totCut[1][ieta].GetTitle());
+        tpho[0]->Draw(Form("hcalTowerSumEtConeDR04/0.9>>%s",phoHcalIso[0][ieta]->GetName()), totCut[0][ieta].GetTitle());
+        tpho[1]->Draw(Form("pho_hcalRechitIsoR4>>%s",phoHcalIso[1][ieta]->GetName()), totCut[1][ieta].GetTitle());
 
         ///////////////////////////////////////////////////
         ///////////////////////////////////////////////////
         // DRAW using compareTwo function 
 
-        const char* Name = "Barrel";
-        if(ieta==1) Name = "endcapEtaTo2";
-        if(ieta==2) Name = "endcapEtaOver2To2p5";
-        if(ieta==3) Name = "totalEta";
+        const char* Name = Form("_pt%d_spikeRejected_Barrel",ptThr);
+        if(ieta==1) Name = Form("_pt%d_spikeRejected_endcapEtaTo2",ptThr);
+        if(ieta==2) Name = Form("_pt%d_spikeRejected_endcapEtaOver2To2p5",ptThr);
+        if(ieta==3) Name = Form("_pt%d_spikeRejected_totalEta",ptThr);
 
 
-        compareTwo(phopt[0][ieta], phopt[1][ieta],0,200,Form("_pt15_%s",Name));
-        if(ieta==1) compareTwo(phoE[0][ieta], phoE[1][ieta],xMin,xMax,Form("_pt15_%s",Name),10);
-        else compareTwo(phoE[0][ieta], phoE[1][ieta],xMin,xMax,Form("_pt15_%s",Name));
-        if(ieta==1) compareTwo(phoRawE[0][ieta], phoRawE[1][ieta],xMin,xMax,Form("_pt15_%s",Name),10);
-        else compareTwo(phoRawE[0][ieta], phoRawE[1][ieta],xMin,xMax,Form("_pt15_%s",Name));
-        //compareTwo(phoCoshRawE[0][ieta], phoCoshRawE[1][ieta],xMin,xMax,Form("_pt15_%s",Name));
-        compareTwo(phoEoverRawE[0][ieta], phoEoverRawE[1][ieta],0.95,1.2,Form("_pt15_%s",Name));
-        compareTwo(phoSigmaIetaIeta[0][ieta], phoSigmaIetaIeta[1][ieta],0.0,0.1,Form("_pt15_%s",Name),9);
-        compareTwo(phoEtaWidth[0][ieta], phoEtaWidth[1][ieta],0.0,0.27,Form("_pt15_%s",Name));
-        compareTwo(phoPhiWidth[0][ieta], phoPhiWidth[1][ieta],0.0,0.35,Form("_pt15_%s",Name));
-        compareTwo(phoR9[0][ieta], phoR9[1][ieta],0,1.0,Form("_pt15_%s",Name),30);
-        compareTwo(phoHoverE[0][ieta], phoHoverE[1][ieta],0.0,1.8,Form("_pt15_%s",Name),7);
+        compareTwo(phopt[0][ieta], phopt[1][ieta],0,200,Name);
+        compareTwo(phoE[0][ieta], phoE[1][ieta],xMin,energyBin[Nenergy],Name);
+        compareTwo(phoRawE[0][ieta], phoRawE[1][ieta],xMin,energyBin[Nenergy],Name);
+        compareTwo(phoEoverRawE[0][ieta], phoEoverRawE[1][ieta],0.95,1.2,Name);
+        compareTwo(phoSigmaIetaIeta[0][ieta], phoSigmaIetaIeta[1][ieta],0.0,0.1,Name);
+        compareTwo(phoEtaWidth[0][ieta], phoEtaWidth[1][ieta],0.0,0.27,Name);
+        compareTwo(phoPhiWidth[0][ieta], phoPhiWidth[1][ieta],0.0,0.35,Name);
+        compareTwo(phoR9[0][ieta], phoR9[1][ieta],0,1.0,Name);
+        compareTwo(phoHoverE[0][ieta], phoHoverE[1][ieta],0.0,1.8,Name);
+        compareTwo(phoHcalIso[0][ieta], phoHcalIso[1][ieta],-30.0,100,Name);
     }
 
 }
@@ -191,11 +195,15 @@ void compareTwo(TH1* h1, TH1* h2, double xmin, double xmax, const char* name, do
     h1->DrawCopy("hist");
     h2->DrawCopy("hist same");
     c->cd(2);
-    h2->SetAxisRange(0,ymax,"Y");
     h2->Divide(h1);
+    if(ymax!=-1) h2->SetAxisRange(0,ymax,"Y");
+    else {
+        h2->SetMinimum(0.0);
+        if(h2->GetMaximum()>20) h2->SetMaximum(20);
+    }
     h2->SetYTitle("75X/53X Ratio");
     h2->DrawCopy();
-    jumSun(xmin,1,xmax,1);
+    jumSun(0,1,xmax,1);
     c -> SaveAs(Form("pdf/%s%s.pdf",h1->GetName(),name)); 
 }
 
