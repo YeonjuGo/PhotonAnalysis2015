@@ -42,15 +42,19 @@ void makeHist_nTower(float etThr=0.0, float eThr=1.0)
     TTree *t_pfTower[2];
     int Entries[2];   
     for(int i=0;i<2;i++){ 
-        if(i==0) f[0] = TFile::Open("root://cluster142.knu.ac.kr//store/user/ygo/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611.root");
-        else f[1] = TFile::Open("root://cluster142.knu.ac.kr//store/user/ygo/officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root");
+ //        if(i==0) f[0] = TFile::Open("root://cluster142.knu.ac.kr//store/user/ygo/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611.root");
+ //       else f[1] = TFile::Open("root://cluster142.knu.ac.kr//store/user/ygo/officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root");
+        if(i==0) f[0] = TFile::Open("/u/user/goyeonju/files/centrality/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611_CMSSW5320_byYJ.root");
+        else f[1] = TFile::Open("/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root");
         t_evt[i] = (TTree*) f[i] -> Get("hiEvtAnalyzer/HiTree");
         t_skim[i] = (TTree*) f[i] -> Get("skimanalysis/HltTree");
         t_hlt[i] = (TTree*) f[i] -> Get("hltanalysis/HltTree");
         t_recTower[i] = (TTree*) f[i] -> Get("rechitanalyzer/tower");
+        t_hf[i] = (TTree*) f[i] -> Get("rechitanalyzer/hf");
         t_recTower[i] -> AddFriend(t_hlt[i]);
         t_recTower[i] -> AddFriend(t_evt[i]);
         t_recTower[i] -> AddFriend(t_skim[i]);
+        t_recTower[i] -> AddFriend(t_hf[i]);
         Entries[i] = t_recTower[i] -> GetEntries();
     }
 
@@ -79,7 +83,8 @@ void makeHist_nTower(float etThr=0.0, float eThr=1.0)
     cout << "LET'S FILL HISTOGRAMS FROM TREE" << endl;
     //********************************************************
     //cut define
-    TString towerCut = Form("abs(tower.eta) > 2.87 && tower.et > %.1f && tower.e > %.1f",etThr,eThr);
+    TString towerCut = Form("hf.et > %.1f && hf.e > %.1f",etThr,eThr);
+    //TString towerCut = Form("abs(tower.eta) > 2.87 && abs(tower.eta) < 5.02 && tower.et > %.1f && tower.e > %.1f",etThr,eThr);
     TCut cut="";
     TCut totcut[Ncut];
     totcut[0] = cut;
@@ -97,7 +102,7 @@ void makeHist_nTower(float etThr=0.0, float eThr=1.0)
     t_recTower[i]->Draw(Form("Sum$(%s)>>+%s",towerCut.Data(),h1F_sumHF_mc->GetName()), totcut[j]);
     h1F_sumHF_mc = (TH1F*)gDirectory->Get(h1F_sumHF_mc->GetName());
 
-    TFile* outFile = new TFile(Form("sumHF_etThr%.1f_eThr%.1f.root",etThr,eThr),"recreate");
+    TFile* outFile = new TFile(Form("histfiles/sumHF_etThr%.1f_eThr%.1f.root",etThr,eThr),"recreate");
     outFile->cd();
     for(int j=0; j<Ncut; j++){
         h1F_sumHF_data[j]->Write();

@@ -18,14 +18,15 @@
 #include "TPad.h"
 #include "stdio.h"
 
-void yj_analyze(char* infile = "/home/goyeonju/CMS/Files/centrality/HiForest_HydjetMB_730_53XBS_merged.root", const char* outfile = "output.root"){
-    infile = "/u/user/goyeonju/files/centrality/HiForest_HydjetMB_730_53XBS_merged_5TeV.root";
+void yj_analyze(bool isMC=0){
+    const char* infile;
+    if(isMC) infile = "/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root";
+    else infile = "/u/user/goyeonju/files/centrality/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611_CMSSW5320_byYJ.root";
     const char* trig = Form("pcollisionEventSelection==1");//"L1Tech_BSC_minBias_threshold1.v0";
     double towerCut = 3.0;
     double ebCut = 3;
 
-    //bool MC = false;
-    bool MC = true;
+    const char* outName = Form("histfiles/allHist_isMC%d_towerCut%d_%s.root",(int)isMC,(int)towerCut,trig);
 
     TFile * inf = new TFile(infile);
     TFile* outf = new TFile(outfile,"recreate");
@@ -80,9 +81,9 @@ void yj_analyze(char* infile = "/home/goyeonju/CMS/Files/centrality/HiForest_Hyd
     TTree* t7 = (TTree*)inf->Get("rechitanalyzer/tower");
     TTree* t8 = (TTree*)inf->Get("hiEvtAnalyzer/HiTree");
 
-    if(MC){
-        TTree* t9 = (TTree*)inf->Get("HiGenParticleAna/hi");
-        t1->AddFriend(t9);
+    if(isMC){
+//        TTree* t9 = (TTree*)inf->Get("HiGenParticleAna/hi");
+//        t1->AddFriend(t9);
     }
 
     t1->AddFriend(t2);
@@ -130,7 +131,7 @@ void yj_analyze(char* infile = "/home/goyeonju/CMS/Files/centrality/HiForest_Hyd
     c1->cd(12);
     t1->Draw(Form("Sum$(abs(tower.eta) > 2.87 && tower.e > %f)>>ha1",towerCut),trig);
 
-    if(MC){
+    if(isMC){
         TCanvas * c2 = new TCanvas("c2","",900,600);
         c2->Divide(3,2);
         c2->cd(1);
