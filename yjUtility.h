@@ -241,7 +241,7 @@ Double_t cleverRange(TH1* h,TH1* h2, Float_t fac=1.2, Float_t minY=1.e-3)
   return max(maxY1,maxY2);
 }
 
-TF1* cleverGaus(TH1* h, char* title="h", Float_t c = 2.5, bool quietMode=true)
+TF1* cleverGaus(TH1* h, const char* title="h", Float_t c = 2.5, bool quietMode=true)
 {
     if ( h->GetEntries() == 0 )
     {
