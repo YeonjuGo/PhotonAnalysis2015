@@ -22,7 +22,7 @@ void yj_analyze(bool isMC=0){
     const char* infile;
     if(isMC) infile = "/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root";
     else infile = "/u/user/goyeonju/files/centrality/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611_CMSSW5320_byYJ.root";
-    const char* trig = "";
+    const char* trig[]={""};
     //const char* trig = Form("HltTree.pcollisionEventSelection==1");//"L1Tech_BSC_minBias_threshold1.v0";
     double towerCut = 3.0;
     double ebCut = 3;
