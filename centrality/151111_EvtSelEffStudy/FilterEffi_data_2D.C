@@ -40,7 +40,7 @@ void FilterEffi_data_2D(bool isMC=0)
     double hiNpixMax = 40000;
     double hiZDCMax = 80000;
     double hiHFMax = 5000;
-    int nbin = nbin;
+    int nbin = 100;
     Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
     Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
     Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
