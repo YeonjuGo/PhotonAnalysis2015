@@ -111,7 +111,7 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
             else h1D_eff[i] -> Draw("ep same"); 
         }
     }
-    c_tot->SaveAs(Form("png/h1D_%s_isPassed%d_%s.png",v1.Data(),(int)isPassed,cap.Data()));
+    c_tot->SaveAs(Form("pdf/h1D_%s_isPassed%d_%s.pdf",v1.Data(),(int)isPassed,cap.Data()));
 
     for(int i=0; i<Ncut; i++){
         delete h1D[i];
