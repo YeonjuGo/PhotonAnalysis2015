@@ -22,14 +22,15 @@ void yj_analyze(bool isMC=0){
     const char* infile;
     if(isMC) infile = "/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root";
     else infile = "/u/user/goyeonju/files/centrality/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611_CMSSW5320_byYJ.root";
-    const char* trig = Form("pcollisionEventSelection==1");//"L1Tech_BSC_minBias_threshold1.v0";
+    const char* trig = "";
+    //const char* trig = Form("HltTree.pcollisionEventSelection==1");//"L1Tech_BSC_minBias_threshold1.v0";
     double towerCut = 3.0;
     double ebCut = 3;
 
     const char* outName = Form("histfiles/allHist_isMC%d_towerCut%d_%s.root",(int)isMC,(int)towerCut,trig);
 
     TFile * inf = new TFile(infile);
-    TFile* outf = new TFile(outfile,"recreate");
+    TFile* outf = new TFile(outName,"recreate");
 
     TH1D* ha[100];
     TH1D* hb[100];

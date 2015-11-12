@@ -39,7 +39,7 @@ void makeHist_nTower(float etThr=0.0, float eThr=1.0)
     TTree *t_skim[2];
     TTree *t_hlt[2];
     TTree *t_recTower[2];
-    TTree *t_pfTower[2];
+    TTree *t_hf[2];
     int Entries[2];   
     for(int i=0;i<2;i++){ 
  //        if(i==0) f[0] = TFile::Open("root://cluster142.knu.ac.kr//store/user/ygo/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611.root");
@@ -67,11 +67,11 @@ void makeHist_nTower(float etThr=0.0, float eThr=1.0)
     TH1F* h1F_sumHF_mc; //[0:data, 1:mc][condition]
 
     for(int j=0; j<Ncut; j++){
-        h1F_sumHF_data[j] = new TH1F(Form("sumHF_data_filter%d",i,j), ";# of HF towers;Events",200,0,1000);
-        h1F_sumHF_data[j] -> SetMarkerStyle(marker[i]);
+        h1F_sumHF_data[j] = new TH1F(Form("sumHF_data_filter%d",j), ";# of HF towers;Events",200,0,1000);
+        //h1F_sumHF_data[j] -> SetMarkerStyle(marker[i]);
         h1F_sumHF_data[j] -> SetMarkerSize(0.9);
-        h1F_sumHF_data[j] -> SetMarkerColor(col[i]);
-        h1F_sumHF_data[j] -> SetLineColor(col[i]);
+        //h1F_sumHF_data[j] -> SetMarkerColor(col[i]);
+        //h1F_sumHF_data[j] -> SetLineColor(col[i]);
         h1F_sumHF_data[j] -> SetLabelSize(0.03);
         //ratio_rec_n[i] -> SetAxisRange(0.5,1.5,"Y");
     }
@@ -95,11 +95,11 @@ void makeHist_nTower(float etThr=0.0, float eThr=1.0)
     totcut[4] = cut&& Form("pcollisionEventSelection==1");
     //********************************************************
     for(int j=0; j<Ncut; j++){
-        t_recTower[i]->Draw(Form("Sum$(%s)>>+%s",towerCut.Data(),h1F_sumHF_data[j]->GetName()), totcut[j] && "HLT_HIMinBiasHfOrBSC_v1==1");
+        t_recTower[0]->Draw(Form("Sum$(%s)>>+%s",towerCut.Data(),h1F_sumHF_data[j]->GetName()), totcut[j] && "HLT_HIMinBiasHfOrBSC_v1==1");
         //cout << "i = " << i << ", j = " << j << " :::: finished " << endl;
         h1F_sumHF_data[j] = (TH1F*)gDirectory->Get(h1F_sumHF_data[j]->GetName());
     }
-    t_recTower[i]->Draw(Form("Sum$(%s)>>+%s",towerCut.Data(),h1F_sumHF_mc->GetName()), totcut[j]);
+    t_recTower[1]->Draw(Form("Sum$(%s)>>+%s",towerCut.Data(),h1F_sumHF_mc->GetName()));
     h1F_sumHF_mc = (TH1F*)gDirectory->Get(h1F_sumHF_mc->GetName());
 
     TFile* outFile = new TFile(Form("histfiles/sumHF_etThr%.1f_eThr%.1f.root",etThr,eThr),"recreate");
