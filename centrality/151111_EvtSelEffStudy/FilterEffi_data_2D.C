@@ -37,27 +37,31 @@ void FilterEffi_data_2D(bool isMC=0)
     t_evt -> AddFriend(t_hlt);
     t_evt -> AddFriend(t_skim);
 
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",100,0,5000,100,0,10000,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",100,0,5000,100,0,50000,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",100,0,10000,100,0,50000,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",100,0,5000,100,0,10000,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",1);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",100,0,5000,100,0,50000,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",1);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",100,0,10000,100,0,50000,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",1);
+    double hiNpixMax = 40000;
+    double hiZDCMax = 80000;
+    double hiHFMax = 5000;
+    int nbin = nbin;
+    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
+    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
+    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
+    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",1);
+    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",1);
+    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",1);
 
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",100,0,5000,100,0,10000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",0);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",100,0,5000,100,0,50000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",0);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",100,0,10000,100,0,50000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",0);
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",100,0,5000,100,0,10000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",1);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",100,0,5000,100,0,50000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",1);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",100,0,10000,100,0,50000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",1);
+    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",0);
+    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",0);
+    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",0);
+    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",1);
+    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",1);
+    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",1);
 
 
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",100,0,5000,100,0,10000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",0);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",100,0,5000,100,0,50000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",0);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",100,0,10000,100,0,50000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",0);
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",100,0,5000,100,0,10000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",1);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",100,0,5000,100,0,50000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",1);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",100,0,10000,100,0,50000,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",1);
+    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",0);
+    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",0);
+    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",0);
+    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",1);
+    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",1);
+    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",1);
 
 }
 void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, double xmax, int ybin, double ymin, double ymax, TCut cut, TString cap,bool isPassed){
