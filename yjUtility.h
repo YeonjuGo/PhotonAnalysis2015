@@ -28,6 +28,10 @@
 #include <vector>
 using namespace std;
 
+const int col[] = {1,2,4,6,8,9,28,46,41};
+const int ycol[] = {8,9,28,46,41};
+const int marker[] = {20,22,29,33,34};
+
 void legStyle( TLegend *a=0 , TString head="")
 {
   a->SetBorderSize(0);
