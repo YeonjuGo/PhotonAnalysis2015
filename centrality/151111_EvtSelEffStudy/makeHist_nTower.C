@@ -44,8 +44,10 @@ void makeHist_nTower(float etThr=0.0, float eThr=1.0)
     for(int i=0;i<2;i++){ 
  //        if(i==0) f[0] = TFile::Open("root://cluster142.knu.ac.kr//store/user/ygo/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611.root");
  //       else f[1] = TFile::Open("root://cluster142.knu.ac.kr//store/user/ygo/officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root");
-        if(i==0) f[0] = TFile::Open("/u/user/goyeonju/files/centrality/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611_CMSSW5320_byYJ.root");
-        else f[1] = TFile::Open("/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root");
+//        if(i==0) f[0] = TFile::Open("/u/user/goyeonju/files/centrality/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611_CMSSW5320_byYJ.root");
+//        else f[1] = TFile::Open("/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root");
+        if(i==0) f[0] = TFile::Open("/mnt/hadoop/cms/store/user/dgulhan/hiForest_HIMinBiasUPC_HIRun2011-v1_7_5_3_patch1/HiForest_HIMinBiasUPC_HIRun2011-v1_merged.root");
+        else f[1] = TFile::Open("/mnt/hadoop/cms/store/user/dgulhan/hiForest_HydjetMB_2076GeV_FOREST_753p1_merged/HydjetMB_2076GeV_FOREST_753p1_v0_merged.root");
         t_evt[i] = (TTree*) f[i] -> Get("hiEvtAnalyzer/HiTree");
         t_skim[i] = (TTree*) f[i] -> Get("skimanalysis/HltTree");
         t_hlt[i] = (TTree*) f[i] -> Get("hltanalysis/HltTree");
