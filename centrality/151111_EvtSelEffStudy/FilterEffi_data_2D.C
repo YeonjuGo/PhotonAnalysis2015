@@ -27,10 +27,14 @@ void FilterEffi_data_2D(bool isMC=0)
     gStyle -> SetOptStat(0);
 
     TString fname;
-    if(isMC) fname = "/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root";
-    else fname = "/u/user/goyeonju/files/centrality/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611_CMSSW5320_byYJ.root";
+    if(isMC) fname = "root://cluster142.knu.ac.kr//store/user/ygo/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611.root";
+    else fname = "root://cluster142.knu.ac.kr//store/user/ygo/officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root";
 
-    TFile *fin = new TFile(fname.Data());
+//    if(isMC) fname = "/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root";
+//    else fname = "/u/user/goyeonju/files/centrality/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611_CMSSW5320_byYJ.root";
+
+//    TFile *fin = new TFile(fname.Data());
+    TFile *fin = TFile::Open(fname.Data());
     TTree *t_evt = (TTree*) fin -> Get("hiEvtAnalyzer/HiTree");
     TTree *t_skim = (TTree*) fin -> Get("skimanalysis/HltTree");
     TTree *t_hlt = (TTree*) fin -> Get("hltanalysis/HltTree");
@@ -85,6 +89,7 @@ void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, 
     for(int i=0;i<Ncut;i++){
         c_tot -> cd(i+1);
         h2D[i] -> Draw("colz");
+        gPad->SetLogz();
     }
     c_tot->SaveAs(Form("pdf/h2D_%s_isPassed%d_%s_%s.pdf", cap.Data(),(int)isPassed, v1.Data(), v2.Data()));
 }

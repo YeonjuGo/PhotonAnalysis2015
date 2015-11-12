@@ -32,17 +32,17 @@ const int col[] = {1,2,4,6,8,9,28,46,41};
 const int ycol[] = {8,9,28,46,41};
 const int marker[] = {20,22,29,33,34};
 
-void legStyle( TLegend *a=0 , TString head="")
+void legStyle( TLegend *a , TString head="")
 {
   a->SetBorderSize(0);
-  a->SetHeader(head);
+  a->SetFillStyle(0);
+//  a->SetHeader(head);
 //  a->SetTextFont(62);
 //  a->SetTextSize(17);
 //  a->SetLineColor(1);
 //  a->SetLineStyle(1);
 //  a->SetLineWidth(1);
 //  a->SetFillColor(0);
-  a->SetFillStyle(0);
 
 }
 void graphStyle(TGraph *g1=0, Int_t lstyle=1, Int_t lcolor=1, Int_t mstyle=20, Int_t mcolor=1, Int_t lwidth=1, Double_t msize=1.0)
@@ -188,8 +188,6 @@ void makeMultiPanelCanvas(TCanvas*& canv, const Int_t columns,
 	}
 }
 
-
-
 Double_t getDPHI( Double_t phi1, Double_t phi2) {
         Double_t dphi = phi1 - phi2;
 
@@ -265,4 +263,11 @@ TF1* cleverGaus(TH1* h, const char* title="h", Float_t c = 2.5, bool quietMode=t
     else    h->Fit(fit1,"LL M O Q R");
     return fit1;
 }
+
+void SetHistColor(TH1* h, Int_t color=1)
+{
+    h->SetMarkerColor(color);
+    h->SetLineColor(color);
+} 
+
 #endif
