@@ -49,10 +49,10 @@ void SetHistTitleStyle(TH1* h, double titlesize=0.08, double offset=0.01){
     h->SetLabelSize( titlesize, "Y" ); h->SetLabelOffset(offset, "Y");
 }
 void thisPadStyle(){
-    gPad->SetPadLeftMargin(0.14);
-    gPad->SetPadRightMargin(0.08);
-    gPad->SetPadBottomMargin(0.15);
-    gPad->SetPadTopMargin(0.10);
+    gPad->SetLeftMargin(0.14);
+    gPad->SetRightMargin(0.08);
+    gPad->SetBottomMargin(0.15);
+    gPad->SetTopMargin(0.10);
 }
 void SetPadStyle(){
     gStyle->SetPadLeftMargin(0.14);
