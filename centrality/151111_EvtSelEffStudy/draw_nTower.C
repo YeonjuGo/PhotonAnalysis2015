@@ -35,7 +35,7 @@ float normHist(TH1* hMC=0, TH1* hData=0, TH1* hRatio=0, double cut_i=700, double
     return hData->Integral()/hMC->Integral();
 }
 
-void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, float norm_f=700)
+void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, float norm_f=1200)
 {
     const int Ncut = 5;
     int col[] = {1,2,4,6,8,28,46,41};
@@ -45,7 +45,7 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, fl
     TH1::SetDefaultSumw2();
     gStyle -> SetOptStat(0);
 
-    TString fname = Form("histfiles/sumHF_etThr%.1f_eThr%.1f.root", etThr,eThr);
+    TString fname = Form("histfiles_5320/sumHF_etThr%.1f_eThr%.1f.root", etThr,eThr);
     TFile* fin = new TFile(fname.Data());
 
     // ===============================================================================================
@@ -58,6 +58,7 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, fl
 
     for(int j=0; j<Ncut; j++){
         h1F_sumHF_data[j] = (TH1F*) fin->Get(Form("sumHF_data_filter%d",j));
+        h1F_sumHF_data[j] -> Rebin(5); 
         h1F_sumHF_data[j] -> SetMarkerStyle(marker[j]);
         h1F_sumHF_data[j] -> SetMarkerSize(0.9);
         h1F_sumHF_data[j] -> SetMarkerColor(col[j]);
@@ -67,6 +68,7 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, fl
         h1F_sumHF_ratio[j]->SetName(";# of HF towers;DATA/MC");
     }
     h1F_sumHF_mc = (TH1F*) fin->Get(Form("sumHF_mc"));
+    h1F_sumHF_mc -> Rebin(5); 
     // ===============================================================================================
     // [# of HF tower] Normalization!!!!!!! important
     // ===============================================================================================
@@ -91,8 +93,8 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, fl
     c_tot->Divide(Ncut,2);
     for(int j=0; j<Ncut; j++){
         c_tot->cd(j+1);
-        h1F_sumHF_data[j]->DrawCopy();
-        h1F_sumHF_mc->DrawCopy("hist same");
+        h1F_sumHF_data[j]->Draw();
+        h1F_sumHF_mc->Draw("hist same");
         drawText(Form("%s",FilterName[j].Data()),0.30,0.78);
         //drawText(Form("%s",totcut[j].GetTitle()),0.46,0.78); //TCut.GetTitle() works
         if(j==0) drawText("rechitTowers", 0.46,0.88); 
@@ -100,7 +102,7 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, fl
             if(eThr!=0.0) drawText(Form("tower e > %.1f",etThr), 0.46,0.68); 
             if(etThr!=0.0) drawText(Form("tower et > %.1f",eThr), 0.46,0.60); 
         }
-        gPad->SetLogy();
+   //     gPad->SetLogy();
         Double_t range = cleverRange(h1F_sumHF_data[j],h1F_sumHF_data[j]);
         onSun(norm_i, 0.000001, norm_i, range);
         onSun(norm_f, 0.000001, norm_f, range);
@@ -110,6 +112,7 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, fl
         h1F_sumHF_ratio[j]->GetYaxis()->SetTitle("DATA/MC");
         h1F_sumHF_ratio[j]->DrawCopy();
         drawText(Form("DATA/MC = %.3f +- %.3f", effi_mean[j], effi_stdv[j]), 0.26,0.88);
+        cleverRange(h1F_sumHF_data[j],h1F_sumHF_mc);
     }
     c_tot->SaveAs(Form("pdf/nHF_etThr%.1f_eThr%.1f_normRange%dto%d_stdvVar%d.pdf",etThr,eThr,(int)norm_i,(int)norm_f,N));
     
@@ -117,23 +120,40 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, fl
     c33->Divide(2,2);
     //makeMultiPanelCanvas(c33,2,2,0.0,0.0,0.2,0.15,0.02);
     c33->cd(1);
-    h1F_sumHF_data[0]->DrawCopy();
-    h1F_sumHF_mc->DrawCopy("hist same");
+    h1F_sumHF_data[0]->Draw();
+    h1F_sumHF_mc->Draw("hist same");
+    cleverRange(h1F_sumHF_data[0],h1F_sumHF_mc);
     c33->cd(2);
-    h1F_sumHF_data[Ncut-1]->DrawCopy();
-    h1F_sumHF_mc->DrawCopy("hist same");
+    h1F_sumHF_mc->Draw("hist");
+    h1F_sumHF_data[Ncut-1]->Draw("same");
+    cleverRange(h1F_sumHF_data[Ncut-1],h1F_sumHF_mc);
     c33->cd(3);
     h1F_sumHF_ratio[0]->GetYaxis()->SetTitle("DATA/MC");
+    h1F_sumHF_ratio[0]->GetYaxis()->SetRangeUser(0,5);
     h1F_sumHF_ratio[0]->DrawCopy();
-    drawText(Form("DATA/MC = %.3f", effi_mean[0]), 0.26,0.88);
+    jumSun(0,1,2000,1,2);
+    drawText(Form("DATA/MC = %.3f", effi_mean[0]), 0.26,0.70);
     //drawText(Form("DATA/MC = %.3f +- %.3f", effi_mean[0], effi_stdv[0]), 0.26,0.88);
     c33->cd(4);
     h1F_sumHF_ratio[Ncut-1]->GetYaxis()->SetTitle("DATA/MC");
+    h1F_sumHF_ratio[Ncut-1]->GetYaxis()->SetRangeUser(0,5);
     h1F_sumHF_ratio[Ncut-1]->DrawCopy();
-    drawText(Form("DATA/MC = %.3f", effi_mean[Ncut-1]), 0.26,0.88);
+    jumSun(0,1,2000,1,2);
+    
+    drawText(Form("DATA/MC = %.3f", effi_mean[Ncut-1]), 0.26,0.70);
     //drawText(Form("DATA/MC = %.3f +- %.3f", effi_mean[Ncut-1], effi_stdv[Ncut-1]), 0.26,0.88);
 
     c33->SaveAs(Form("pdf/nHF_onlyCollEvtFilter_etThr%.1f_eThr%.1f_normRange%dto%d_stdvVar%d.pdf",etThr,eThr,(int)norm_i,(int)norm_f,N));
+
+    TCanvas *c4;
+    //= new TCanvas("c4","c4", 600,600);
+    c4 = (TCanvas*)c33->DrawClone();
+    for(int i=0;i<Ncut;i++){
+        c4->cd(i+1);
+        gPad->SetLogx();
+    }
+    c4->SaveAs(Form("pdf/nHF_onlyCollEvtFilter_etThr%.1f_eThr%.1f_normRange%dto%d_stdvVar%d_logx.pdf",etThr,eThr,(int)norm_i,(int)norm_f,N));
+
 }
 
 float mean(float data[], int n)
