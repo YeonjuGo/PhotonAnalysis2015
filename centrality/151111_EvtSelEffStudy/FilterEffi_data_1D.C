@@ -16,22 +16,14 @@
 #include "stdio.h"
 #include <iostream>
 #include "../../yjUtility.h"
-//#include "../HiForestAnalysis/hiForest.h"
 
-const int col[]={1,2,4,6,8,28,46};
 const double dy= 0.5;
 const int Ncut = 5;
 void Get1DEffPlots(TTree* t_evt=0, TString v1="hiHF",int xbin=200, double xmin=0, double xmax=4500, TCut cut="", TCanvas* c_tot=0, TString cap="", bool isPassed=0, double eff_ymin=0.50, bool isAOD=0);
 
 void FilterEffi_data_1D(const char* fname="/afs/cern.ch/work/y/ygo/public/centrality/merged_centrality_MB_DATA750_RECO_150914.root", TString type="RECO_750", bool isAOD=0)
 {
-    /*    const int onlineFilter = 0;//HLT_HIMinBiasHfOrBSC_v1
-          const int collCut = 0; //pcollisionEventSelection
-          const int vertexCut = 0; //pprimaryVertexFilter
-          const int pixelCut = 0; //phltPixelClusterShapeFilter
-          const int hfCoincCut = 0; //phfCoincFilter3
-          */
-    const TCut runCut = "run==181611";
+   const TCut runCut = "run==181611";
     const TCut lumiCut = "lumi>=1 && lumi<=895";
     const TCut eventCut = runCut && lumiCut;
     TH1::SetDefaultSumw2();
@@ -52,14 +44,23 @@ void FilterEffi_data_1D(const char* fname="/afs/cern.ch/work/y/ygo/public/centra
     //    const double HFsum_bins[] = {0,2,5,10,15,20,30,40,50,60,70,80,90,100,200,300,400,500,1000,2000,3000,4000,5000};
     //    const int n_HFsum_bins = sizeof(HFsum_bins)/sizeof(double) - 1;
 
-    Get1DEffPlots(t_evt, "hiHF",100,0,5000,"HLT_HIMinBiasHfOrBSC_v1==1",c_tot,type,1,0.70,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiHF",100,0,5000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,1,0.70,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiNpix",100,0,10000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,1,0.95,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiBin",105,0,210,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,1,0.0,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiZDC",100,0,50000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,1,0.0,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiET",100,0,2000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,1,0.994,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiEE",100,0,4000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,1,0.992,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiEB",100,0,5000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,1,0.2,(int)isAOD);
+    Get1DEffPlots(t_evt, "vz",100,-50,50,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,1,0.2,(int)isAOD);
 
-    Get1DEffPlots(t_evt, "hiNpix",100,0,10000,"HLT_HIMinBiasHfOrBSC_v1==1",c_tot,type,1,0.95,(int)isAOD);
-    Get1DEffPlots(t_evt, "hiBin",105,0,210,"HLT_HIMinBiasHfOrBSC_v1==1",c_tot,type,1,0.0,(int)isAOD);
-    Get1DEffPlots(t_evt, "hiZDC",100,0,50000,"HLT_HIMinBiasHfOrBSC_v1==1",c_tot,type,1,0.0,(int)isAOD);
-    Get1DEffPlots(t_evt, "hiET",100,0,2000,"HLT_HIMinBiasHfOrBSC_v1==1",c_tot,type,1,0.994,(int)isAOD);
-    Get1DEffPlots(t_evt, "hiEE",100,0,4000,"HLT_HIMinBiasHfOrBSC_v1==1",c_tot,type,1,0.992,(int)isAOD);
-    Get1DEffPlots(t_evt, "hiEB",100,0,5000,"HLT_HIMinBiasHfOrBSC_v1==1",c_tot,type,1,0.2,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiHF",100,0,5000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,0,0.70,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiNpix",100,0,10000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,0,0.95,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiBin",105,0,210,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,0,0.0,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiZDC",100,0,50000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,0,0.0,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiET",100,0,2000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,0,0.994,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiEE",100,0,4000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,0,0.992,(int)isAOD);
+    Get1DEffPlots(t_evt, "hiEB",100,0,5000,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,0,0.2,(int)isAOD);
+    Get1DEffPlots(t_evt, "vz",100,-50,50,"HLT_HIMinBiasHfOrBSC_v1",c_tot,type,0,0.2,(int)isAOD);
 }
 
 void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax, TCut cut, TCanvas* c_tot, TString cap, bool isPassed, double eff_ymin, bool isAOD)
