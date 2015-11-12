@@ -32,6 +32,34 @@ const int col[] = {1,2,4,6,8,9,28,46,41};
 const int ycol[] = {8,9,28,46,41};
 const int marker[] = {20,22,29,33,34};
 
+void yjStyleRoot(){
+    gStyle -> SetOptStat(0);
+    TH1::SetDefaultSumw2();
+}
+void SetHistTitleStyle(double titlesize=0.08, double offset=0.01){
+    gStyle->SetTitleSize( titlesize, "X" ); gStyle->SetTitleOffset(offset, "X");
+    gStyle->SetTitleSize( titlesize, "Y" ); gStyle->SetTitleOffset(offset, "Y");
+    gStyle->SetLabelSize( titlesize, "X" ); gStyle->SetLabelOffset(offset, "X");
+    gStyle->SetLabelSize( titlesize, "Y" ); gStyle->SetLabelOffset(offset, "Y");
+}
+void SetHistTitleStyle(TH1* h, double titlesize=0.08, double offset=0.01){
+    h->SetTitleSize( titlesize, "X" ); h->SetTitleOffset(offset, "X");
+    h->SetTitleSize( titlesize, "Y" ); h->SetTitleOffset(offset, "Y");
+    h->SetLabelSize( titlesize, "X" ); h->SetLabelOffset(offset, "X");
+    h->SetLabelSize( titlesize, "Y" ); h->SetLabelOffset(offset, "Y");
+}
+void thisPadStyle(){
+    gPad->SetPadLeftMargin(0.14);
+    gPad->SetPadRightMargin(0.08);
+    gPad->SetPadBottomMargin(0.15);
+    gPad->SetPadTopMargin(0.10);
+}
+void SetPadStyle(){
+    gStyle->SetPadLeftMargin(0.14);
+    gStyle->SetPadRightMargin(0.08);
+    gStyle->SetPadBottomMargin(0.15);
+    gStyle->SetPadTopMargin(0.10);
+}
 void legStyle( TLegend *a , TString head="")
 {
   a->SetBorderSize(0);

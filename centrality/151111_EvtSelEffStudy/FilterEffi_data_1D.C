@@ -26,8 +26,11 @@ void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Cen
     const TCut runCut = "run==181611";
     const TCut lumiCut = "lumi>=1 && lumi<=895";
     const TCut eventCut = runCut && lumiCut;
-    TH1::SetDefaultSumw2();
-    gStyle -> SetOptStat(0);
+//    TH1::SetDefaultSumw2();
+//    gStyle -> SetOptStat(0);
+    yjStyleRoot();
+    SetHistTitleStyle();
+    SetPadStyle();
 
     TFile *fin = new TFile(fname);
     TTree *t_evt = (TTree*) fin -> Get("hiEvtAnalyzer/HiTree");
@@ -70,11 +73,12 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
     TH1D *h1D_eff[10];
     for(int i=0; i<Ncut; i++){
         h1D[i] = new TH1D(Form("h1D_%d",i), Form(";%s;Events", v1.Data()), xbin, xmin,xmax );
+        h1D[i]->SetMarkerStyle(marker[i]); 
+        h1D[i]->SetMarkerSize(1);
         h1D_eff[i] = (TH1D*)h1D[i]->Clone(Form("h1D_eff_%d",i));
         h1D_eff[i] -> SetTitle(Form(";%s;Filter Rate",v1.Data()));
         SetHistColor(h1D[i],col[i]);
         SetHistColor(h1D_eff[i],col[i]);
-        h1D_eff[i] -> SetAxisRange(eff_ymin,1.0005,"Y");
     }
     for(int i=0; i<Ncut; i++){
         t_evt->Draw(Form("%s>>+%s",v1.Data(), h1D[i]->GetName() ), totcut[i]);
@@ -97,11 +101,11 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
         if(i==0) h1D[i] -> Draw("hist");
         else h1D[i] -> Draw("ep same");
         l1 -> Draw();
-
+        
         if(i!=0){
             c_tot->cd(2);
             h1D_eff[i] -> Divide(h1D[i],h1D[0],1,1,"B");
-            h1D_eff[i] -> GetYaxis()-> SetRangeUser(eff_ymin,1.005);
+            h1D_eff[i] -> GetYaxis()-> SetRangeUser(eff_ymin,1.05);
             if(i==1) {
                 h1D_eff[i] -> Draw("ep"); 
                 jumSun(0,1,100000,1);
