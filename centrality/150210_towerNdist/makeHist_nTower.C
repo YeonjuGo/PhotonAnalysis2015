@@ -84,7 +84,7 @@ void makeHist_nTower(float etThr=1.5)
     cout << "LET'S FILL HISTOGRAMS FROM TREE" << endl;
     //********************************************************
     //cut define
-    TString towerCut = Form("abs(tower.eta) > 2.87 && tower.et > %.1f",etThr);
+    TString towerCut = Form("abs(tower.eta) > 2.87 && abs(tower.eta)<5.205 && tower.e > %.1f",etThr);
     TCut cut="";
     TCut totcut[Ncut];
     totcut[0] = cut;
@@ -94,16 +94,29 @@ void makeHist_nTower(float etThr=1.5)
     totcut[3] = cut&& Form("phfCoincFilter3==1");
     totcut[4] = cut&& Form("pcollisionEventSelection==1");
     //********************************************************
+    std::clock_t    start_loop, end_loop;
+    start_loop = std::clock();
+
+
     for(int i=0; i<2; i++){
         for(int j=0; j<Ncut; j++){
+            std::clock_t    startT_draw, endT_draw;
+            startT_draw = std::clock();
             cout << "i = " << i << ", j = " << j << endl;
             //if(i==0) t_recTower[i]->Draw(Form("Sum$(abs(tower.eta) > 2.87 && tower.et > 0.5)>>+%s",h1F_rec_nTower[i][j]->GetName()));
             if(i==0) t_recTower[i]->Draw(Form("Sum$(%s)>>+%s",towerCut.Data(),h1F_rec_nTower[i][j]->GetName()), totcut[j] && "HLT_HIMinBiasHfOrBSC_v1==1");
-            else if(i==1) t_recTower[i]->Draw(Form("Sum$(%s)>>+%s",towerCut.Data(),h1F_rec_nTower[i][j]->GetName()), totcut[j]);
-            cout << "i = " << i << ", j = " << j << " :::: finished " << endl;
+            else if(i==1) t_recTower[i]->Draw(Form("Sum$(%s)>>+%s",towerCut.Data(),h1F_rec_nTower[i][j]->GetName()));
             h1F_rec_nTower[i][j] = (TH1F*)gDirectory->Get(h1F_rec_nTower[i][j]->GetName());
+            endT_draw = std::clock();
+            std::cout.precision(6);      // get back to default precision
+            std::cout << "DRAW finished in             : " << (endT_draw - startT_draw) / (double)CLOCKS_PER_SEC << " seconds" << std::endl;
         }
     }
+
+    end_loop = std::clock();
+    std::cout.precision(6);      // get back to default precision
+    std::cout << "LOOP finished in             : " << (end_loop - start_loop) / (double)CLOCKS_PER_SEC << " seconds" << std::endl;
+    std::cout << "exited loop" << std::endl;
 
     TFile* outFile = new TFile(Form("recTower_n_etThr%.1f.root",etThr),"recreate");
     outFile->cd();
