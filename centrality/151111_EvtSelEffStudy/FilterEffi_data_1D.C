@@ -21,7 +21,7 @@ const double dy= 0.5;
 const int Ncut = 5;
 void Get1DEffPlots(TTree* t_evt=0, TString v1="hiHF",int xbin=200, double xmin=0, double xmax=4500, TCut cut="", TCanvas* c_tot=0, TString cap="", bool isPassed=0, double eff_ymin=0.50, bool isAOD=0);
 
-void FilterEffi_data_1D(const char* fname="/afs/cern.ch/work/y/ygo/public/centrality/merged_centrality_MB_DATA750_RECO_150914.root", TString type="RECO_750", bool isAOD=0)
+void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root", TString type="HYDJET_5320", bool isAOD=0)
 {
     const TCut runCut = "run==181611";
     const TCut lumiCut = "lumi>=1 && lumi<=895";
