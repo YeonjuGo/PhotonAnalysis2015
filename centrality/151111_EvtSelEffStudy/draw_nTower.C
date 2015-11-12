@@ -35,7 +35,7 @@ float normHist(TH1* hMC=0, TH1* hData=0, TH1* hRatio=0, double cut_i=700, double
     return hData->Integral()/hMC->Integral();
 }
 
-void draw_nTower(float etThr=0.0, float eThr=1.0, int N=50, float norm_i=200, float norm_f=700)
+void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, float norm_f=700)
 {
     const int Ncut = 5;
     int col[] = {1,2,4,6,8,28,46,41};
@@ -66,7 +66,7 @@ void draw_nTower(float etThr=0.0, float eThr=1.0, int N=50, float norm_i=200, fl
         h1F_sumHF_ratio[j] = (TH1F*) h1F_sumHF_data[j]->Clone(Form("sumHF_ratio_filter%d",j));
         h1F_sumHF_ratio[j]->SetName(";# of HF towers;DATA/MC");
     }
-
+    h1F_sumHF_mc = (TH1F*) fin->Get(Form("sumHF_mc"));
     // ===============================================================================================
     // [# of HF tower] Normalization!!!!!!! important
     // ===============================================================================================
@@ -75,7 +75,7 @@ void draw_nTower(float etThr=0.0, float eThr=1.0, int N=50, float norm_i=200, fl
     for(int j=0; j<Ncut; j++){
         float effi[N];
         for(int jn=0; jn<N; jn++){
-            effi[jn] = normHist(h1F_sumHF_data[j],h1F_sumHF_mc, h1F_sumHF_ratio[j], norm_i-(N/2.)+jn, norm_f);
+            effi[jn] = normHist(h1F_sumHF_mc, h1F_sumHF_data[j],h1F_sumHF_ratio[j], norm_i-(N/2.)+jn, norm_f);
         }
         effi_mean[j] = mean(effi, N);
         effi_stdv[j] = standard_deviation(effi, N);
@@ -87,7 +87,8 @@ void draw_nTower(float etThr=0.0, float eThr=1.0, int N=50, float norm_i=200, fl
     // ===============================================================================================
     cout << "LET'S DRAW HISTOGRAMS IN CANVAS" << endl;
     TCanvas *c_tot = new TCanvas("c_tot","c_tot", 1200,600);
-    makeMultiPanelCanvas(c_tot,Ncut,2,0.0,0.0,0.2,0.15,0.02);
+    //makeMultiPanelCanvas(c_tot,Ncut,2,0.0,0.0,0.2,0.15,0.02);
+    c_tot->Divide(Ncut,2);
     for(int j=0; j<Ncut; j++){
         c_tot->cd(j+1);
         h1F_sumHF_data[j]->DrawCopy();
@@ -96,8 +97,8 @@ void draw_nTower(float etThr=0.0, float eThr=1.0, int N=50, float norm_i=200, fl
         //drawText(Form("%s",totcut[j].GetTitle()),0.46,0.78); //TCut.GetTitle() works
         if(j==0) drawText("rechitTowers", 0.46,0.88); 
         else if(j==1) {
-            if(eThr!=0.0) drawText(Form("tower e > %.1f",etThr), 0.46,0.88); 
-            if(etThr!=0.0) drawText(Form("tower et > %.1f",eThr), 0.46,0.80); 
+            if(eThr!=0.0) drawText(Form("tower e > %.1f",etThr), 0.46,0.68); 
+            if(etThr!=0.0) drawText(Form("tower et > %.1f",eThr), 0.46,0.60); 
         }
         gPad->SetLogy();
         Double_t range = cleverRange(h1F_sumHF_data[j],h1F_sumHF_data[j]);
@@ -111,6 +112,28 @@ void draw_nTower(float etThr=0.0, float eThr=1.0, int N=50, float norm_i=200, fl
         drawText(Form("DATA/MC = %.3f +- %.3f", effi_mean[j], effi_stdv[j]), 0.26,0.88);
     }
     c_tot->SaveAs(Form("pdf/nHF_etThr%.1f_eThr%.1f_normRange%dto%d_stdvVar%d.pdf",etThr,eThr,(int)norm_i,(int)norm_f,N));
+    
+    TCanvas *c33 = new TCanvas("c33","c33", 600,600);
+    c33->Divide(2,2);
+    //makeMultiPanelCanvas(c33,2,2,0.0,0.0,0.2,0.15,0.02);
+    c33->cd(1);
+    h1F_sumHF_data[0]->DrawCopy();
+    h1F_sumHF_mc->DrawCopy("hist same");
+    c33->cd(2);
+    h1F_sumHF_data[Ncut-1]->DrawCopy();
+    h1F_sumHF_mc->DrawCopy("hist same");
+    c33->cd(3);
+    h1F_sumHF_ratio[0]->GetYaxis()->SetTitle("DATA/MC");
+    h1F_sumHF_ratio[0]->DrawCopy();
+    drawText(Form("DATA/MC = %.3f", effi_mean[0]), 0.26,0.88);
+    //drawText(Form("DATA/MC = %.3f +- %.3f", effi_mean[0], effi_stdv[0]), 0.26,0.88);
+    c33->cd(4);
+    h1F_sumHF_ratio[Ncut-1]->GetYaxis()->SetTitle("DATA/MC");
+    h1F_sumHF_ratio[Ncut-1]->DrawCopy();
+    drawText(Form("DATA/MC = %.3f", effi_mean[Ncut-1]), 0.26,0.88);
+    //drawText(Form("DATA/MC = %.3f +- %.3f", effi_mean[Ncut-1], effi_stdv[Ncut-1]), 0.26,0.88);
+
+    c33->SaveAs(Form("pdf/nHF_onlyCollEvtFilter_etThr%.1f_eThr%.1f_normRange%dto%d_stdvVar%d.pdf",etThr,eThr,(int)norm_i,(int)norm_f,N));
 }
 
 float mean(float data[], int n)
