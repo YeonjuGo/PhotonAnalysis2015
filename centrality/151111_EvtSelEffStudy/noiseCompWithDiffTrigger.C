@@ -62,7 +62,7 @@ void noiseCompWithDiffTrigger(){
         t1->Draw(Form("hf.e>>e%d",i),trig[i]);
         t1->Draw(Form("hf.et>>et%d",i),trig[i]);
         t1->Draw(Form("tower.e>>e_tower%d",i),Form("abs(tower.eta)>2.87 && abs(tower.eta)<5.205 && %s", trig[i]));
-        t1->Draw(Form("tower.et>>e_tower%d",i),Form("abs(tower.eta)>2.87 && abs(tower.eta)<5.205 && %s", trig[i]));
+        t1->Draw(Form("tower.et>>et_tower%d",i),Form("abs(tower.eta)>2.87 && abs(tower.eta)<5.205 && %s", trig[i]));
     }
     outf->Write();
 }
