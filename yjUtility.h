@@ -36,23 +36,23 @@ void yjStyleRoot(){
     gStyle -> SetOptStat(0);
     TH1::SetDefaultSumw2();
 }
-void SetHistTitleStyle(double titlesize=0.08, double offset=0.01){
-    gStyle->SetTitleSize( titlesize, "X" ); gStyle->SetTitleOffset(offset, "X");
-    gStyle->SetTitleSize( titlesize, "Y" ); gStyle->SetTitleOffset(offset, "Y");
-    gStyle->SetLabelSize( titlesize, "X" ); gStyle->SetLabelOffset(offset, "X");
-    gStyle->SetLabelSize( titlesize, "Y" ); gStyle->SetLabelOffset(offset, "Y");
+void SetHistTitleStyle(double titlesize=0.06, double titleoffset=0.04, double labelsize = 0.05, double labeloffset=0.01){
+    gStyle->SetTitleSize( titlesize, "X" ); gStyle->SetTitleOffset(titleoffset, "X");
+    gStyle->SetTitleSize( titlesize, "Y" ); gStyle->SetTitleOffset(titleoffset, "Y");
+    gStyle->SetLabelSize( labelsize, "X" ); gStyle->SetLabelOffset(labeloffset, "X");
+    gStyle->SetLabelSize( labelsize, "Y" ); gStyle->SetLabelOffset(labeloffset, "Y");
 }
-void SetHistTitleStyle(TH1* h, double titlesize=0.08, double offset=0.01){
-    h->SetTitleSize( titlesize, "X" ); h->SetTitleOffset(offset, "X");
-    h->SetTitleSize( titlesize, "Y" ); h->SetTitleOffset(offset, "Y");
-    h->SetLabelSize( titlesize, "X" ); h->SetLabelOffset(offset, "X");
-    h->SetLabelSize( titlesize, "Y" ); h->SetLabelOffset(offset, "Y");
+void SetHistTitleStyle(TH1* h, double titlesize=0.08, double titleoffset=0.01, double labelsize=0.05,double labeloffset=0.01){
+    h->SetTitleSize( titlesize, "X" ); h->SetTitleOffset(titleoffset, "X");
+    h->SetTitleSize( titlesize, "Y" ); h->SetTitleOffset(titleoffset, "Y");
+    h->SetLabelSize( labelsize, "X" ); h->SetLabelOffset(labeloffset, "X");
+    h->SetLabelSize( labelsize, "Y" ); h->SetLabelOffset(labeloffset, "Y");
 }
 void thisPadStyle(){
-    gPad->SetLeftMargin(0.14);
+    gPad->SetLeftMargin(0.17);
     gPad->SetRightMargin(0.08);
     gPad->SetBottomMargin(0.15);
-    gPad->SetTopMargin(0.10);
+    gPad->SetTopMargin(0.05);
 }
 void SetPadStyle(){
     gStyle->SetPadLeftMargin(0.14);
