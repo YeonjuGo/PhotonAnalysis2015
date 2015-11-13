@@ -45,7 +45,7 @@ void draw_vz(const char* fname="/u/user/goyeonju/files/centrality/PbPb_minbias_d
         c[i] = new TCanvas(Form("c%d",i),"",300,300);
         c2D[i] = new TCanvas(Form("c2D%d",i),"",300,300);
         h[i] = new TH1D(Form("h%d",i),";z_{vtx} (cm);",50,-50,50);
-        h2D[i] = new TH2D(Form("h2D%d",i),";x_{vtx} (cm);y_{vtx} (cm)",100,0.0,0.4,100,0.0,0.4);
+        h2D[i] = new TH2D(Form("h2D%d",i),";x_{vtx} (cm);y_{vtx} (cm)",100,-0.2,0.2,100,-0.2,0.2);
     }
     t_evt->Draw("vz>>h0","HLT_HIMinBiasHfOrBSC_v1==1");
     t_evt->Draw("vz>>h1","HLT_HIMinBiasHfOrBSC_v1==1 && pprimaryVertexFilter==1");
