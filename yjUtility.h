@@ -28,9 +28,9 @@
 #include <vector>
 using namespace std;
 
-const int col[] = {1,2,4,6,8,9,28,46,41};
+const int col[] = {1,2,3,4,6,7,28,46,41};
 const int ycol[] = {8,9,28,46,41};
-const int marker[] = {20,22,29,33,34};
+const int marker[] = {24,25,26,27,28,29,31,33,34};
 
 void yjStyleRoot(){
     gStyle -> SetOptStat(0);
@@ -297,5 +297,38 @@ void SetHistColor(TH1* h, Int_t color=1)
     h->SetMarkerColor(color);
     h->SetLineColor(color);
 } 
+
+float mean(float data[], int n)
+{
+    float mean=0.0;
+    int i;
+    for(i=0; i<n;++i)
+    {
+        mean+=data[i];
+    }
+    mean=mean/n;
+    return mean;
+}
+
+float standard_deviation(float data[], int n)
+{
+    float mean=0.0, sum_deviation=0.0;
+    int i;
+    for(i=0; i<n;++i)
+    {
+        mean+=data[i];
+    }
+    mean=mean/n;
+    for(i=0; i<n;++i)
+        sum_deviation+=(data[i]-mean)*(data[i]-mean);
+    return sqrt(sum_deviation/n);
+}
+
+void normHist(TH1* h=0, TH1* hNominal=0, double cut_i=700, double cut_f=900){
+    int cutBinFrom = h->FindBin(cut_i);
+    int cutBinTo = h->FindBin(cut_f);
+    h->Scale(hNominal->Integral(cutBinFrom,cutBinTo)/h->Integral(cutBinFrom,cutBinTo));
+}
+
 
 #endif

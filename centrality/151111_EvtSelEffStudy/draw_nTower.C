@@ -19,9 +19,7 @@
 #include "stdio.h"
 #include "../../yjUtility.h"
 
-float mean(float data[], int n);
-float standard_deviation(float data[], int n);
-float normHist(TH1* hMC=0, TH1* hData=0, TH1* hRatio=0, double cut_i=700, double cut_f=900){
+float normHistR(TH1* hMC=0, TH1* hData=0, TH1* hRatio=0, double cut_i=700, double cut_f=900){
     int cutBinFrom = hMC->FindBin(cut_i); 
     int cutBinTo = hMC->FindBin(cut_f); 
 
@@ -45,7 +43,7 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, float norm_i=400, float norm_f
     TH1::SetDefaultSumw2();
     gStyle -> SetOptStat(0);
 
-    TString fname = Form("histfiles_5320/sumHF_etThr%.1f_eThr%.1f.root", etThr,eThr);
+    TString fname = Form("histfiles/sumHF_etThr%.1f_eThr%.1f.root", etThr,eThr);
     TFile* fin = new TFile(fname.Data());
 
     // ===============================================================================================
@@ -77,7 +75,7 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, float norm_i=400, float norm_f
     for(int j=0; j<Ncut; j++){
         float effi[N];
         for(int jn=0; jn<N; jn++){
-            effi[jn] = normHist(h1F_sumHF_mc, h1F_sumHF_data[j],h1F_sumHF_ratio[j], norm_i-(N/2.)+jn, norm_f);
+            effi[jn] = normHistR(h1F_sumHF_mc, h1F_sumHF_data[j],h1F_sumHF_ratio[j], norm_i-(N/2.)+jn, norm_f);
         }
         effi_mean[j] = mean(effi, N);
         effi_stdv[j] = standard_deviation(effi, N);
@@ -114,7 +112,7 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, float norm_i=400, float norm_f
         drawText(Form("DATA/MC = %.3f +- %.3f", effi_mean[j], effi_stdv[j]), 0.26,0.88);
         cleverRange(h1F_sumHF_data[j],h1F_sumHF_mc);
     }
-    c_tot->SaveAs(Form("pdf/nHF_etThr%.1f_eThr%.1f_normRange%dto%d_stdvVar%d.pdf",etThr,eThr,(int)norm_i,(int)norm_f,N));
+ //   c_tot->SaveAs(Form("pdf/nHF_etThr%.1f_eThr%.1f_normRange%dto%d_stdvVar%d.pdf",etThr,eThr,(int)norm_i,(int)norm_f,N));
     
     TCanvas *c33 = new TCanvas("c33","c33", 600,600);
     c33->Divide(2,2);
@@ -123,10 +121,15 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, float norm_i=400, float norm_f
     h1F_sumHF_data[0]->Draw();
     h1F_sumHF_mc->Draw("hist same");
     cleverRange(h1F_sumHF_data[0],h1F_sumHF_mc);
+    drawText("HLT_HIMinBiasHfOrBSC_v1",0.3,0.8);
+    drawText(Form("e > %.1f",eThr),0.5,0.59);
+    drawText(Form("e_{T} > %.1f",etThr),0.5,0.64);
     c33->cd(2);
     h1F_sumHF_mc->Draw("hist");
     h1F_sumHF_data[Ncut-1]->Draw("same");
     cleverRange(h1F_sumHF_data[Ncut-1],h1F_sumHF_mc);
+    drawText("HLT_HIMinBiasHfOrBSC_v1",0.3,0.8);
+    drawText("&& pcollisionEventSelection",0.3,0.73);
     c33->cd(3);
     h1F_sumHF_ratio[0]->GetYaxis()->SetTitle("DATA/MC");
     h1F_sumHF_ratio[0]->GetYaxis()->SetRangeUser(0,5);
@@ -144,7 +147,7 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, float norm_i=400, float norm_f
     //drawText(Form("DATA/MC = %.3f +- %.3f", effi_mean[Ncut-1], effi_stdv[Ncut-1]), 0.26,0.88);
 
     c33->SaveAs(Form("pdf/nHF_onlyCollEvtFilter_etThr%.1f_eThr%.1f_normRange%dto%d_stdvVar%d.pdf",etThr,eThr,(int)norm_i,(int)norm_f,N));
-
+/*
     TCanvas *c4;
     //= new TCanvas("c4","c4", 600,600);
     c4 = (TCanvas*)c33->DrawClone();
@@ -153,34 +156,8 @@ void draw_nTower(float etThr=0.0, float eThr=5.0, float norm_i=400, float norm_f
         gPad->SetLogx();
     }
     c4->SaveAs(Form("pdf/nHF_onlyCollEvtFilter_etThr%.1f_eThr%.1f_normRange%dto%d_stdvVar%d_logx.pdf",etThr,eThr,(int)norm_i,(int)norm_f,N));
-
+*/
 }
-
-float mean(float data[], int n)
-{
-    float mean=0.0;
-    int i;
-    for(i=0; i<n;++i)
-    {
-        mean+=data[i];
-    }
-    mean=mean/n;
-    return mean;           
-}
-float standard_deviation(float data[], int n)
-{
-    float mean=0.0, sum_deviation=0.0;
-    int i;
-    for(i=0; i<n;++i)
-    {
-        mean+=data[i];
-    }
-    mean=mean/n;
-    for(i=0; i<n;++i)
-        sum_deviation+=(data[i]-mean)*(data[i]-mean);
-    return sqrt(sum_deviation/n);           
-}
-
 
 int main(){
     draw_nTower(0.0, 1.0);
