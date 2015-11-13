@@ -35,7 +35,7 @@ float normHist(TH1* hMC=0, TH1* hData=0, TH1* hRatio=0, double cut_i=700, double
     return hData->Integral()/hMC->Integral();
 }
 
-void draw_nTower(float etThr=0.0, float eThr=5.0, int N=50, float norm_i=400, float norm_f=1200)
+void draw_nTower(float etThr=0.0, float eThr=5.0, float norm_i=400, float norm_f=1200, int N=50)
 {
     const int Ncut = 5;
     int col[] = {1,2,4,6,8,28,46,41};

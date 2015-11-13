@@ -21,9 +21,9 @@
 void noiseCompWithDiffTrigger(){
 
     const char* infile = "/u/user/goyeonju/files/centrality/PbPb_minbias_data_2760_HIRun2011-14Mar2014-v2_run181611_CMSSW5320_byYJ.root";
-    const char* trig[]={"HLT_HIZeroBias_v1", "HLT_HIMinBiasZDC_Calo_v1","HLT_HIMinBiasHfOrBSC_v1", "!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1"};
+    const char* trig[]={"HLT_HIMinBiasHfOrBSC_v1","HLT_HIMinBiasHF_v1","HLT_HIMinBiasHf_OR_v1","HLT_HIMinBiasBSC_v1","HLT_HIMinBiasBSC_OR_v1","HLT_HIZeroBias_v1", "HLT_HIMinBiasZDC_Calo_v1","!HLT_HIMinBiasHF_v1 && HLT_HIMinBiasHf_OR_v1", "!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1",};
     //const char* trig[]={"HLT_HIZeroBias_v1==1", "HLT_HIMinBiasZDC_Calo_v1==1","HLT_HIMinBiasHfOrBSC_v1==1", "HLT_HIMinBiasHfOrBSC_v1!=1 && HLT_HIZeroBias_v1==1"};
-    const int nTrig = 4;
+    const int nTrig = 9;
 
     const char* outName = Form("histfiles/hist_noiseCompDiffTrigger.root");
 

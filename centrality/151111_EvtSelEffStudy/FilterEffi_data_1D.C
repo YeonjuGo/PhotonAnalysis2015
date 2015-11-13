@@ -27,7 +27,7 @@ void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Cen
     const TCut lumiCut = "lumi>=1 && lumi<=895";
     const TCut eventCut = runCut && lumiCut;
     TH1::SetDefaultSumw2();
-    SetHistTitleStyle(.055,1.0,.040,0.01);
+    SetHistTitleStyle(.055,1.0,.035,0.01);
     TFile *fin = new TFile(fname);
     TTree *t_evt = (TTree*) fin -> Get("hiEvtAnalyzer/HiTree");
     TTree *t_skim = (TTree*) fin -> Get("skimanalysis/HltTree");
@@ -39,8 +39,9 @@ void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Cen
 
     TCut cut="(1==1)";
     if(!isMC) cut = "HLT_HIMinBiasHfOrBSC_v1==1";
-
+    cout << cut.GetTitle() << endl;
     Get1DEffPlots(t_evt, "hiHF",100,0,5000,cut,type,1,isAOD);
+    Get1DEffPlots(t_evt, "hiHFhit",100,0,5000,cut,type,1,isAOD);
     Get1DEffPlots(t_evt, "hiNpix",100,0,10000,cut,type,1,isAOD);
     Get1DEffPlots(t_evt, "hiBin",105,0,210,cut,type,1,isAOD);
     Get1DEffPlots(t_evt, "hiZDC",100,0,50000,cut,type,1,isAOD);
@@ -94,9 +95,10 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
         if(i==0) h1D[i] -> DrawCopy("hist");
         else h1D[i] -> DrawCopy("ep same");
         l1 -> Draw();
-        
+        gPad->SetLogx();
         if(i!=0){
             c_tot->cd(2);
+        gPad->SetLogx();
             h1D_eff[i]->GetYaxis()-> SetRangeUser(h1D_eff[Ncut-1]->GetMinimum()*0.9,1.0);
             if(i==1) {
                 h1D_eff[i] -> DrawCopy("ep"); 
@@ -107,6 +109,14 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
     }
 
     c_tot->SaveAs(Form("pdf/h1D_%s_%s.pdf",v1.Data(),cap.Data()));
+
+    TCanvas *c2;
+    c2 = (TCanvas*) c_tot->DrawClone();
+    c2->cd(1);
+    gPad->SetLogx();   
+    c2->cd(2);
+    gPad->SetLogx();
+    c2->SaveAs(Form("pdf/h1D_%s_%s_logx.pdf",v1.Data(),cap.Data()));
 
     for(int i=0; i<Ncut; i++){
         delete h1D[i];
