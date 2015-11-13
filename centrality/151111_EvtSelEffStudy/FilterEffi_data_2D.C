@@ -17,7 +17,7 @@
 #include "../../yjUtility.h"
 
 const int Ncut = 5;
-void Get2DEffPlots(TTree* t_evt=0, TString v1="hiHF", TString v2="hiNpix", int xbin=200, double xmin=0, double xmax=4500, int ybin=200, double ymin=0, double ymax=10000, TCut cut="", TString cap="",bool isPassed=1);
+void Get2DEffPlots(TTree* t_evt=0, TString v1="hiHF", TString v2="hiNpix", int xbin=200, double xmin=0, double xmax=4500, int ybin=200, double ymin=0, double ymax=10000, TCut cut="", const char* cap="",bool isPassed=1);
 void FilterEffi_data_2D(bool isMC=0)
 {
     const TCut runCut = "run==181611";
@@ -71,7 +71,7 @@ void FilterEffi_data_2D(bool isMC=0)
         Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",i);
     }
 }
-void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, double xmax, int ybin, double ymin, double ymax, TCut cut, TString cap,bool isPassed){
+void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, double xmax, int ybin, double ymin, double ymax, TCut cut, const char* cap,bool isPassed){
     TCut totcut[Ncut];
     totcut[0] = cut;
     totcut[1] = cut&& Form("pprimaryVertexFilter==%d",(int)isPassed);
@@ -83,7 +83,7 @@ void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, 
     c_temp->cd();
     TH2D *h2D[Ncut];
     for(int i=0; i<Ncut; i++){
-        h2D[i] = new TH2D(Form("h2D_%s_%s_filter%d_%s_isPassed%d",v1.Data(),v2.Data(),i,cap.Data(),(int)isPassed), Form("%s;%s;%s",totcut[i].GetTitle(), v1.Data(), v2.Data()), xbin, xmin, xmax, ybin, ymin, ymax);
+        h2D[i] = new TH2D(Form("h2D_%s_%s_filter%d_%s_isPassed%d",v1.Data(),v2.Data(),i,cap,(int)isPassed), Form("%s;%s;%s",totcut[i].GetTitle(), v1.Data(), v2.Data()), xbin, xmin, xmax, ybin, ymin, ymax);
         t_evt->Draw(Form("%s:%s>>+%s",v2.Data(), v1.Data(), h2D[i]->GetName() ), totcut[i]);
         h2D[i]=(TH2D*)gDirectory->Get(h2D[i]->GetName());
     }
@@ -94,6 +94,6 @@ void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, 
         h2D[i] -> Draw("colz");
         gPad->SetLogz();
     }
-    c_tot->SaveAs(Form("pdf/h2D_%s_%s_%s_isPassed%d.pdf",(int)isPassed, v1.Data(), v2.Data(),cap.Data()));
+    c_tot->SaveAs(Form("pdf/h2D_%s_%s_%s_isPassed%d.pdf", v1.Data(), v2.Data(),cap,(int)isPassed));
 }
 

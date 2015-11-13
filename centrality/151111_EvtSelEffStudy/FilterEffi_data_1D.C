@@ -19,9 +19,9 @@
 
 const double dy= 0.5;
 const int Ncut = 5;
-void Get1DEffPlots(TTree* t_evt=0, TString v1="hiHF",int xbin=200, double xmin=0, double xmax=4500, TCut cut="", TString cap="", bool isPassed=0,bool isAOD=0);
+void Get1DEffPlots(TTree* t_evt=0, TString v1="hiHF",int xbin=200, double xmin=0, double xmax=4500, TCut cut="",const char* cap="", bool isPassed=0,bool isAOD=0);
 
-void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root", TString type="HYDJET_5320", bool isMC=1, bool isAOD=0)
+void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root",const char* type="HYDJET_5320", bool isMC=1, bool isAOD=0)
 {
     const TCut runCut = "run==181611";
     const TCut lumiCut = "lumi>=1 && lumi<=895";
@@ -59,9 +59,9 @@ void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Cen
     Get1DEffPlots(t_evt, "hiEB",100,0,500,cut,Form("%s_shortRange",type),1,isAOD);
 }
 
-void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax, TCut cut,  TString cap, bool isPassed, bool isAOD)
+void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax, TCut cut,const char* cap, bool isPassed, bool isAOD)
 {
-    TCanvas *c_tot = new TCanvas(Form("c_tot_%s_%s",v1.Data(),cap.Data()), "c_tot", 300,600);
+    TCanvas *c_tot = new TCanvas(Form("c_tot_%s_%s",v1.Data(),cap), "c_tot", 300,600);
     c_tot->Divide(1,2);
 
     TCut totcut[Ncut];
@@ -89,7 +89,7 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
         h1D[i]=(TH1D*)gDirectory->Get(h1D[i]->GetName());
         if(i!=0) h1D_eff[i] -> Divide(h1D[i],h1D[0],1,1,"B");
     }
-    TLegend* l1 = new TLegend(0.45, 0.7, 0.9, 0.95, Form("%s",cap.Data()));
+    TLegend* l1 = new TLegend(0.45, 0.7, 0.9, 0.95, Form("%s",cap));
     legStyle(l1);
     l1 -> AddEntry(h1D[0], "No filter", "l");
     l1 -> AddEntry(h1D[1], "pprimaryVertexFilter");
@@ -113,9 +113,9 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
             else h1D_eff[i] -> DrawCopy("ep same"); 
         }
     }
-    c_tot->SaveAs(Form("pdf/h1D_%s_%s.pdf",v1.Data(),cap.Data()));
+    c_tot->SaveAs(Form("pdf/h1D_%s_%s.pdf",v1.Data(),cap));
 
-    TFile* outf = new TFile(Form("pdf/outfile_%s.root",cap.Data()), "RECREATE");
+    TFile* outf = new TFile(Form("pdf/outfile_%s.root",cap), "RECREATE");
     outf->cd();
     for(int i=0; i<Ncut; i++){
         h1D[i]->Write();
