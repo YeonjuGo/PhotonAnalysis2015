@@ -21,7 +21,7 @@ const double dy= 0.5;
 const int Ncut = 5;
 void Get1DEffPlots(TTree* t_evt=0, TString v1="hiHF",int xbin=200, double xmin=0, double xmax=4500, TCut cut="", TString cap="", bool isPassed=0,bool isAOD=0);
 
-void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root", TString type="HYDJET_5320", bool isMC=0, bool isAOD=0)
+void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Centrality_officialMC_Hydjet1p8_TuneDrum_Quenched_MinBias_2760GeV.root", TString type="HYDJET_5320", bool isMC=1, bool isAOD=0)
 {
     const TCut runCut = "run==181611";
     const TCut lumiCut = "lumi>=1 && lumi<=895";
@@ -48,12 +48,20 @@ void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Cen
     Get1DEffPlots(t_evt, "hiET",100,0,2000,cut,type,1,isAOD);
     Get1DEffPlots(t_evt, "hiEE",100,0,4000,cut,type,1,isAOD);
     Get1DEffPlots(t_evt, "hiEB",100,0,5000,cut,type,1,isAOD);
-    //Get1DEffPlots(t_evt, "vz",100,-50,50,cut,type,1,isAOD);
+
+    Get1DEffPlots(t_evt, "hiHF",100,0,500,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiHFhit",100,0,500,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiNpix",100,0,1000,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiBin",105,1000,210,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiZDC",100,0,5000,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiET",100,0,200,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiEE",100,0,400,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiEB",100,0,500,cut,Form("%s_shortRange",type),1,isAOD);
 }
 
 void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax, TCut cut,  TString cap, bool isPassed, bool isAOD)
 {
-    TCanvas *c_tot = new TCanvas(Form("c_tot_%s",v1.Data()), "c_tot", 300,600);
+    TCanvas *c_tot = new TCanvas(Form("c_tot_%s_%s",v1.Data(),cap.Data()), "c_tot", 300,600);
     c_tot->Divide(1,2);
 
     TCut totcut[Ncut];
@@ -95,10 +103,8 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
         if(i==0) h1D[i] -> DrawCopy("hist");
         else h1D[i] -> DrawCopy("ep same");
         l1 -> Draw();
-        gPad->SetLogx();
         if(i!=0){
             c_tot->cd(2);
-        gPad->SetLogx();
             h1D_eff[i]->GetYaxis()-> SetRangeUser(h1D_eff[Ncut-1]->GetMinimum()*0.9,1.0);
             if(i==1) {
                 h1D_eff[i] -> DrawCopy("ep"); 
@@ -107,16 +113,16 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
             else h1D_eff[i] -> DrawCopy("ep same"); 
         }
     }
-
     c_tot->SaveAs(Form("pdf/h1D_%s_%s.pdf",v1.Data(),cap.Data()));
 
-    TCanvas *c2;
-    c2 = (TCanvas*) c_tot->DrawClone();
-    c2->cd(1);
-    gPad->SetLogx();   
-    c2->cd(2);
-    gPad->SetLogx();
-    c2->SaveAs(Form("pdf/h1D_%s_%s_logx.pdf",v1.Data(),cap.Data()));
+    TFile* outf = new TFile(Form("pdf/outfile_%s.root",cap.Data()), "RECREATE");
+    outf->cd();
+    for(int i=0; i<Ncut; i++){
+        h1D[i]->Write();
+        h1D_eff[i]->Write();
+    }
+    c_tot->Write();
+    outf->Close();
 
     for(int i=0; i<Ncut; i++){
         delete h1D[i];

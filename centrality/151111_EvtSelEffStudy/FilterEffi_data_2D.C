@@ -45,28 +45,31 @@ void FilterEffi_data_2D(bool isMC=0)
     double hiZDCMax = 80000;
     double hiHFMax = 5000;
     int nbin = 100;
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",0);
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",1);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",1);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",1);
+    for(int i=0;i<2;i++){
+        Get2DEffPlots(t_evt, "hiHFplus","hiHFminus",nbin,0,hiHFMax,nbin,0,hiHFMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",i);
+        Get2DEffPlots(t_evt, "hiHFhitPlus","hiHFhitMinus",nbin,0,hiHFMax,nbin,0,hiHFMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",i);
+        Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",i);
+        Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",i);
+        Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"HLT_HIMinBiasHfOrBSC_v1==1","HLT_HIMinBiasHfOrBSC_v1",i);
 
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",0);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",0);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",0);
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",1);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",1);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",1);
+        Get2DEffPlots(t_evt, "hiHFplus","hiHFminus",nbin,0,hiHFMax,nbin,0,hiHFMax,"!HLT_HIMinBiasHF_v1 && HLT_HIMinBiasHf_OR_v1","noHF_passHfOr",i);
+        Get2DEffPlots(t_evt, "hiHFhitPlus","hiHFhitMinus",nbin,0,hiHFMax,nbin,0,hiHFMax,"!HLT_HIMinBiasHF_v1 && HLT_HIMinBiasHf_OR_v1","noHF_passHfOr",i);
+        Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHF_v1 && HLT_HIMinBiasHf_OR_v1","noHF_passHfOr",i);
+        Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHF_v1 && HLT_HIMinBiasHf_OR_v1","noHF_passHfOr",i);
+        Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHF_v1 && HLT_HIMinBiasHf_OR_v1","noHF_passHfOr",i);
 
+        Get2DEffPlots(t_evt, "hiHFplus","hiHFminus",nbin,0,hiHFMax,nbin,0,hiHFMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",i);
+        Get2DEffPlots(t_evt, "hiHFhitPlus","hiHFhitMinus",nbin,0,hiHFMax,nbin,0,hiHFMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",i);
+        Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",i);
+        Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",i);
+        Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",i);
 
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",0);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",0);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",0);
-    Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",1);
-    Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",1);
-    Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIMinBiasHf_OR_v1","noHfOrBSC_passHfOr",1);
-
+        Get2DEffPlots(t_evt, "hiHFplus","hiHFminus",nbin,0,hiHFMax,nbin,0,hiHFMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",i);
+        Get2DEffPlots(t_evt, "hiHFhitPlus","hiHFhitMinus",nbin,0,hiHFMax,nbin,0,hiHFMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",i);
+        Get2DEffPlots(t_evt, "hiHF","hiNpix",nbin,0,hiHFMax,nbin,0,hiNpixMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",i);
+        Get2DEffPlots(t_evt, "hiHF","hiZDC",nbin,0,hiHFMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",i);
+        Get2DEffPlots(t_evt, "hiNpix","hiZDC",nbin,0,hiNpixMax,nbin,0,hiZDCMax,"!HLT_HIMinBiasHfOrBSC_v1 && HLT_HIZeroBias_v1","noHfOrBSC_passZero",i);
+    }
 }
 void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, double xmax, int ybin, double ymin, double ymax, TCut cut, TString cap,bool isPassed){
     TCut totcut[Ncut];
@@ -91,6 +94,6 @@ void Get2DEffPlots(TTree* t_evt, TString v1, TString v2, int xbin, double xmin, 
         h2D[i] -> Draw("colz");
         gPad->SetLogz();
     }
-    c_tot->SaveAs(Form("pdf/h2D_%s_isPassed%d_%s_%s.pdf", cap.Data(),(int)isPassed, v1.Data(), v2.Data()));
+    c_tot->SaveAs(Form("pdf/h2D_%s_%s_%s_isPassed%d.pdf",(int)isPassed, v1.Data(), v2.Data(),cap.Data()));
 }
 
