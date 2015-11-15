@@ -64,7 +64,7 @@ void legStyle( TLegend *a , TString head="")
 {
   a->SetBorderSize(0);
   a->SetFillStyle(0);
-//  a->SetHeader(head);
+  a->SetHeader(head);
 //  a->SetTextFont(62);
 //  a->SetTextSize(17);
 //  a->SetLineColor(1);
