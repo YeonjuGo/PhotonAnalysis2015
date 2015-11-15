@@ -49,14 +49,14 @@ void FilterEffi_data_1D(const char* fname="/u/user/goyeonju/files/centrality/Cen
     Get1DEffPlots(t_evt, "hiEE",100,0,4000,cut,type,1,isAOD);
     Get1DEffPlots(t_evt, "hiEB",100,0,5000,cut,type,1,isAOD);
 
-    Get1DEffPlots(t_evt, "hiHF",100,0,500,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiHF",100,0,100,cut,Form("%s_shortRange",type),1,isAOD);
     Get1DEffPlots(t_evt, "hiHFhit",100,0,500,cut,Form("%s_shortRange",type),1,isAOD);
-    Get1DEffPlots(t_evt, "hiNpix",100,0,1000,cut,Form("%s_shortRange",type),1,isAOD);
-    Get1DEffPlots(t_evt, "hiBin",105,1000,210,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiNpix",100,0,300,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiBin",105,100,210,cut,Form("%s_shortRange",type),1,isAOD);
     Get1DEffPlots(t_evt, "hiZDC",100,0,5000,cut,Form("%s_shortRange",type),1,isAOD);
-    Get1DEffPlots(t_evt, "hiET",100,0,200,cut,Form("%s_shortRange",type),1,isAOD);
-    Get1DEffPlots(t_evt, "hiEE",100,0,400,cut,Form("%s_shortRange",type),1,isAOD);
-    Get1DEffPlots(t_evt, "hiEB",100,0,500,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiET",100,0,40,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiEE",100,0,100,cut,Form("%s_shortRange",type),1,isAOD);
+    Get1DEffPlots(t_evt, "hiEB",100,0,200,cut,Form("%s_shortRange",type),1,isAOD);
 }
 
 void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax, TCut cut,const char* cap, bool isPassed, bool isAOD)
@@ -72,7 +72,7 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
     totcut[3] = cut&& Form("phfCoincFilter3==%d",(int)isPassed);
     totcut[4] = cut&& Form("pcollisionEventSelection==%d",(int)isPassed);
 
-    TCanvas *c_temp= new TCanvas(Form("c_temp"), "", 300,300);
+    TCanvas *c_temp= new TCanvas(Form("c_temp_%s",cap), "", 300,300);
     TH1D *h1D[10];
     TH1D *h1D_eff[10];
     for(int i=0; i<Ncut; i++){
@@ -114,7 +114,7 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
         }
     }
     c_tot->SaveAs(Form("pdf/h1D_%s_%s.pdf",v1.Data(),cap));
-
+/*
     TFile* outf = new TFile(Form("pdf/outfile_%s.root",cap), "RECREATE");
     outf->cd();
     for(int i=0; i<Ncut; i++){
@@ -123,7 +123,7 @@ void Get1DEffPlots(TTree* t_evt, TString v1, int xbin, double xmin, double xmax,
     }
     c_tot->Write();
     outf->Close();
-
+*/
     for(int i=0; i<Ncut; i++){
         delete h1D[i];
         delete h1D_eff[i];
