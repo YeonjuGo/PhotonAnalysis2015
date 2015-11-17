@@ -95,26 +95,11 @@ void gedPhotonMacros_RecHit(const char* inputfileName, const char* outputFileNam
     TFile* outputFile = new TFile(outputFileName, "RECREATE");
 
     // selection_pt_t1
-    make2DRecHit(359,masterTree);
-    make2DRecHit(369,masterTree);
-    make2DRecHit(375,masterTree);
-    make2DRecHit(379,masterTree);
+    make2DRecHit(837,masterTree);
 /*
  * ***********************************************************************************************************************
  * *    Row   * Instance *       run *     event *     lumis *    Entry$ *   t1.nPho *  t1.phoEt * t1.phoEta * t1.phoPhi *
  * ***********************************************************************************************************************
- * *      359 *        0 *         1 *       160 *        10 *       359 *         2 * 8.0958623 * 0.0348131 * 1.0261895 *
- * *      359 *        1 *         1 *       160 *        10 *       359 *         2 * 44.158470 * -1.989384 * 1.6155483 *
- * *      369 *        0 *         1 *       170 *        10 *       369 *         1 * 53.766132 * -2.719878 * -2.151719 *
- * *      375 *        0 *         1 *       176 *        10 *       375 *         2 * 37.665493 * -0.385551 * 2.6640393 *
- * *      375 *        1 *         1 *       176 *        10 *       375 *         2 * 14.052883 * 1.4597802 * -2.505520 *
- * *      379 *        0 *         1 *       180 *        10 *       379 *         2 * 43.896617 * 0.0994993 * -1.484266 *
- * *      379 *        1 *         1 *       180 *        10 *       379 *         2 * 47.820270 * -1.417525 * 1.6277667 *
- * *      359 *        0 *         0 *           *           *           *           *           *           *           *
- * *      369 *        0 *         0 *           *           *           *           *           *           *           *
- * *      375 *        0 *         1 * 19.245159 * 17.861345 * -0.391139 * 2.6490013 * 129.61741 *         1 *           *
- * *      379 *        0 *         1 * 16.822832 * 16.720628 * 0.1105095 * -1.475957 * 129.53227 *         1 *           *
-
 */
     // selection_pt_t1_t2
     outputFile->Write();
@@ -293,13 +278,13 @@ int main(int argc, char** argv)
 
     if(argc == 1)
     {
-        inputFileName = "root://eoscms//eos/cms//store/cmst3/user/mverweij/jetsPbPb/Run2Prep/Run2_pthat80_HiForest_HCAL_Method2/PyquenUnquenched_Dijet_NcollFilt_pthat80_740pre8_MCHI1_74_V4_GEN-SIM_v3/crab_Run2_pthat80_HiForest_HCAL_Method2_WithTracks/151103_225327/HiForest_1.root";
-        outputFileName = "RecHit1_Dijet_NcollFilt_pthat80_740pre8_hiForest.root";
+        inputFileName = "/afs/cern.ch/work/y/ygo/public/ecalLocalReco/forest_AllQCDPhoton30_ecalGlobal_755p1.root";
+        outputFileName = "RecHit1_global.root";
     }
     else if(argc == 2)
     {
         inputFileName = argv[1];
-        outputFileName = "gedPhotonMacros_RecHit2_2011_MB_750_hiForest.root";
+        outputFileName = "RecHit1_global.root";
     }
     else if(argc == 3)
     {
