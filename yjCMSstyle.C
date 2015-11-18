@@ -10,7 +10,7 @@
 void CMSstyle(){
  // use the 'plain' style for plots (white backgrounds, etc)
  //  cout << "...using style 'Plain'" << endl;
- gROOT->SetStyle("Plain");
+ //gROOT->SetStyle("Plain");
 
  // Create the 'CMS' style for approved plots. Note that this style may need
  // some fine tuning in your macro depending on what you are plotting, e.g.
@@ -21,16 +21,16 @@ void CMSstyle(){
  TStyle *cmsStyle= new TStyle("CMS","CMS approved plots style");
 
  // use plain black on white colors
- cmsStyle->SetFrameBorderMode(0);
- cmsStyle->SetCanvasBorderMode(0);
- cmsStyle->SetPadBorderMode(0);
- cmsStyle->SetPadColor(0);
- cmsStyle->SetCanvasColor(0);
- cmsStyle->SetTitleColor(1);
- cmsStyle->SetStatColor(0);
- cmsStyle->SetFrameFillColor(0);
- cmsStyle->SetFrameLineColor(0);
- cmsStyle->SetFillColor(0);
+ //cmsStyle->SetFrameBorderMode(0);
+// cmsStyle->SetCanvasBorderMode(0);
+// cmsStyle->SetPadBorderMode(0);
+ //cmsStyle->SetPadColor(0);
+ //cmsStyle->SetCanvasColor(0);
+// cmsStyle->SetTitleColor(1);
+// cmsStyle->SetStatColor(0);
+ //cmsStyle->SetFrameFillColor(0);
+// cmsStyle->SetFrameLineColor(0);
+ //cmsStyle->SetFillColor(0);
  
  cmsStyle->SetPadBorderSize(0);
  cmsStyle->SetCanvasBorderSize(0);
@@ -81,7 +81,7 @@ void CMSstyle(){
 //       << endl << endl;
 
  // restore the plain style
- gROOT->SetStyle("Plain");
+ //gROOT->SetStyle("Plain");
  gROOT->SetStyle("CMS");
  return ;
 }

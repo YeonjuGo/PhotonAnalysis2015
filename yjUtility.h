@@ -36,12 +36,32 @@ void yjStyleRoot(){
     gStyle -> SetOptStat(0);
     TH1::SetDefaultSumw2();
 }
-void SetHistTitleStyle(double titlesize=0.06, double titleoffset=0.04, double labelsize = 0.05, double labeloffset=0.01){
-    gStyle->SetTitleSize( titlesize, "X" ); gStyle->SetTitleOffset(titleoffset, "X");
-    gStyle->SetTitleSize( titlesize, "Y" ); gStyle->SetTitleOffset(titleoffset, "Y");
-    gStyle->SetLabelSize( labelsize, "X" ); gStyle->SetLabelOffset(labeloffset, "X");
-    gStyle->SetLabelSize( labelsize, "Y" ); gStyle->SetLabelOffset(labeloffset, "Y");
+void SetyjPadStyle(){
+    gStyle->SetPaperSize(20,26);
+    gStyle->SetPadTopMargin(0.05);
+    gStyle->SetPadRightMargin(0.05);
+    gStyle->SetPadBottomMargin(0.17);
+    gStyle->SetPadLeftMargin(0.17);
 }
+void SetHistTitleStyle(double titlesize=0.06, double labelsize = 0.05){
+    gStyle->SetTextFont(42); 
+    gStyle->SetTextSize(0.04); 
+    gStyle->SetLabelFont( 42, "X" ); 
+    gStyle->SetLabelFont( 42, "Y" ); 
+    gStyle->SetLabelFont( 42, "Z" ); 
+    gStyle->SetTitleSize( titlesize, "X" ); 
+    gStyle->SetTitleSize( titlesize, "Y" ); 
+    gStyle->SetTitleSize( titlesize, "Z" ); 
+    gStyle->SetLabelSize( labelsize, "X" ); 
+    gStyle->SetLabelSize( labelsize, "Y" ); 
+    gStyle->SetLabelSize( labelsize, "Z" ); 
+}
+//void SetHistTitleStyle(double titlesize=0.06, double titleoffset=0.04, double labelsize = 0.05, double labeloffset=0.01){
+//    gStyle->SetTitleSize( titlesize, "X" ); gStyle->SetTitleOffset(titleoffset, "X");
+ //   gStyle->SetTitleSize( titlesize, "Y" ); gStyle->SetTitleOffset(titleoffset, "Y");
+  //  gStyle->SetLabelSize( labelsize, "X" ); gStyle->SetLabelOffset(labeloffset, "X");
+   // gStyle->SetLabelSize( labelsize, "Y" ); gStyle->SetLabelOffset(labeloffset, "Y");
+//}
 void SetHistTitleStyle(TH1* h, double titlesize=0.08, double titleoffset=0.01, double labelsize=0.05,double labeloffset=0.01){
     h->SetTitleSize( titlesize, "X" ); h->SetTitleOffset(titleoffset, "X");
     h->SetTitleSize( titlesize, "Y" ); h->SetTitleOffset(titleoffset, "Y");
@@ -60,11 +80,11 @@ void SetPadStyle(){
     gStyle->SetPadBottomMargin(0.15);
     gStyle->SetPadTopMargin(0.10);
 }
-void legStyle( TLegend *a , TString head="")
+void legStyle( TLegend *a)
 {
   a->SetBorderSize(0);
   a->SetFillStyle(0);
-  a->SetHeader(head);
+//  a->SetHeader(head);
 //  a->SetTextFont(62);
 //  a->SetTextSize(17);
 //  a->SetLineColor(1);

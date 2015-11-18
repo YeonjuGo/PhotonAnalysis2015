@@ -62,6 +62,19 @@ void compareRechit(const char* f1="/afs/cern.ch/work/y/ygo/public/ecalLocalReco/
         tevt[i]->AddFriend(tpho[i]);
     }
 
+    compareTwo_diff(tee[0],tee[1],"chi2",50,0,70,"",Form("%s",cap));
+    compareTwo_diff(teb[0],teb[1],"chi2",50,0,70,"",Form("%s",cap));
+    compareTwo_diff(tee[0],tee[1],"eError",50,0,0.2,"",Form("%s",cap));
+    compareTwo_diff(teb[0],teb[1],"eError",50,0,0.2,"",Form("%s",cap));
+   /* 
+    const char* jetptcut = "Max$(jtpt)>80";
+    compareTwo_diff(tee[0],tee[1],"chi2",50,0,1,Form("%s",cap));
+    compareTwo_diff(teb[0],teb[1],"chi2",50,0,70,Form("%s",cap));
+    compareTwo_diff(tee[0],tee[1],"eError",50,0,1,Form("%s",cap));
+    compareTwo_diff(teb[0],teb[1],"eError",50,0,0.6,Form("%s",cap));
+ */
+
+#if 0
     double eMax=1.0;
     double etMax=0.5;
     const char* jetptcut = "Max$(jtpt)>90";
@@ -100,8 +113,8 @@ void compareRechit(const char* f1="/afs/cern.ch/work/y/ygo/public/ecalLocalReco/
     compareTwo_diff(teb[0],teb[1],"e",50,0,0.6,Form("hiNtracks>1000 && %s",jetptcut),Form("%s_hiNtracks1000_ptcut90",cap));
     compareTwo_diff(teb[0],teb[1],"et",50,0,0.6,Form("hiNtracks>1000 && %s",jetptcut),Form("%s_hiNtracks1000_ptcut90",cap));
     compareTwo_diff(teb[0],teb[1],"phi",20,-3.14,3.14,Form("hiNtracks>1000 && %s",jetptcut),Form("%s_hiNtracks1000_ptcut90",cap));
-
-/*
+#endif
+#if 0
     const char* jetptcut = "Max$(jtpt)>80";
     compareTwo_diff(tpho[0],tpho[1],"phoEt",40,0,200,Form("%s",jetptcut),Form("%s_ptcut80",cap));
     compareTwo_diff(tpho[0],tpho[1],"phoEta",50,-3,3,Form("%s",jetptcut),Form("%s_ptcut80",cap));
@@ -138,10 +151,13 @@ void compareRechit(const char* f1="/afs/cern.ch/work/y/ygo/public/ecalLocalReco/
     compareTwo_diff(teb[0],teb[1],"e",50,0,0.6,Form("hiNtracks>1000 && %s",jetptcut),Form("%s_hiNtracks1000_ptcut80",cap));
     compareTwo_diff(teb[0],teb[1],"et",50,0,0.6,Form("hiNtracks>1000 && %s",jetptcut),Form("%s_hiNtracks1000_ptcut80",cap));
     compareTwo_diff(teb[0],teb[1],"phi",20,-3.14,3.14,Form("hiNtracks>1000 && %s",jetptcut),Form("%s_hiNtracks1000_ptcut80",cap));
-*/
+#endif
 
-    // basic spectra (jet, centrality)
 #if 0
+// basic spectra (jet, centrality, photon)
+    compareTwo_diff(tpho[0],tpho[1],"phoEt",40,0,200,Form("%s",cap));
+    compareTwo_diff(tpho[0],tpho[1],"phoEta",50,-3,3,Form("%s",cap));
+    compareTwo_diff(tpho[0],tpho[1],"phoPhi",20,-3.14,3.14,Form("%s",cap));
     compareTwo_diff(tjet[0],tjet[1],"jtpt",40,0,200,"",Form("%s",cap));
     compareTwo_diff(tjet[0],tjet[1],"jteta",50,-3,3,"",Form("%s",cap));
     compareTwo_diff(tjet[0],tjet[1],"jtphi",20,-3.14,3.14,"",Form("%s",cap));
@@ -165,7 +181,6 @@ void compareRechit(const char* f1="/afs/cern.ch/work/y/ygo/public/ecalLocalReco/
     compareTwo_diff(teb[0],teb[1],"et",50,0,0.5,"hiNtracks<50",Form("%s_hiNtracks50",cap));
     compareTwo_diff(teb[0],teb[1],"phi",20,-3.14,3.14,"hiNtracks<50",Form("%s_hiNtracks50",cap));
 // hiNtracks >1000
-
     compareTwo_diff(tee[0],tee[1],"e",50,0,2,"hiNtracks>1000",Form("%s_hiNtracks1000",cap));
     compareTwo_diff(tee[0],tee[1],"et",50,0,2,"hiNtracks>1000",Form("%s_hiNtracks1000",cap));
     compareTwo_diff(tee[0],tee[1],"phi",20,-3.14,3.14,"hiNtracks>1000",Form("%s_hiNtracks1000",cap));
@@ -320,8 +335,12 @@ void compareTwo_diff(TTree* t1, TTree* t2, TString var, int nBins, double xMin, 
     drawText(Form("%s",t1->GetName()),0.25,0.95);
     TLegend* leg = new TLegend(0.6,0.75,0.9,0.9);
     //legStyle(leg);
-    leg->AddEntry(h1,Form("Global"), "l");
-    leg->AddEntry(h2,Form("Multifit"));
+//    leg->AddEntry(h1,Form("Global"), "l");
+//    leg->AddEntry(h2,Form("Multifit"));
+//    leg->AddEntry(h1,Form("Jet80Data"), "l");
+//    leg->AddEntry(h2,Form("Photon20Data"));
+    leg->AddEntry(h1,Form("PhotonData"), "l");
+    leg->AddEntry(h2,Form("PhotonMC"));
     leg->Draw();
     cc->cd(2);
     //h2->SetAxisRange(0.5,1.5,"Y");
@@ -330,7 +349,9 @@ void compareTwo_diff(TTree* t1, TTree* t2, TString var, int nBins, double xMin, 
     for(int i=0;i< h2->GetNbinsX();i++){
         h2->SetBinError(i+1,0.000000000000000000001);
     }
-    h2->SetYTitle("MultiFit - GlobalReco");
+    //h2->SetYTitle("MultiFit - GlobalReco");
+    //h2->SetYTitle("Photon20Data - Jet80Data");
+    h2->SetYTitle("PhotonData - PhotonMC");
     h2->DrawCopy("p");
     jumSun(xMin,0,xMax,0);
     cc-> SaveAs(Form("pdf/%s.pdf",cc->GetName())); 
