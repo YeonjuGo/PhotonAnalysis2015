@@ -22,14 +22,16 @@ void triggerTurnOn(const char* fname="root://eoscms//eos/cms//store/group/phys_h
         const char* xvar="hiHF",
         double xmin = 0,
         double xmax = 200,
-        int nBin = 50)
+        int nBin = 50,
+        TString cap="")
 {
 
 
     //baseTrig : HLT_ZeroBias_v2 53450 , L1Tech_BPTX_plus_AND_minus.v0 224871, L1_ZeroBias 54037,  
     //trig : HLT_L1MinimumBiasHF1OR_part1_v1, HLT_L1MinimumBiasHF2OR_v1, HLT_L1MinimumBiasHF1AND_v1, HLT_L1MinimumBiasHF2AND_v1
-    const int nTrig = 4;
-    TString trig[] = {"HLT_L1MinimumBiasHF1OR_part1_v1","HLT_L1MinimumBiasHF1AND_v1","HLT_L1MinimumBiasHF2OR_v1","HLT_L1MinimumBiasHF2AND_v1"};
+    const int nTrig = 3;
+//    TString trig[] = {"HLT_L1MinimumBiasHF1AND_v1","HLT_L1MinimumBiasHF2OR_v1","HLT_L1MinimumBiasHF2AND_v1"};
+    TString trig[] = {"L1_MinimumBiasHF1_AND","L1_MinimumBiasHF2_OR","L1_MinimumBiasHF2_AND"};
 
     TH1::SetDefaultSumw2();
     gStyle->SetOptStat(0);
@@ -45,12 +47,15 @@ void triggerTurnOn(const char* fname="root://eoscms//eos/cms//store/group/phys_h
 
     TH1D* h[nTrig];
     TH1D* hbase = new TH1D(Form("hbase"),Form("%s;%s;Entries",baseTrig.Data(),xvar),nBin,xmin,xmax);
-    t->Draw( Form("%s>>hbase",xvar), Form("%s==1",baseTrig.Data()) );
+    t->Draw( Form("%s>>hbase",xvar), Form("%s_Prescl*(%s==1)",baseTrig.Data(),baseTrig.Data()) );
+    //t->Draw( Form("%s>>hbase",xvar), Form("%s==1",baseTrig.Data()) );
     int baseTrigEntry = t->GetEntries(Form("%s==1",baseTrig.Data()));
     int trigEntry[nTrig];
     cout << "BASE TRIGGER ::: " << baseTrig << " ::: " << endl; 
     for(int i=0;i<nTrig;i++){
-        const char* tmpTrig = Form("%s==1 && %s==1", baseTrig.Data(), trig[i].Data());
+        //const char* tmpTrig = Form("%s_Prescl*(%s==1)", trig[i].Data(), trig[i].Data());
+        const char* tmpTrig = Form("%s_Prescl*(%s==1 && %s==1)",trig[i].Data(), baseTrig.Data(), trig[i].Data());
+        //const char* tmpTrig = Form("(%s==1 && %s==1)", baseTrig.Data(), trig[i].Data());
         h[i] = new TH1D(Form("h%d",i), Form("%s;%s;Entries",trig[i].Data(),xvar),nBin,xmin,xmax);
         t->Draw( Form("%s>>%s",xvar,h[i]->GetName()), tmpTrig );
         trigEntry[i]=t->GetEntries(tmpTrig);
@@ -89,22 +94,40 @@ void triggerTurnOn(const char* fname="root://eoscms//eos/cms//store/group/phys_h
         else hEff[i]->Draw("p same");
     }
     jumSun(xmin,1,xmax,1);
-    c_tot->SaveAs(Form("pdf/trigTurnOn_%s_%s.png",xvar,baseTrig.Data()));
+    c_tot->SaveAs(Form("pdf/trigTurnOn_%s_%s%s.png",xvar,baseTrig.Data(),cap.Data()));
 }
 
 int main(){
     const char* fin = "root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163_277k.root"; 
 //baseTrig : HLT_ZeroBias_v2 53450 , L1Tech_BPTX_plus_AND_minus.v0 224871, L1_ZeroBias 54037,  
+/*
     triggerTurnOn(fin,"HLT_ZeroBias_v2" ,"hiHF", 0, 200, 50);
     triggerTurnOn(fin,"HLT_ZeroBias_v2" ,"hiNpix", 0, 1400, 50);
-    triggerTurnOn(fin,"HLT_ZeroBias_v2" ,"hiBin", 0, 200, 50);
+    //triggerTurnOn(fin,"HLT_ZeroBias_v2" ,"hiBin", 0, 200, 50);
 
     triggerTurnOn(fin,"L1Tech_BPTX_plus_AND_minus.v0" ,"hiHF", 0, 200, 50);
     triggerTurnOn(fin,"L1Tech_BPTX_plus_AND_minus.v0" ,"hiNpix", 0, 1400, 50);
-    triggerTurnOn(fin,"L1Tech_BPTX_plus_AND_minus.v0" ,"hiBin", 0, 200, 50);
+    //triggerTurnOn(fin,"L1Tech_BPTX_plus_AND_minus.v0" ,"hiBin", 0, 200, 50);
 
     triggerTurnOn(fin,"L1_ZeroBias" ,"hiHF", 0, 200, 50);
     triggerTurnOn(fin,"L1_ZeroBias" ,"hiNpix", 0, 1400, 50);
-    triggerTurnOn(fin,"L1_ZeroBias" ,"hiBin", 0, 200, 50);
+    //triggerTurnOn(fin,"L1_ZeroBias" ,"hiBin", 0, 200, 50);
+*/     
+    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiHF", 0, 200, 50);
+    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNpix", 0, 1500, 50);
+    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNtracksPtCut", 0, 100, 50);
+   
+    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR","hiHF", 0, 20, 20, "_zoom");
+    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNpix", 0, 100, 20, "_zoom");
+    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNtracksPtCut", 0, 50, 20, "_zoom");
+/*
+    triggerTurnOn(fin,"HLT_L1MinimumBiasHF1OR_part1_v1","hiHF", 0, 200, 50);
+    triggerTurnOn(fin,"HLT_L1MinimumBiasHF1OR_part1_v1" ,"hiNpix", 0, 1500, 50);
+    triggerTurnOn(fin,"HLT_L1MinimumBiasHF1OR_part1_v1" ,"hiNtracksPtCut", 0, 100, 50);
+   
+    triggerTurnOn(fin,"HLT_L1MinimumBiasHF1OR_part1_v1","hiHF", 0, 20, 50, "_zoom");
+    triggerTurnOn(fin,"HLT_L1MinimumBiasHF1OR_part1_v1" ,"hiNpix", 0, 100, 50, "_zoom");
+    triggerTurnOn(fin,"HLT_L1MinimumBiasHF1OR_part1_v1" ,"hiNtracksPtCut", 0, 50, 50, "_zoom");
+*/
     return 0;
 }
