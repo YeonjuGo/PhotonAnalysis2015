@@ -1,0 +1,18 @@
+#void filtorEffCalculator(const char* fname="root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163-262172_1.4M.root")
+
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163_275169_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262165_102426_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262167_466650_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262169_78899_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262170_94070_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262171_269452_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262172_261242_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262173_244963_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262204_138208_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262205_513167_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262235_708331_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262248_2357_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262249_65165_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262250_122302_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262252_289210_match.root")'
+root -l -b -q 'filterEffCalculator.C+("root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262254_279593_match.root")'

@@ -17,8 +17,9 @@
 #include <iostream>
 #include "../../yjUtility.h"
 
-void triggerTurnOn(const char* fname="root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163_277k.root", 
-        TString baseTrig = "L1Tech_BPTX_plus_AND_minus.v0", 
+void triggerTurnOn(const char* fname="root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163-262172_1.4M.root",
+        ///store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163_277k.root", 
+        const char* baseTrig = "L1_MinimumBiasHF1_OR", 
         const char* xvar="hiHF",
         double xmin = 0,
         double xmax = 200,
@@ -46,16 +47,20 @@ void triggerTurnOn(const char* fname="root://eoscms//eos/cms//store/group/phys_h
     t-> AddFriend(t_skim);
 
     TH1D* h[nTrig];
-    TH1D* hbase = new TH1D(Form("hbase"),Form("%s;%s;Entries",baseTrig.Data(),xvar),nBin,xmin,xmax);
-    t->Draw( Form("%s>>hbase",xvar), Form("%s_Prescl*(%s==1)",baseTrig.Data(),baseTrig.Data()) );
-    //t->Draw( Form("%s>>hbase",xvar), Form("%s==1",baseTrig.Data()) );
-    int baseTrigEntry = t->GetEntries(Form("%s==1",baseTrig.Data()));
+    TH1D* hbase = new TH1D(Form("hbase"),Form("%s;%s;Entries",baseTrig,xvar),nBin,xmin,xmax);
+    const char* lumiCut = "((1==1))";
+    //const char* lumiCut = "((Run>262163))";
+    //const char* lumiCut = "((Run==262163 && LumiBlock>5) || (Run>262163))";
+    //t->Draw( Form("%s>>hbase",xvar), Form("%s_Prescl*(%s==1 && %s)",baseTrig,baseTrig,lumiCut) );
+    //t->Draw( Form("%s>>hbase",xvar), Form("(%s==1 && %s)",baseTrig,lumiCut) );
+    //t->Draw( Form("%s>>hbase",xvar), Form("(%s==1 && %s)",baseTrig,lumiCut) );
+    int baseTrigEntry = t->GetEntries(Form("%s==1 && %s",baseTrig,lumiCut));
     int trigEntry[nTrig];
     cout << "BASE TRIGGER ::: " << baseTrig << " ::: " << endl; 
     for(int i=0;i<nTrig;i++){
-        //const char* tmpTrig = Form("%s_Prescl*(%s==1)", trig[i].Data(), trig[i].Data());
-        const char* tmpTrig = Form("%s_Prescl*(%s==1 && %s==1)",trig[i].Data(), baseTrig.Data(), trig[i].Data());
-        //const char* tmpTrig = Form("(%s==1 && %s==1)", baseTrig.Data(), trig[i].Data());
+        //const char* tmpTrig = Form("%s_Prescl*(%s==1 && %s)",trig[i].Data(),trig[i].Data(), lumiCut);
+        //const char* tmpTrig = Form("%s_Prescl*(%s==1 && %s==1 && %s)",trig[i].Data(),trig[i].Data(), baseTrig, lumiCut);
+        const char* tmpTrig = Form("(%s==1 && %s==1 && %s)",trig[i].Data(), baseTrig, lumiCut);
         h[i] = new TH1D(Form("h%d",i), Form("%s;%s;Entries",trig[i].Data(),xvar),nBin,xmin,xmax);
         t->Draw( Form("%s>>%s",xvar,h[i]->GetName()), tmpTrig );
         trigEntry[i]=t->GetEntries(tmpTrig);
@@ -69,14 +74,14 @@ void triggerTurnOn(const char* fname="root://eoscms//eos/cms//store/group/phys_h
     c_tot->Divide(1,2);
     c_tot->cd(1);
     gPad->SetLogy();
-    hbase->GetYaxis()->SetRangeUser(0.8,hbase->GetMaximum()*10);
+    //hbase->GetYaxis()->SetRangeUser(0.8,hbase->GetMaximum()*10);
     hbase->DrawCopy("hist");
-    l1->AddEntry(hbase, Form("%s",baseTrig.Data()),"l");
+    l1->AddEntry(hbase, Form("%s",baseTrig),"l");
     for(int i=0;i<nTrig;i++){
         c_tot->cd(1);
         SetHistColor(h[i],col[i+2]);
         l1->AddEntry(h[i], Form("%s",trig[i].Data()),"l");
-        h[i]->GetYaxis()->SetRangeUser(0.8,hbase->GetMaximum()*10);
+       // h[i]->GetYaxis()->SetRangeUser(0.8,hbase->GetMaximum()*10);
         h[i]->DrawCopy("hist same");
     }
     l1->Draw("same");
@@ -90,16 +95,19 @@ void triggerTurnOn(const char* fname="root://eoscms//eos/cms//store/group/phys_h
         c_tot->cd(2);
         hEff[i]->Divide(h[i], hbase, 1,1,"B");  
         hEff[i]->GetYaxis()->SetRangeUser(0,1.2);
-        if(i==0) hEff[i]->Draw("p");
-        else hEff[i]->Draw("p same");
+        if(i==0) hEff[i]->Draw("pe");
+        else hEff[i]->Draw("pe same");
     }
     jumSun(xmin,1,xmax,1);
-    c_tot->SaveAs(Form("pdf/trigTurnOn_%s_%s%s.png",xvar,baseTrig.Data(),cap.Data()));
+    c_tot->SaveAs(Form("pdf/trigTurnOn_%s_%s%s.png",xvar,baseTrig,cap.Data()));
 }
 
 int main(){
-    const char* fin = "root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163_277k.root"; 
-//baseTrig : HLT_ZeroBias_v2 53450 , L1Tech_BPTX_plus_AND_minus.v0 224871, L1_ZeroBias 54037,  
+//    const char* fin = "root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163_277k.root";// 5 < LumiBlock < 242 
+//    const char* fin = "root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262167_473k.root";// 1 <LumiBlock < 12
+    const char* fin = "root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163-262172_1.4M.root";//all forest
+
+    //baseTrig : HLT_ZeroBias_v2 53450 , L1Tech_BPTX_plus_AND_minus.v0 224871, L1_ZeroBias 54037,  
 /*
     triggerTurnOn(fin,"HLT_ZeroBias_v2" ,"hiHF", 0, 200, 50);
     triggerTurnOn(fin,"HLT_ZeroBias_v2" ,"hiNpix", 0, 1400, 50);
@@ -114,13 +122,14 @@ int main(){
     //triggerTurnOn(fin,"L1_ZeroBias" ,"hiBin", 0, 200, 50);
 */     
     triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiHF", 0, 200, 50);
-    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNpix", 0, 1500, 50);
-    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNtracksPtCut", 0, 100, 50);
+   // triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNpix", 0, 1500, 50);
+//    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNtracksPtCut", 0, 100, 50);
    
-    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR","hiHF", 0, 20, 20, "_zoom");
-    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNpix", 0, 100, 20, "_zoom");
-    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNtracksPtCut", 0, 50, 20, "_zoom");
-/*
+    //triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiHF", 0, 30, 10, "_zoom");
+   // triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNpix", 0, 200, 50, "_zoom");
+//    triggerTurnOn(fin,"L1_MinimumBiasHF1_OR" ,"hiNtracksPtCut", 0, 20, 20, "_zoom");
+
+    /*
     triggerTurnOn(fin,"HLT_L1MinimumBiasHF1OR_part1_v1","hiHF", 0, 200, 50);
     triggerTurnOn(fin,"HLT_L1MinimumBiasHF1OR_part1_v1" ,"hiNpix", 0, 1500, 50);
     triggerTurnOn(fin,"HLT_L1MinimumBiasHF1OR_part1_v1" ,"hiNtracksPtCut", 0, 100, 50);
