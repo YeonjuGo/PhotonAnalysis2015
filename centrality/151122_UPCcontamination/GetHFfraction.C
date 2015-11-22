@@ -28,6 +28,7 @@ void GetHFfraction(const char* fname="root://eoscms//eos/cms/store/group/phys_he
         //const char* fname="/mnt/hadoop/cms/store/user/dgulhan/mergedForest/HiForest_Centrality_Unpacker_Hydjet_Quenched_MinBias_5020GeV_750_RECODEBUG_v0/HiForest_Centrality_Unpacker_Hydjet_Quenched_MinBias_5020GeV_750_RECODEBUG_v0_merged_forest_1.root",
         float eThr = 3,
         int nTower= 1,
+        bool doL1 = 0,
         TString cap="")
 {
     TH1::SetDefaultSumw2();
@@ -45,10 +46,11 @@ void GetHFfraction(const char* fname="root://eoscms//eos/cms/store/group/phys_he
     //t-> AddFriend(t_skim);
     t-> AddFriend(t_gen);
     //t-> AddFriend(t_l1);
-
+    cout << "Energh Threshold : " << eThr << " GeV, # of towers for firing HF : " << nTower << endl;
     //////////////////////////////////////////////////////////////// 
     //////////////////////////////////////////////////////////////// 
     // GEN FRACTION
+    cout << " :::::::::::::::::: GEN FRACTION :::::::::::::::::: " << endl;
     Int_t mult;
     std::vector<float>* pt=0;
     std::vector<float>* eta=0;
@@ -99,6 +101,7 @@ void GetHFfraction(const char* fname="root://eoscms//eos/cms/store/group/phys_he
     //////////////////////////////////////////////////////////////// 
     //////////////////////////////////////////////////////////////// 
     // RECO FRACTION
+    cout << " :::::::::::::::::: RECO FRACTION ::::::::::::::::: " << endl;
     hfANDevt = 0;
     hfORevt = 0;
     hfXORevt = 0;
@@ -143,9 +146,10 @@ void GetHFfraction(const char* fname="root://eoscms//eos/cms/store/group/phys_he
     hfANDevt = 0;
     hfORevt = 0;
     hfXORevt = 0;
-
-    L1UpgradeTree * tl1 = new L1UpgradeTree(fname);
-    tl1->Loop(99999);
-    tl1->GetEntries();
- 
+    if(doL1){
+        cout << " :::::::::::::::::: L1 FRACTION :::::::::::::::::: " << endl;
+        L1UpgradeTree * tl1 = new L1UpgradeTree(fname);
+        tl1->Loop(99999999);
+        tl1->GetEntries();
+    }
 }
