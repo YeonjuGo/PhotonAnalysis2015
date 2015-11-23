@@ -67,11 +67,11 @@ void GetHFfraction(const char* fname="root://eoscms//eos/cms/store/group/phys_he
     int hfORevt = 0;
     int hfXORevt = 0;
     for(int jentry=0; jentry<totEvt;jentry++){
+        if(jentry%1000==0) cout << jentry << " / " << totEvt << endl;
         t->GetEntry(jentry);
         int nPosTower = 0;
         int nNegTower = 0;
         for(int i=0; i<mult;i++){
-            TLorentzVector * v = new TLorentzVector();  
             float m = -1.;
             if(fabs(pdg->at(i)) == 111) m = 0.13498; //pion 0
             else if(fabs(pdg->at(i)) == 211) m = 0.13957; //pion +-
@@ -83,8 +83,10 @@ void GetHFfraction(const char* fname="root://eoscms//eos/cms/store/group/phys_he
             else if(fabs(pdg->at(i)) == 11) m = 0.000511; //electron
             else if(fabs(pdg->at(i)) == 13) m = 0.10566; //muon
             else continue;
+            TLorentzVector * v = new TLorentzVector();  
             v->SetPtEtaPhiM(pt->at(i),eta->at(i),phi->at(i),m);
             double e = v->Energy();
+            delete v;
             if(e<eThr) continue;
             if( (eta->at(i)>HFin ) && ( (eta->at(i))<HFout ) ) nPosTower++;
             else if( (eta->at(i)>-HFout ) && ( (eta->at(i))<-HFin ) ) nNegTower++;
@@ -105,7 +107,7 @@ void GetHFfraction(const char* fname="root://eoscms//eos/cms/store/group/phys_he
     hfANDevt = 0;
     hfORevt = 0;
     hfXORevt = 0;
-   
+    /*
     Int_t phfPosTowers, phfNegTowers;
     Int_t phfPosFilter, phfPosFilter2, phfPosFilter3, phfPosFilter4, phfPosFilter5;
     Int_t phfNegFilter, phfNegFilter2, phfNegFilter3, phfNegFilter4, phfNegFilter5;
@@ -125,7 +127,7 @@ void GetHFfraction(const char* fname="root://eoscms//eos/cms/store/group/phys_he
     t->SetBranchAddress("phfCoincFilter3",&phfCoincFilter3);
     t->SetBranchAddress("phfCoincFilter4",&phfCoincFilter4);
     t->SetBranchAddress("phfCoincFilter5",&phfCoincFilter5);
-
+    */
     if(nTower==1){
         hfANDevt = t->GetEntries(Form("phfCoincFilter==1"));
         hfORevt = t->GetEntries(Form("phfPosFilter==1 || phfNegFilter==1"));
