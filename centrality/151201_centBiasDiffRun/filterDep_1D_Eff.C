@@ -21,12 +21,12 @@
 #include "TPad.h"
 #include "stdio.h"
 #include <iostream>
-#include "yjUtility.h"
+#include "../../yjUtility.h"
 
 //////////// modify here as you want!! ////////////////
 const int nfilter = 4;
 //const int nfilter = 7;
-const char* evtfilter[] = {"","phfCoincFilter3","pprimaryVertexFilter","phfCoincFilter3 && pprimaryVertexFilter"};
+const char* evtfilter[] = {"","phfCoincFilter3","pprimaryVertexFilter","pcollisionEventSelection"};
 //const char* evtfilter[] = {"","phfCoincFilter","phfPosFilter2 && phfNegFilter2","phfCoincFilter3","pprimaryVertexFilter","phfCoincFilter3 && pprimaryVertexFilter"};
 //const char* evtfilter[] = {"","phfCoincFilter3 && pprimaryVertexFilter"};
 //const char* evtfilter[] = {"","pBeamScrapingFilter","pPAprimaryVertexFilter","pHBHENoiseFilterResultProducer","phfCoincFilter","phfCoincFilter3","PAcollisionEventSelection"};
@@ -36,14 +36,17 @@ void Get1DEffPlots(TTree* t_evt=0, TString v1="hiHF",int xbin=200, double xmin=0
 
 void filterDep_1D_Eff(
         //const char* fname="root://eoscms//eos/cms//store/group/phys_heavyions/Delicanu/forest/Run2015E/HIExpressPhysics/Merged/HIForestMinbiasUPC_run262548.root",
-        const char* fname="root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/HIRun2015/HIExpressPhysics/Merged/HIForestExpress_run262834.root",
+        const char* fname="root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/HIRun2015/HIExpressPhysics/Merged/HIForestExpress_run263234.root",
+        //const char* fname="root://eoscms//eos/cms/store/group/cmst3/group/hintt/mverweij/PbPbReco/Forest/000/263/233/merge/HiForestRun263233PrivateRecoMB.root",
+        //const char* fname="root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/HIRun2015/HIExpressPhysics/Merged/HIForestExpress_run262834.root",
         //const char* fname="root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/HIExpressPhysics/Merged//HIForestExpress_run262548-v6.root",
         //const char* fname="root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/Run2015E/ExpressPhysics/Merged/ExpressHiForest_run262163-262172_1.4M.root",
-        const char* type="Run262834Express_afterLumiMask", 
+        const char* type="Run263234_Express", 
         //const char* type="Run262163-262172", 
         //TCut trig = "HLT_HIL1MinimumBiasHF1AND_v1",
         //TCut trig = "HLT_HIL1MinimumBiasHF2ANDExpress_v1",
-        TCut trig = "HLT_HIL1MinimumBiasHF1ANDExpress_v1 && lumi>73",
+        TCut trig = "HLT_HIL1MinimumBiasHF2ANDExpress_v1",
+        //TCut trig = "HLT_HIL1MinimumBiasHF2AND_part2_v1",
         //TCut trig = "HLT_HIL1HFplusANDminusTH0Express_v1",
         //TCut trig = "HLT_L1MinimumBiasHF1OR_part1_v1",
         bool isAOD=0)

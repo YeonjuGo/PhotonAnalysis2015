@@ -1,6 +1,7 @@
 // comparison centrality objects between runs 
+// Prompt Reco vs. Private Reco vs. Express
 // Author : Yeonju Go
-// 30 Nov 2015
+// 08 Dec 2015
 
 //private setup
 #include "../../yjUtility.h"
@@ -11,7 +12,7 @@ const Int_t colhere[10] = {1, kBlue, kRed, kCyan+2, kGray+1, kMagenta+2, kYellow
 //const int colhere[] = {1,4,9,6,46,kOrange,kViolet,kOrange+10};
 //const int colhere[] = {1,2,4,9,6,46,kOrange,kViolet,kOrange+10};
 void draw_compare_runs_1D(string var="hiHF");
-void compare_runs_1D(){
+void compare_runs_1D_3types(){
     TStopwatch timer;
     timer.Start();
     draw_compare_runs_1D("hiHF");
@@ -43,26 +44,12 @@ void draw_compare_runs_1D(string var){
     ///////////////////// for larger sample
     const char* dir = "root://eoscms//eos/cms//store/group/phys_heavyions/velicanu/forest/HIRun2015/HIMinimumBias2/Merged/";
     const int Nrun = 7;
-    //string run[] = {"2695", "2694", "2703","2726", "2735"};
     string run[] = {"2811","2694","2695","2816","2620","2656","3233"};
-    //string run[] = {"2695","2548","2620","2656","2694","2811","2816","3031"};
-    //string run[] = {"2695","2548","2620","2656","2694","2811","2816","3033"};
-    //string run[] = {"695","548","620","656","694","811","816"};
     //const char* trigCut = "HLT_HIL1MinimumBiasHF1AND_v1";
     //TCut trigCut = "HLT_HIL1MinimumBiasHF1AND_v1 && pcollisionEventSelection";
     TCut trigCut = "hiHF>220 && HLT_HIL1MinimumBiasHF1AND_v1 && pprimaryVertexFilter && phfCoincFilter3";
     TCut trigCutFor3233 = "hiHF>220 && HLT_HIL1MinimumBiasHF2AND_part2_v1 && pprimaryVertexFilter && phfCoincFilter3";
     const char* cap= "";
-
-    double trkPtBin[] = {0.,0.25,0.5,0.75,1.0,1.25,1.5,1.75,2.0,2.25,2.5,2.75,3.0,3.5,4.0,4.5,5.0,5.5,6.0,7.0,8.0,10.0,12.0,16.0,20.0};
-    int NtrkPtBin = sizeof(trkPtBin)/sizeof(double)-1;
-
-    ////////////////////// for express
-    //const char* dir = "root://eoscms//eos/cms/store/group/phys_heavyions/velicanu/forest/Run2015E/HIExpressPhysics/Merged/";
-    //const int Nrun = 8;
-    //const char* run[] = {"768","548-v6", "620-v6", "695","703","726","811","837"};
-    //const char* run[] = {"548-v6", "620-v6", "656","694","695","697","703","726","768","777","784","817","811","816","818","819","834","836","837"};
-    //const char* trigCut = "HLT_HIL1MinimumBiasHF1ANDExpress_v1 && pprimaryVertexFilter && phfCoincFilter3";
 
     int nBin = 100;
     if(var=="hiBin") nBin=200;
@@ -75,7 +62,6 @@ void draw_compare_runs_1D(string var){
     if(var == "xVtx" || var == "yVtx") xmax = 0.20;
 
     int nEvents[Nrun];
-    
     TH1D* h[Nrun];
     TLegend* l1 = new TLegend(0.7,0.65,0.95,0.95);
     legStyle(l1);
